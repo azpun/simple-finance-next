@@ -18,6 +18,18 @@ export const transactionSchema = zod.object({
   }),
 });
 
+export const createTrasactionValidation = (
+  payload: CreateTransactionInputType,
+) => {
+  return transactionSchema.safeParseAsync(payload);
+};
+
+export const updateTrasactionValidation = (
+  payload: UpdateTransactionInputType,
+) => {
+  return transactionSchemaPartial.safeParseAsync(payload);
+};
+
 export const transactionSchemaPartial = transactionSchema.partial();
 
 export type CreateTransactionInputType = zod.infer<typeof transactionSchema>;
