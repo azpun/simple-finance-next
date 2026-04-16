@@ -52,7 +52,7 @@ model Users {
   id            String          @id @default(cuid())
   fullname      String
   email         String          @unique
-  password      String
+  password      String          
   transactions  Transactions[]
   categories    Categories[]
 }
