@@ -86,12 +86,20 @@ export default function RootLayout({
                 </div>
                 <div className="flex items-center gap-2">
                   <Link href="/auth/login" className="hidden md:block">
-                    <Button variant={"outline"} size={"lg"}>
+                    <Button
+                      variant={"outline"}
+                      size={"lg"}
+                      className="cursor-pointer"
+                    >
                       Sign In
                     </Button>
                   </Link>
                   <Link href="/auth/register" className="hidden md:block">
-                    <Button variant={"default"} size={"lg"}>
+                    <Button
+                      variant={"default"}
+                      size={"lg"}
+                      className="cursor-pointer"
+                    >
                       Sign Up
                     </Button>
                   </Link>

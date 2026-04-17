@@ -32,6 +32,8 @@ export default function ThemeSwitcher({
       variant={variant}
       size="icon-lg"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      aria-label="Toggle dark mode"
+      className="md:cursor-pointer"
     >
       {theme === "dark" ? <Sun size={24} /> : <Moon />}
     </Button>
