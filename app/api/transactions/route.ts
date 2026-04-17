@@ -1,8 +1,7 @@
 // import prisma from "@/lib/connectDB";
 // import { CreateTransactionInputType } from "@/validations/transaction.validate";
-import { NextResponse } from "next/server";
 
-export async function POST(req: Request, res: NextResponse) {
+export async function POST() {
   //   const data = (await req.json()) as CreateTransactionInputType;
   //   const createTransaction = await prisma.transactions.create({
   //     data: {
