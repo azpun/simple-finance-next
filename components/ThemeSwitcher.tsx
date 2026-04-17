@@ -4,7 +4,17 @@ import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Sun, Moon } from "lucide-react";
 
-export default function ThemeSwitcher() {
+export default function ThemeSwitcher({
+  variant = "default",
+}: {
+  variant?:
+    | "link"
+    | "default"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "destructive";
+}) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -19,11 +29,11 @@ export default function ThemeSwitcher() {
 
   return (
     <Button
-      variant="ghost"
+      variant={variant}
       size="icon-lg"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
-      {theme === "dark" ? <Sun size={32} /> : <Moon />}
+      {theme === "dark" ? <Sun size={24} /> : <Moon />}
     </Button>
   );
 }
