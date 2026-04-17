@@ -2,17 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import AppSidebar from "@/components/app-sidebar";
+
 import { ThemeProvider } from "next-themes";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
-import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -36,12 +27,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const navigationMenus = [
-    { name: "Home", href: "/" },
-    { name: "Features", href: "/features" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
-  ];
   return (
     <html
       lang="en"
@@ -57,58 +42,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" enableSystem>
-          <SidebarProvider defaultOpen={false}>
-            <AppSidebar className="block md:hidden" />
-            <SidebarInset>
-              <header
-                className={`flex h-16 shrink-0 items-center justify-between border-b px-4`}
-              >
-                <SidebarTrigger className="md:hidden" />
-                <div className="flex items-center">
-                  <Link href={"/"}>
-                    <h1 className="text-lg">Simple Finance</h1>
-                  </Link>
-                  <Separator
-                    orientation="vertical"
-                    className="my-4 ml-4 mr-2 hidden md:block"
-                  />
-                  <div className="hidden md:block">
-                    <ul className="flex items-center">
-                      {navigationMenus.map(menu => (
-                        <Link key={menu.name} href={menu.href}>
-                          <li className="p-4.5 hover:bg-slate-700/30">
-                            {menu.name}
-                          </li>
-                        </Link>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Link href="/auth/login" className="hidden md:block">
-                    <Button
-                      variant={"outline"}
-                      size={"lg"}
-                      className="cursor-pointer"
-                    >
-                      Sign In
-                    </Button>
-                  </Link>
-                  <Link href="/auth/register" className="hidden md:block">
-                    <Button
-                      variant={"default"}
-                      size={"lg"}
-                      className="cursor-pointer"
-                    >
-                      Sign Up
-                    </Button>
-                  </Link>
-                  <ThemeSwitcher variant="outline" />
-                </div>
-              </header>
-              <main>{children}</main>
-            </SidebarInset>
-          </SidebarProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>
