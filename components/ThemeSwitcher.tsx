@@ -35,7 +35,7 @@ export default function ThemeSwitcher({
       aria-label="Toggle dark mode"
       className="md:cursor-pointer"
     >
-      {theme === "dark" ? <Sun size={24} /> : <Moon />}
+      {theme === "dark" ? <Sun /> : <Moon />}
     </Button>
   );
 }

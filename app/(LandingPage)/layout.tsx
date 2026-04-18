@@ -75,7 +75,7 @@ export default function LandingLayout({
                 Sign Up
               </Button>
             </Link>
-            <ThemeSwitcher variant="outline" />
+            <ThemeSwitcher variant="ghost" />
           </div>
         </header>
         {children}
