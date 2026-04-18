@@ -25,8 +25,8 @@ export default function Register() {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as RegisterInputType;
     const jsonData = JSON.stringify(data);
-    // const validated = validateRegister(JSON.parse(jsonData));
-    // console.log(JSON.parse(jsonData));
+
+    // console.log(jsonData);
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -44,6 +44,7 @@ export default function Register() {
       }
       const result = await response.json();
       console.log("Registrasi berhasil:", result);
+      return result;
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +73,7 @@ export default function Register() {
                 <Input
                   type="text"
                   id="fullname"
-                  name="fullname"
+                  name="name"
                   placeholder="John Doe"
                   required
                 />
