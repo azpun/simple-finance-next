@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  RegisterInputType,
+  validateRegister,
+} from "@/validations/auth.validation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { FormEvent } from "react";
@@ -18,16 +22,31 @@ import { FormEvent } from "react";
 export default function Register() {
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const jsonForm = JSON.stringify(Object.fromEntries(form));
-    console.log(jsonForm);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData) as RegisterInputType;
+    const jsonData = JSON.stringify(data);
+    // const validated = validateRegister(JSON.parse(jsonData));
+    // console.log(JSON.parse(jsonData));
 
     try {
-      // await fetch("/api/auth/register", {
-      //   method: "POST",
-      //   body: JSON.stringify(Object.fromEntries(form)),
-      // });
-    } catch (error) {}
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // WAJIB ada agar backend bisa memproses JSON
+        },
+        body: jsonData,
+      });
+      if (!response.ok) {
+        // Menangani error status code (400, 401, 500, dll)
+        const errorData = await response.json();
+        console.error("Registrasi gagal:", errorData.message);
+        return;
+      }
+      const result = await response.json();
+      console.log("Registrasi berhasil:", result);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="sm:flex sm:justify-center sm:items-center">
@@ -85,7 +104,7 @@ export default function Register() {
                 <Input
                   type="password"
                   id="confirm-password"
-                  name="confirm-password"
+                  name="confirm"
                   placeholder="********"
                   required
                 />

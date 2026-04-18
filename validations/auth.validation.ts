@@ -19,6 +19,10 @@ export const registerSchema = zod
     path: ["confirm"],
   });
 
+export const validateRegister = (payload: RegisterInputType) => {
+  return registerSchema.safeParse(payload);
+};
+
 export const loginSchema = zod.object({
   email: zod
     .email({ message: "Please enter a valid email address" })
@@ -26,6 +30,10 @@ export const loginSchema = zod.object({
     .toLowerCase(),
   password: zod.string().min(6, "Password must be at least 6 characters long"),
 });
+
+export const validateLogin = (payload: LoginInputType) => {
+  return loginSchema.safeParse(payload);
+};
 
 export type RegisterInputType = zod.infer<typeof registerSchema>;
 export type LoginInputType = zod.infer<typeof loginSchema>;
