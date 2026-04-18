@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +13,22 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { FormEvent } from "react";
 
 export default function Register() {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const jsonForm = JSON.stringify(Object.fromEntries(form));
+    console.log(jsonForm);
+
+    try {
+      // await fetch("/api/auth/register", {
+      //   method: "POST",
+      //   body: JSON.stringify(Object.fromEntries(form)),
+      // });
+    } catch (error) {}
+  };
   return (
     <div className="sm:flex sm:justify-center sm:items-center">
       <Card className="my-8 w-full sm:w-md ">
@@ -30,7 +46,7 @@ export default function Register() {
           </CardDescription>
         </CardHeader>
         <CardContent className="my-4">
-          <form action="submit">
+          <form onSubmit={handleRegister}>
             <FieldGroup className="px-6">
               <Field>
                 <FieldLabel htmlFor="fullname">Fullname</FieldLabel>
