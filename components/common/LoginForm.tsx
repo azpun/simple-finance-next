@@ -70,9 +70,11 @@ const LoginForm = () => {
           </Field>
 
           <Field className="gap-3">
-            <Button type="submit" className="p-5">
-              Submit
-            </Button>
+            <Link href={"/dashboard"}>
+              <Button type="submit" className="p-5">
+                Submit
+              </Button>
+            </Link>
             <span>
               Don&apos;t have an account?{" "}
               <Link
