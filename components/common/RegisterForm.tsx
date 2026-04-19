@@ -1,45 +1,59 @@
 "use client";
-import { Link } from "lucide-react";
+
+import Link from "next/link";
 import { Button } from "../ui/button";
 import { Field, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { RegisterInputType } from "@/validations/auth.validation";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const RegisterForm = () => {
-  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData) as RegisterInputType;
-    const jsonData = JSON.stringify(data);
+  const { handleSubmit, register } = useForm<RegisterInputType>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirm: "",
+    },
+  });
 
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // WAJIB ada agar backend bisa memproses JSON
-        },
-        body: jsonData,
-      });
-      if (!response.ok) {
-        // Menangani error status code (400, 401, 500, dll)
-        const errorData = await response.json();
-        console.error("Registrasi gagal:", errorData.message);
-        return;
-      }
-      const result = await response.json();
-      console.log("Registrasi berhasil:", result);
-      return result;
-    } catch (error) {
-      console.log(error);
-    }
+  const onRegister: SubmitHandler<RegisterInputType> = async data => {
+    // e.preventDefault();
+    // const formData = new FormData(e.currentTarget);
+    // const data = Object.fromEntries(formData) as RegisterInputType;
+    // const jsonData = JSON.stringify(data);
+    // try {
+    //   const response = await fetch("/api/auth/register", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json", // WAJIB ada agar backend bisa memproses JSON
+    //     },
+    //     body: jsonData,
+    //   });
+    //   if (!response.ok) {
+    //     // Menangani error status code (400, 401, 500, dll)
+    //     const errorData = await response.json();
+    //     console.error("Registrasi gagal:", errorData.message);
+    //     return;
+    //   }
+    //   const result = await response.json();
+    //   console.log("Registrasi berhasil:", result);
+    //   return result;
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    console.log(data);
   };
+
   return (
     <>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleSubmit(onRegister)}>
         <FieldGroup className="px-6">
           <Field>
             <FieldLabel htmlFor="fullname">Fullname</FieldLabel>
             <Input
+              {...register("name")}
               type="text"
               id="fullname"
               name="name"
@@ -50,6 +64,7 @@ const RegisterForm = () => {
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
+              {...register("email")}
               type="email"
               id="email"
               name="email"
@@ -60,6 +75,7 @@ const RegisterForm = () => {
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
+              {...register("password")}
               type="password"
               id="password"
               name="password"
@@ -70,6 +86,7 @@ const RegisterForm = () => {
           <Field>
             <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
             <Input
+              {...register("confirm")}
               type="password"
               id="confirm-password"
               name="confirm"
@@ -85,7 +102,7 @@ const RegisterForm = () => {
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="hover:text-green-500 hover:underline"
+                className="text-green-600 hover:text-lime-500 hover:underline"
               >
                 Sign In
               </Link>

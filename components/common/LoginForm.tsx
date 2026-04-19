@@ -1,24 +1,27 @@
 "use client";
-import { Link } from "lucide-react";
+import Link from "next/link";
 import { Button } from "../ui/button";
 import { Field, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-// import { RegisterInputType } from "@/validations/auth.validation";
+import { LoginInputType } from "@/validations/auth.validation";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const LoginForm = () => {
-  //   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     // const formData = new FormData(e.currentTarget);
-  //     // const data = Object.fromEntries(formData) as RegisterInputType;
-  //     // const jsonData = JSON.stringify(data);
-  //   };
+  const { handleSubmit, register } = useForm<LoginInputType>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const onLogin: SubmitHandler<LoginInputType> = async () => {};
   return (
     <>
-      <form action="submit">
+      <form onSubmit={handleSubmit(onLogin)}>
         <FieldGroup className="px-6">
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
+              {...register("email")}
               type="email"
               id="email"
               name="email"
@@ -29,6 +32,7 @@ const LoginForm = () => {
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
+              {...register("password")}
               type="password"
               id="password"
               name="password"
@@ -45,7 +49,7 @@ const LoginForm = () => {
               Don&apos;t have an account?{" "}
               <Link
                 href="/auth/register"
-                className="hover:text-green-500 hover:underline"
+                className="text-green-600 hover:text-lime-500 hover:underline"
               >
                 Sign Up
               </Link>

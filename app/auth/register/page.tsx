@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import RegisterForm from "@/components/common/RegisterForm";
 import {
   Card,
@@ -11,7 +10,6 @@ import {
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { FormEvent } from "react";
 
 export default function Register() {
   return (
