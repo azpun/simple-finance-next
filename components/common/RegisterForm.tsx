@@ -2,19 +2,28 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Field, FieldGroup, FieldLabel } from "../ui/field";
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { RegisterInputType } from "@/validations/auth.validation";
-import { SubmitHandler, useForm } from "react-hook-form";
+import {
+  RegisterInputType,
+  registerSchema,
+} from "@/validations/auth.validation";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterForm = () => {
-  const { handleSubmit, register } = useForm<RegisterInputType>({
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<RegisterInputType>({
     defaultValues: {
       name: "",
       email: "",
       password: "",
       confirm: "",
     },
+    resolver: zodResolver(registerSchema),
   });
 
   const onRegister: SubmitHandler<RegisterInputType> = async data => {
@@ -52,47 +61,119 @@ const RegisterForm = () => {
         <FieldGroup className="px-6">
           <Field>
             <FieldLabel htmlFor="fullname">Fullname</FieldLabel>
-            <Input
-              {...register("name")}
-              type="text"
-              id="fullname"
+            <Controller
+              control={control}
               name="name"
-              placeholder="John Doe"
-              required
+              rules={{
+                required: "Fullname is Required",
+                minLength: {
+                  value: 3,
+                  message: "Fullname must greater than equal 3 characters",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="text"
+                  id="fullname"
+                  name="name"
+                  placeholder="John Doe"
+                  autoComplete="false"
+                  className={`${errors.name ? "border-2 border-red-500" : ""}`}
+                  aria-invalid={errors.name ? "true" : "false"}
+                />
+              )}
             />
+            {errors.name?.message !== "" && (
+              <FieldError>{errors.name?.message}</FieldError>
+            )}
           </Field>
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
-            <Input
-              {...register("email")}
-              type="email"
-              id="email"
+            <Controller
+              control={control}
               name="email"
-              placeholder="g6oZK@example.com"
-              required
+              rules={{
+                required: "Email is Required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="g6oZK@example.com"
+                  autoComplete="false"
+                  className={`${errors.email ? "border-2 border-red-500" : ""}`}
+                  aria-invalid={errors.email ? "true" : "false"}
+                />
+              )}
             />
+            {errors.email?.message !== "" && (
+              <FieldError>{errors.email?.message}</FieldError>
+            )}
           </Field>
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
-            <Input
-              {...register("password")}
-              type="password"
-              id="password"
+            <Controller
+              control={control}
               name="password"
-              placeholder="********"
-              required
+              rules={{
+                required: "Password is Required",
+                minLength: {
+                  value: 6,
+                  message: "Password must greater than equal 6 characters",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="********"
+                  autoComplete="false"
+                  className={`${errors.password ? "border-2 border-red-500" : ""}`}
+                  aria-invalid={errors.password ? "true" : "false"}
+                />
+              )}
             />
+            {errors.password?.message !== "" && (
+              <FieldError>{errors.password?.message}</FieldError>
+            )}
           </Field>
           <Field>
             <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-            <Input
-              {...register("confirm")}
-              type="password"
-              id="confirm-password"
+            <Controller
+              control={control}
               name="confirm"
-              placeholder="********"
-              required
+              rules={{
+                required: "Confirm Password is Required",
+                minLength: {
+                  value: 6,
+                  message: " Password must greater than equal 6 characters",
+                },
+              }}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  id="confirm-password"
+                  name="confirm"
+                  placeholder="********"
+                  autoComplete="false"
+                  className={`${errors.confirm ? "border-2 border-red-500" : ""}`}
+                  aria-invalid={errors.confirm ? "true" : "false"}
+                />
+              )}
             />
+            {errors.confirm?.message !== "" && (
+              <FieldError>{errors.confirm?.message}</FieldError>
+            )}
           </Field>
           <Field className="gap-3">
             <Button type="submit" className="p-5">
