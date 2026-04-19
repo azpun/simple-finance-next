@@ -4,7 +4,10 @@ export const registerSchema = zod
   .object({
     name: zod.string().min(3, "Name must be at least 3 characters long"),
     email: zod
-      .email({ message: "Please enter a valid email address" })
+      .email({
+        message: "Please enter a valid email address",
+        pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      })
       .trim()
       .toLowerCase(),
     password: zod
@@ -25,7 +28,10 @@ export const validateRegister = (payload: RegisterInputType) => {
 
 export const loginSchema = zod.object({
   email: zod
-    .email({ message: "Please enter a valid email address" })
+    .email({
+      message: "Please enter a valid email address",
+      pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+    })
     .trim()
     .toLowerCase(),
   password: zod.string().min(6, "Password must be at least 6 characters long"),

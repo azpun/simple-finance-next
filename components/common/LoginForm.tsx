@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Field, FieldGroup, FieldLabel } from "../ui/field";
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { LoginInputType } from "@/validations/auth.validation";
+import { LoginInputType, loginSchema } from "@/validations/auth.validation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const LoginForm = () => {
   const {
@@ -16,6 +17,7 @@ const LoginForm = () => {
       email: "",
       password: "",
     },
+    resolver: zodResolver(loginSchema),
   });
   const onLogin: SubmitHandler<LoginInputType> = async data => {
     console.log(data);
@@ -29,13 +31,6 @@ const LoginForm = () => {
             <Controller
               control={control}
               name="email"
-              rules={{
-                required: "Email is Required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              }}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -49,7 +44,7 @@ const LoginForm = () => {
               )}
             />
             {errors.email?.message && (
-              <small className="text-red-500">{errors.email.message}</small>
+              <FieldError>{errors.email?.message}</FieldError>
             )}
           </Field>
           <Field>
@@ -57,13 +52,6 @@ const LoginForm = () => {
             <Controller
               control={control}
               name="password"
-              rules={{
-                required: "Password is Required",
-                minLength: {
-                  value: 6,
-                  message: "Password must greater then equal 6 characters",
-                },
-              }}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -77,7 +65,7 @@ const LoginForm = () => {
               )}
             />
             {errors.password?.message && (
-              <small className="text-red-500">{errors.password.message}</small>
+              <FieldError>{errors.password?.message}</FieldError>
             )}
           </Field>
 

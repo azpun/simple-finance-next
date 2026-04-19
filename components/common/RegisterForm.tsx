@@ -64,13 +64,6 @@ const RegisterForm = () => {
             <Controller
               control={control}
               name="name"
-              rules={{
-                required: "Fullname is Required",
-                minLength: {
-                  value: 3,
-                  message: "Fullname must greater than equal 3 characters",
-                },
-              }}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -93,13 +86,6 @@ const RegisterForm = () => {
             <Controller
               control={control}
               name="email"
-              rules={{
-                required: "Email is Required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              }}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -151,13 +137,6 @@ const RegisterForm = () => {
             <Controller
               control={control}
               name="confirm"
-              rules={{
-                required: "Confirm Password is Required",
-                minLength: {
-                  value: 6,
-                  message: " Password must greater than equal 6 characters",
-                },
-              }}
               render={({ field }) => (
                 <Input
                   {...field}
