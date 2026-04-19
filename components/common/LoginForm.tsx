@@ -37,7 +37,7 @@ const LoginForm = () => {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="g6oZK@example.com"
+                  placeholder="Input your email"
                   className={`${errors.email ? "border-2 border-red-500" : ""}`}
                   aria-invalid={errors.email ? "true" : "false"}
                 />
@@ -58,7 +58,7 @@ const LoginForm = () => {
                   type="password"
                   id="password"
                   name="password"
-                  placeholder="********"
+                  placeholder="Input your password"
                   className={`${errors.password ? "border-2 border-red-500" : ""}`}
                   aria-invalid={errors.password ? "true" : "false"}
                 />

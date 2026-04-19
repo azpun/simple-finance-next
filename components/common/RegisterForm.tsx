@@ -70,7 +70,7 @@ const RegisterForm = () => {
                   type="text"
                   id="fullname"
                   name="name"
-                  placeholder="John Doe"
+                  placeholder="Input your fullname"
                   autoComplete="false"
                   className={`${errors.name ? "border-2 border-red-500" : ""}`}
                   aria-invalid={errors.name ? "true" : "false"}
@@ -92,7 +92,7 @@ const RegisterForm = () => {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="g6oZK@example.com"
+                  placeholder="Input your email"
                   autoComplete="false"
                   className={`${errors.email ? "border-2 border-red-500" : ""}`}
                   aria-invalid={errors.email ? "true" : "false"}
@@ -121,7 +121,7 @@ const RegisterForm = () => {
                   type="password"
                   id="password"
                   name="password"
-                  placeholder="********"
+                  placeholder="Input your password"
                   autoComplete="false"
                   className={`${errors.password ? "border-2 border-red-500" : ""}`}
                   aria-invalid={errors.password ? "true" : "false"}
@@ -143,7 +143,7 @@ const RegisterForm = () => {
                   type="password"
                   id="confirm-password"
                   name="confirm"
-                  placeholder="********"
+                  placeholder="Input your password again"
                   autoComplete="false"
                   className={`${errors.confirm ? "border-2 border-red-500" : ""}`}
                   aria-invalid={errors.confirm ? "true" : "false"}
