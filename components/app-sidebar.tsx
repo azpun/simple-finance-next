@@ -33,19 +33,17 @@ export default function AppSidebar({ className }: { className?: string }) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {pathname === "/dashboard" ||
-            (pathname === "/transactions" && (
-              <>
-                {navigationMenusDashboard.map(menu => (
-                  <SidebarMenuItem key={menu.name}>
-                    <SidebarMenuButton asChild className="p-6">
-                      <Link href={menu.href}>{menu.name}</Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </>
-            ))}
-          {pathname !== "/dashboard" && pathname !== "/transactions" && (
+          {pathname === "/dashboard" || pathname === "/transactions" ? (
+            <>
+              {navigationMenusDashboard.map(menu => (
+                <SidebarMenuItem key={menu.name}>
+                  <SidebarMenuButton asChild className="p-6">
+                    <Link href={menu.href}>{menu.name}</Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </>
+          ) : (
             <>
               {navigationMenus.map(menu => (
                 <SidebarMenuItem key={menu.name}>
