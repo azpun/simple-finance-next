@@ -15,7 +15,7 @@ datasource db {
 
 model Transactions {
   id          String             @id @default(cuid())
-  amount      BigInt
+  amount      Int
   title       String 
   description String? 
   type        TransactionType
@@ -53,8 +53,21 @@ model Users {
   fullname      String
   email         String          @unique
   password      String          
+  budgets       Budgets[]          
   transactions  Transactions[]
   categories    Categories[]
+}
+
+model Budgets {
+  id            String          @id @default(cuid())
+  userId        String
+  user          Users           @relation(fields: [userId], references: [id])
+
+  amount        Int
+  month         Int
+  year          Int
+
+  @@unique([userId, year, month])
 }
 
 enum TransactionType {
