@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body className="flex flex-col min-h-full">
         <ThemeProvider attribute="class" enableSystem>
           <SessionProvider>{children}</SessionProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

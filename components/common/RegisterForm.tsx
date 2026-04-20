@@ -10,6 +10,7 @@ import {
 } from "@/validations/auth.validation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 const RegisterForm = () => {
   const {
@@ -27,32 +28,30 @@ const RegisterForm = () => {
   });
 
   const onRegister: SubmitHandler<RegisterInputType> = async data => {
-    // e.preventDefault();
-    // const formData = new FormData(e.currentTarget);
-    // const data = Object.fromEntries(formData) as RegisterInputType;
-    // const jsonData = JSON.stringify(data);
-    // try {
-    //   const response = await fetch("/api/auth/register", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json", // WAJIB ada agar backend bisa memproses JSON
-    //     },
-    //     body: jsonData,
-    //   });
-    //   if (!response.ok) {
-    //     // Menangani error status code (400, 401, 500, dll)
-    //     const errorData = await response.json();
-    //     console.error("Registrasi gagal:", errorData.message);
-    //     return;
-    //   }
-    //   const result = await response.json();
-    //   console.log("Registrasi berhasil:", result);
-    //   return result;
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const jsonData = JSON.stringify(data);
 
-    console.log(data);
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // WAJIB ada agar backend bisa memproses JSON
+        },
+        body: jsonData,
+      });
+      if (!response.ok) {
+        // Menangani error status code (400, 401, 500, dll)
+        const errorData = await response.json();
+        console.error("Registrasi gagal:", errorData.message);
+        return;
+      }
+      const result = await response.json();
+      // console.log("Registrasi berhasil:", result);
+      toast.success("Registrasi berhasil");
+      return result;
+    } catch (error) {
+      toast.error("Registrasi gagal");
+      console.log(error);
+    }
   };
 
   return (

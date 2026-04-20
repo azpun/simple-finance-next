@@ -8,6 +8,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const LoginForm = () => {
   const {
@@ -29,8 +30,10 @@ const LoginForm = () => {
         password: data.password,
         callbackUrl: "/dashboard",
       });
+      toast.success("Login successful");
       push("/dashboard");
     } catch (error) {
+      toast.error("Login failed");
       console.log(error);
     }
   };
