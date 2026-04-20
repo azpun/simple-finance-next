@@ -11,9 +11,11 @@ import {
 } from "./ui/sidebar";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function AppSidebar({ className }: { className?: string }) {
   const pathname = usePathname();
+  const { status } = useSession();
 
   const navigationMenus = [
     { name: "Home", href: "/" },
@@ -57,18 +59,23 @@ export default function AppSidebar({ className }: { className?: string }) {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <div className="flex items-center justify-center gap-4 mb-4">
-          <Link href="/auth/login">
-            <Button variant={"outline"} size={"lg"}>
+        {status === "authenticated" ? (
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <Button variant={"outline"} size={"lg"} onClick={() => signOut()}>
+              Sign Out
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <Button variant={"outline"} size={"lg"} onClick={() => signIn()}>
               Sign In
             </Button>
-          </Link>
-          <Link href="/auth/register">
+
             <Button variant={"default"} size={"lg"}>
               Sign Up
             </Button>
-          </Link>
-        </div>
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );

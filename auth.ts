@@ -1,11 +1,11 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
+import prisma from "./lib/connectDB";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       // ini adalah nama provider
@@ -60,17 +60,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   // ini adalah opsi untuk mengatur callback pada next-auth untuk mengambil data user
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
+    async jwt({ token, account, user }) {
+      if (account?.provider === "credentials") {
         token.id = user.id as string;
+        token.fullname = user.name as string;
+        token.email = user.email as string;
       }
       return token;
     },
 
     // ini adalah opsi untuk mengatur callback pada next-auth untuk mengambil data session
     async session({ session, token }) {
-      if (token) {
-        session.userId = token.id as string;
+      if ("id" in token) {
+        session.user.id = token.id as string;
+      }
+      if ("email" in token) {
+        session.user.email = token.email as string;
+      }
+      if ("fullname" in token) {
+        session.user.name = token.fullname as string;
       }
       return session;
     },

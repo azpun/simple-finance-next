@@ -6,6 +6,8 @@ import { Input } from "../ui/input";
 import { LoginInputType, loginSchema } from "@/validations/auth.validation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const {
@@ -19,8 +21,18 @@ const LoginForm = () => {
     },
     resolver: zodResolver(loginSchema),
   });
+  const { push } = useRouter();
   const onLogin: SubmitHandler<LoginInputType> = async data => {
-    console.log(data);
+    try {
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/dashboard",
+      });
+      push("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -70,11 +82,10 @@ const LoginForm = () => {
           </Field>
 
           <Field className="gap-3">
-            <Link href={"/dashboard"}>
-              <Button type="submit" className="p-5">
-                Submit
-              </Button>
-            </Link>
+            <Button type="submit" className="p-5">
+              Submit
+            </Button>
+
             <span>
               Don&apos;t have an account?{" "}
               <Link

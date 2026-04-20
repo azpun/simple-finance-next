@@ -1,12 +1,13 @@
 import AppSidebar from "@/components/app-sidebar";
+import SignButtons from "@/components/SignButton";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
 import Link from "next/link";
 
 export default function DashboardLayout({
@@ -45,24 +46,7 @@ export default function DashboardLayout({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Link href="/auth/login" className="hidden md:block">
-              <Button
-                variant={"outline"}
-                size={"lg"}
-                className="cursor-pointer"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/auth/register" className="hidden md:block">
-              <Button
-                variant={"default"}
-                size={"lg"}
-                className="cursor-pointer"
-              >
-                Sign Up
-              </Button>
-            </Link>
+            <SignButtons />
             <ThemeSwitcher variant="ghost" />
           </div>
         </header>
