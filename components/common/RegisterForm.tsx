@@ -11,6 +11,7 @@ import {
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
   const {
@@ -27,10 +28,25 @@ const RegisterForm = () => {
     resolver: zodResolver(registerSchema),
   });
 
+  const { push } = useRouter();
+
   const onRegister: SubmitHandler<RegisterInputType> = async data => {
     const jsonData = JSON.stringify(data);
 
     try {
+      toast.promise<{ status: string }>(
+        () =>
+          new Promise(resolve =>
+            setTimeout(() => {
+              resolve({ status: "success" });
+            }, 2000),
+          ),
+        {
+          loading: "Loading...",
+          success: "Registrasi berhasil",
+          error: "Failed to register",
+        },
+      );
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -44,10 +60,10 @@ const RegisterForm = () => {
         console.error("Registrasi gagal:", errorData.message);
         return;
       }
-      const result = await response.json();
-      // console.log("Registrasi berhasil:", result);
-      toast.success("Registrasi berhasil");
-      return result;
+      await response.json();
+      // toast.success("Registrasi berhasil", { position: "top-center" });
+      push("/auth/login");
+      // return result;
     } catch (error) {
       toast.error("Registrasi gagal");
       console.log(error);
