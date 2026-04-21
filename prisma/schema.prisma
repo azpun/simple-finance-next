@@ -30,6 +30,7 @@ model Transactions {
   user        Users             @relation(fields: [userId], references: [id])
 
   createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 }
 
 model Categories {
@@ -40,6 +41,9 @@ model Categories {
   // relasi ke user
   userId      String
   user        Users             @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   // Constraint: Nama kategori unik per-user, bukan unik secara global
   // Name boleh duplikat (User A punya "Makan", User B punya "Makan").
@@ -56,6 +60,9 @@ model Users {
   budgets       Budgets[]          
   transactions  Transactions[]
   categories    Categories[]
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 }
 
 model Budgets {
@@ -66,6 +73,9 @@ model Budgets {
   amount        Int
   month         Int
   year          Int
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   @@unique([userId, year, month])
 }

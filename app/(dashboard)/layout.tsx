@@ -18,6 +18,7 @@ export default function DashboardLayout({
   const navigationMenus = [
     { name: "Dashboard", href: "/dashboard" },
     { name: "Transactions", href: "/transactions" },
+    { name: "Report", href: "/report" },
   ];
   return (
     <SidebarProvider defaultOpen={false}>
@@ -50,7 +51,7 @@ export default function DashboardLayout({
             <ThemeSwitcher variant="ghost" />
           </div>
         </header>
-        {children}
+        <div className="px-2 py-2 md:px-20 md:py-10">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
