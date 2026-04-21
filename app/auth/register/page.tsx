@@ -14,7 +14,7 @@ import Link from "next/link";
 export default function Register() {
   return (
     <div className="sm:flex sm:justify-center sm:items-center">
-      <Card className="w-full my-8 sm:w-md ">
+      <Card className="my-8 sm:w-md">
         <CardHeader className="my-2">
           <div>
             <Link href="/">

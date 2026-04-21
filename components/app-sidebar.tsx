@@ -13,11 +13,14 @@ import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Card } from "./ui/card";
+import Image from "next/image";
+
 // import SignButtons from "./SignButton";
 
 export default function AppSidebar({ className }: { className?: string }) {
   const pathname = usePathname();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   // console.log(status);
   const router = useRouter();
 
@@ -30,6 +33,7 @@ export default function AppSidebar({ className }: { className?: string }) {
   const navigationMenusDashboard = [
     { name: "Dashboard", href: "/dashboard" },
     { name: "Transactions", href: "/transactions" },
+    { name: "Report", href: "/report" },
   ];
 
   return (
@@ -39,7 +43,10 @@ export default function AppSidebar({ className }: { className?: string }) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {pathname === "/dashboard" || pathname === "/transactions" ? (
+          {pathname === "/dashboard" ||
+          pathname === "/transactions" ||
+          pathname === "/report" ||
+          pathname === "/profile" ? (
             <>
               {navigationMenusDashboard.map(menu => (
                 <SidebarMenuItem key={menu.name}>
@@ -65,9 +72,36 @@ export default function AppSidebar({ className }: { className?: string }) {
       <SidebarFooter>
         {/* <SignButtons /> */}
         {status === "authenticated" ? (
-          <Button variant={"destructive"} size={"lg"} onClick={() => signOut()}>
-            Sign Out
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Link href="/profile">
+              <Card className="flex flex-row items-center pb-0 m-0">
+                <Image
+                  src="/user-default.svg"
+                  alt="user"
+                  width={50}
+                  height={50}
+                  className="my-2 ml-2"
+                />
+                <div>
+                  <h3 className="font-bold">{session?.user?.name}</h3>
+                </div>
+              </Card>
+            </Link>
+            <Button
+              variant={"default"}
+              size={"lg"}
+              onClick={() => router.push("/dashboard")}
+            >
+              Dashboard
+            </Button>
+            <Button
+              variant={"destructive"}
+              size={"lg"}
+              onClick={() => signOut()}
+            >
+              Sign Out
+            </Button>
+          </div>
         ) : (
           <>
             <Button variant={"outline"} size={"lg"} onClick={() => signIn()}>

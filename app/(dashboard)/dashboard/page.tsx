@@ -25,6 +25,7 @@ export default function Dashboard() {
     <div>
       <div className="p-6">
         <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
+        <p>Here&apos;s your financial snapshot for this month</p>
       </div>
       <div className="flex flex-col gap-4 md:gap-7">
         {isMobile ? (
