@@ -34,7 +34,7 @@ const LoginForm = () => {
           ),
         {
           loading: "Loading...",
-          success: "Registrasi berhasil",
+          success: "Login berhasil",
           error: "Failed to register",
         },
       );
