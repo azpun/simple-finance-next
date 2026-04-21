@@ -19,7 +19,7 @@ export default function Dashboard() {
   return (
     <div>
       <div className="p-6">
-        <h1 className="text-3xl">Hallo... User!</h1>
+        <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
       </div>
       <div className="flex flex-col gap-4">
         <Card className="flex flex-col gap-6">
