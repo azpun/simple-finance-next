@@ -35,7 +35,7 @@ const LoginForm = () => {
         {
           loading: "Loading...",
           success: "Login berhasil",
-          error: "Failed to register",
+          error: "Login gagal",
         },
       );
       await signIn("credentials", {
