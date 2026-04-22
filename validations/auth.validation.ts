@@ -22,8 +22,34 @@ export const registerSchema = zod
     path: ["confirm"],
   });
 
+export const registerResponseSchema = zod.object({
+  success: zod.boolean(),
+  status: zod.number(),
+  message: zod.string(),
+  data: zod.object({
+    id: zod.string(),
+    email: zod.string(),
+    name: zod.string(),
+  }),
+});
+
+export const errorResponseSchema = zod.object({
+  success: zod.literal("false"),
+  status: zod.number(),
+  message: zod.string(),
+  errors: zod.any(),
+});
+
 export const validateRegister = (payload: RegisterInputType) => {
   return registerSchema.safeParse(payload);
+};
+
+export const validateRegisterResponse = (payload: unknown) => {
+  return registerResponseSchema.safeParse(payload);
+};
+
+export const validateErrorResponse = (payload: unknown) => {
+  return errorResponseSchema.safeParse(payload);
 };
 
 export const loginSchema = zod.object({

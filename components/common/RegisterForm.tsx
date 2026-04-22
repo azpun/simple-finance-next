@@ -7,24 +7,12 @@ import { Input } from "../ui/input";
 import {
   RegisterInputType,
   registerSchema,
+  validateRegisterResponse,
 } from "@/validations/auth.validation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
-type ApiResponse<T> = {
-  success: boolean;
-  status: number;
-  message: string;
-  data: T;
-};
-
-type RegisterResponse = {
-  id: string;
-  email: string;
-  name: string;
-};
 
 const RegisterForm = () => {
   const {
@@ -46,40 +34,40 @@ const RegisterForm = () => {
   const onRegister: SubmitHandler<RegisterInputType> = async data => {
     const jsonData = JSON.stringify(data);
 
-    console.log(jsonData);
-
     try {
-      toast.promise<{ status: string }>(
-        () =>
-          new Promise(resolve =>
-            setTimeout(() => {
-              resolve({ status: "success" });
-            }, 2000),
-          ),
-        {
-          loading: "Loading...",
-          success: "Registrasi berhasil",
-          error: "Failed to register",
-        },
-      );
-      const response = await fetch("/api/auth/register", {
+      const promise = fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: jsonData,
+      }).then(async res => {
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.message);
+        }
+
+        return json;
       });
-      if (!response.ok) {
-        // Menangani error status code (400, 401, 500, dll)
-        const errorData = await response.json();
-        console.error("Registrasi gagal:", errorData.message);
-        return;
+
+      toast.promise(promise, {
+        loading: "Loading...",
+        success: "Registrasi berhasil",
+        error: "Registrasi gagal",
+      });
+
+      const jsonResult = await promise;
+
+      const parsedResult = validateRegisterResponse(jsonResult);
+
+      if (!parsedResult.success) {
+        console.error("Format response tidak sesuai ");
       }
-      const result: ApiResponse<RegisterResponse> = await response.json();
+
       push("/auth/login");
-      return result;
+      return parsedResult.data;
     } catch (error) {
-      toast.error("Registrasi gagal");
       console.log(error);
     }
   };

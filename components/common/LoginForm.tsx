@@ -25,24 +25,17 @@ const LoginForm = () => {
   const { push } = useRouter();
   const onLogin: SubmitHandler<LoginInputType> = async data => {
     try {
-      toast.promise<{ status: string }>(
-        () =>
-          new Promise(resolve =>
-            setTimeout(() => {
-              resolve({ status: "success" });
-            }, 2000),
-          ),
-        {
-          loading: "Loading...",
-          success: "Login berhasil",
-          error: "Login gagal",
-        },
-      );
-      await signIn("credentials", {
+      const promise = signIn("credentials", {
         email: data.email,
         password: data.password,
         callbackUrl: "/dashboard",
       });
+      toast.promise(promise, {
+        loading: "Logging in...",
+        success: "Login successful",
+        error: "Login failed",
+      });
+      await promise;
       push("/dashboard");
     } catch (error) {
       toast.error("Login failed");

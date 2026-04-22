@@ -9,6 +9,7 @@ export async function POST(req: Request) {
   const data = await req.json();
 
   const validated = validateRegister(data);
+
   if (!validated.success) {
     return NextResponse.json({
       success: false,
