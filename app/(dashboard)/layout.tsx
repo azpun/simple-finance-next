@@ -51,7 +51,7 @@ export default function DashboardLayout({
             <ThemeSwitcher variant="ghost" />
           </div>
         </header>
-        <div className="px-2 py-2 md:px-20 md:py-10">{children}</div>
+        <div className="px-2 py-2 md:px-20 md:py-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

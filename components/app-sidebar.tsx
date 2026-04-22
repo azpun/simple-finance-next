@@ -49,8 +49,12 @@ export default function AppSidebar({ className }: { className?: string }) {
           pathname === "/profile" ? (
             <>
               {navigationMenusDashboard.map(menu => (
-                <SidebarMenuItem key={menu.name}>
-                  <SidebarMenuButton asChild className="p-6">
+                <SidebarMenuItem key={menu.name} className={`px-4`}>
+                  <SidebarMenuButton
+                    asChild
+                    className="p-6"
+                    isActive={pathname === menu.href}
+                  >
                     <Link href={menu.href}>{menu.name}</Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -59,8 +63,12 @@ export default function AppSidebar({ className }: { className?: string }) {
           ) : (
             <>
               {navigationMenus.map(menu => (
-                <SidebarMenuItem key={menu.name}>
-                  <SidebarMenuButton asChild className="p-6">
+                <SidebarMenuItem key={menu.name} className={`px-4`}>
+                  <SidebarMenuButton
+                    asChild
+                    className="p-6"
+                    isActive={pathname === menu.href}
+                  >
                     <Link href={menu.href}>{menu.name}</Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
