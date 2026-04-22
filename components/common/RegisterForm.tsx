@@ -13,6 +13,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+type ApiResponse<T> = {
+  success: boolean;
+  status: number;
+  message: string;
+  data: T;
+};
+
+type RegisterResponse = {
+  id: string;
+  email: string;
+  name: string;
+};
+
 const RegisterForm = () => {
   const {
     handleSubmit,
@@ -33,6 +46,8 @@ const RegisterForm = () => {
   const onRegister: SubmitHandler<RegisterInputType> = async data => {
     const jsonData = JSON.stringify(data);
 
+    console.log(jsonData);
+
     try {
       toast.promise<{ status: string }>(
         () =>
@@ -50,7 +65,7 @@ const RegisterForm = () => {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // WAJIB ada agar backend bisa memproses JSON
+          "Content-Type": "application/json",
         },
         body: jsonData,
       });
@@ -60,10 +75,9 @@ const RegisterForm = () => {
         console.error("Registrasi gagal:", errorData.message);
         return;
       }
-      await response.json();
-      // toast.success("Registrasi berhasil", { position: "top-center" });
+      const result: ApiResponse<RegisterResponse> = await response.json();
       push("/auth/login");
-      // return result;
+      return result;
     } catch (error) {
       toast.error("Registrasi gagal");
       console.log(error);

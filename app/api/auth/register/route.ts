@@ -1,3 +1,4 @@
+// app/api/auth/register/route.ts
 import { validateRegister } from "../../../../validations/auth.validation";
 import prisma from "@/lib/connectDB";
 import { hashPassword } from "@/lib/hash";
@@ -9,7 +10,12 @@ export async function POST(req: Request) {
 
   const validated = validateRegister(data);
   if (!validated.success) {
-    return NextResponse.json(validated.error.issues, { status: 400 });
+    return NextResponse.json({
+      success: false,
+      status: 400,
+      message: "Registration failed",
+      errors: validated.error.issues,
+    });
   }
 
   validated.data.password = `${await hashPassword(validated.data.password)}`;
@@ -21,10 +27,15 @@ export async function POST(req: Request) {
       password: validated.data.password,
     },
   });
+
   return NextResponse.json({
     success: true,
     status: 201,
     message: "Registration successful",
-    data: user,
+    data: {
+      id: user.id,
+      email: user.email,
+      name: user.fullname,
+    },
   });
 }
