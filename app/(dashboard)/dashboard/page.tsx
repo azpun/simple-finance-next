@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
+import AddTransactionDialog from "@/components/common/AddTransactionDialog";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -32,7 +32,7 @@ export default function Dashboard() {
           </p>
         </div>
         <div className="hidden md:block">
-          <Button className="mt-6 hover:bg-primary/80">Add Transaction</Button>
+          <AddTransactionDialog />
         </div>
       </div>
       <div className="flex flex-col gap-4 md:gap-7">
