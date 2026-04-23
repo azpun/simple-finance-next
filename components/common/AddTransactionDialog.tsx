@@ -11,15 +11,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Field, FieldGroup } from "../ui/field";
+import { Field, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const AddTransactionDialog = () => {
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild className="md:hidden">
+          {/* Floating button for mobile */}
           <div className="fixed bottom-10 right-10 md:hidden">
             <Button
               type="button"
@@ -30,33 +39,76 @@ const AddTransactionDialog = () => {
           </div>
         </DialogTrigger>
         <DialogTrigger asChild className="hidden md:block">
+          {/* Button for desktop */}
           <Button type="button" className="mt-6 hover:bg-primary/80">
             Add Transaction
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>Add Transaction</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
+              Make transaction to your account
             </DialogDescription>
           </DialogHeader>
           <FieldGroup>
             <Field>
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
+              <FieldLabel htmlFor="title">Title</FieldLabel>
+              <Input id="title" name="title" placeholder="Watch a Movie" />
             </Field>
             <Field>
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
+              <FieldLabel htmlFor="description">Description</FieldLabel>
+              <Input
+                id="description"
+                name="description"
+                placeholder="Watch a Movie at Home with Friends"
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="amount">Amount</FieldLabel>
+              <Input
+                id="amount"
+                name="amount"
+                placeholder="35000"
+                type="number"
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="type">Type</FieldLabel>
+              <Select name="type">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Type</SelectLabel>
+                    <SelectItem value="EXPENSE">Expense</SelectItem>
+                    <SelectItem value="INCOME">Income</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="category">Category</FieldLabel>
+              <Select name="category">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Categories</SelectLabel>
+                    <SelectItem value="Food">Food</SelectItem>
+                    <SelectItem value="Entertainment">Entertainment</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </Field>
           </FieldGroup>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">Add</Button>
           </DialogFooter>
         </DialogContent>
       </form>
