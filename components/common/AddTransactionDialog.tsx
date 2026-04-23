@@ -1,4 +1,5 @@
 "use client";
+import { PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -13,17 +14,25 @@ import {
 import { Field, FieldGroup } from "../ui/field";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import FloatingActionButton from "./FAB";
 
 const AddTransactionDialog = () => {
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild className="md:hidden">
-          <FloatingActionButton />
+          <div className="fixed bottom-10 right-10 md:hidden">
+            <Button
+              type="button"
+              className="font-bold text-white rounded-full size-18 bg-primary hover:bg-primary/80"
+            >
+              <PlusIcon />
+            </Button>
+          </div>
         </DialogTrigger>
         <DialogTrigger asChild className="hidden md:block">
-          <Button className="mt-6 hover:bg-primary/80">Add Transaction</Button>
+          <Button type="button" className="mt-6 hover:bg-primary/80">
+            Add Transaction
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
