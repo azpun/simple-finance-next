@@ -132,6 +132,7 @@ const AddTransactionDialog = () => {
                     name="amount"
                     placeholder="35000"
                     type="number"
+                    // walaupun type number, outputnya string. Jadi diubah ke number
                     onChange={e => {
                       const value = e.target.value;
                       field.onChange(value === "" ? "" : Number(value));
@@ -157,7 +158,6 @@ const AddTransactionDialog = () => {
                     // {...field}
                     onValueChange={field.onChange}
                     value={field.value}
-                    name="type"
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a type" />
@@ -182,6 +182,10 @@ const AddTransactionDialog = () => {
                 render={({ field }) => (
                   <Select
                     value={field.value?.name ?? undefined}
+                    // Data yang dibutuhkan schema berupa Objek Category dengan property name,
+                    // namun hasil dari select berupa string tanpa objek
+                    // onValueChange dibawah untuk memasukan value
+                    // ke property name di dalam objek category
                     onValueChange={value => field.onChange({ name: value })}
                   >
                     <SelectTrigger>
