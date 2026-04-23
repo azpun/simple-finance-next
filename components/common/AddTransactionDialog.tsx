@@ -1,3 +1,4 @@
+// components/common/AddTransactionDialog.tsx
 "use client";
 import { PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
@@ -28,9 +29,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CreateTransactionInputType,
   transactionSchema,
+  validateResponseTransaction,
 } from "@/validations/transaction.validate";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const AddTransactionDialog = () => {
+  const { data: session } = useSession();
   const {
     handleSubmit,
     control,
@@ -41,14 +47,58 @@ const AddTransactionDialog = () => {
       title: "",
       description: "",
       type: "EXPENSE",
+      category: {
+        name: "Not Set",
+      },
     },
     resolver: zodResolver(transactionSchema),
   });
 
-  //   console.log(useForm());
+  const { push } = useRouter();
 
-  const onSubmit: SubmitHandler<CreateTransactionInputType> = data => {
-    console.log(data);
+  const onSubmit: SubmitHandler<CreateTransactionInputType> = async data => {
+    const userId = session?.user?.id as string;
+    const dataWithUserId = { ...data, userId };
+    const jsonData = JSON.stringify(dataWithUserId);
+    // console.log();
+
+    try {
+      const promise = fetch("api/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonData,
+      }).then(async res => {
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.message);
+        }
+
+        return json;
+      });
+
+      toast.promise(promise, {
+        loading: "Creating transaction...",
+        success: "Transaction created successfully",
+        error: "Failed to create transaction",
+      });
+
+      const jsonResult = await promise;
+      const parsedResponse = await validateResponseTransaction(jsonResult);
+
+      if (!parsedResponse.success) {
+        console.error(
+          "Format response tidak sesuai:",
+          parsedResponse.error.message,
+        );
+      }
+      push("/dashboard");
+      return parsedResponse.data;
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Dialog>
@@ -180,28 +230,16 @@ const AddTransactionDialog = () => {
                 control={control}
                 name="category"
                 render={({ field }) => (
-                  <Select
-                    value={field.value?.name ?? undefined}
-                    // Data yang dibutuhkan schema berupa Objek Category dengan property name,
-                    // namun hasil dari select berupa string tanpa objek
-                    // onValueChange dibawah untuk memasukan value
-                    // ke property name di dalam objek category
-                    onValueChange={value => field.onChange({ name: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Categories</SelectLabel>
-                        <SelectItem value="Not Set">Not Set</SelectItem>
-                        <SelectItem value="Food">Food</SelectItem>
-                        <SelectItem value="Entertainment">
-                          Entertainment
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    {...field}
+                    id="category"
+                    name="category"
+                    placeholder="Food"
+                    value={field.value?.name || ""}
+                    onChange={e => {
+                      field.onChange({ name: e.target.value });
+                    }}
+                  />
                 )}
               />
               {errors.category && (

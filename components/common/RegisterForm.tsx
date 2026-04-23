@@ -58,7 +58,6 @@ const RegisterForm = () => {
       });
 
       const jsonResult = await promise;
-
       const parsedResult = validateRegisterResponse(jsonResult);
 
       if (!parsedResult.success) {

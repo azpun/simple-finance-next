@@ -18,6 +18,28 @@ export const transactionSchema = zod.object({
   }),
 });
 
+export const transactionResponseSchema = zod.object({
+  success: zod.boolean(),
+  status: zod.number(),
+  message: zod.string(),
+  data: zod.object({
+    id: zod.string(),
+    amount: zod.number(),
+    title: zod.string(),
+    description: zod.string().optional(),
+    type: zod.enum(["EXPENSE", "INCOME"]),
+    category: zod.object({
+      name: zod
+        .string()
+        .max(15, "Category name cannot be more than 15 characters long"),
+    }),
+  }),
+});
+
+export const validateResponseTransaction = (payload: unknown) => {
+  return transactionResponseSchema.safeParseAsync(payload);
+};
+
 export const createTrasactionValidation = (
   payload: CreateTransactionInputType,
 ) => {
