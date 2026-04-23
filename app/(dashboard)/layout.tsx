@@ -1,4 +1,5 @@
 import AppSidebar from "@/components/app-sidebar";
+import FloatingActionButton from "@/components/common/FAB";
 import SignButtons from "@/components/SignButton";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { Separator } from "@/components/ui/separator";
@@ -52,6 +53,7 @@ export default function DashboardLayout({
           </div>
         </header>
         <div className="px-2 py-2 md:px-20 md:py-6">{children}</div>
+        <FloatingActionButton />
       </SidebarInset>
     </SidebarProvider>
   );

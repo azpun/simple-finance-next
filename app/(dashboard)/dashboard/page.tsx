@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -23,9 +24,16 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="p-6">
-        <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
-        <p>Here&apos;s your financial snapshot for this month</p>
+      <div className="p-6 md:flex md:justify-between">
+        <div className="flex flex-col">
+          <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
+          <p className="tracking-tight text-balance">
+            Here&apos;s your financial snapshot for this month
+          </p>
+        </div>
+        <div className="hidden md:block">
+          <Button className="mt-6 hover:bg-primary/80">Add Transaction</Button>
+        </div>
       </div>
       <div className="flex flex-col gap-4 md:gap-7">
         {isMobile ? (

@@ -67,10 +67,18 @@ export default function Transactions() {
   ];
   return (
     <div>
-      <div className="p-6">
-        <h1 className="text-2xl">Transactions</h1>
-        <p>Here&apos;s your transaction list</p>
+      <div className="p-6 md:flex md:justify-between">
+        <div className="flex flex-col">
+          <h1 className="text-3xl">Transactions</h1>
+          <p className="tracking-tight text-balance">
+            Here&apos;s your transaction list
+          </p>
+        </div>
+        <div className="hidden md:block">
+          <Button className="mt-6 hover:bg-primary/80">Add Transaction</Button>
+        </div>
       </div>
+
       <div className="p-6">This is for Filter and Search</div>
 
       {isMobile ? (
