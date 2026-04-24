@@ -62,8 +62,6 @@ export async function POST(req: Request) {
 
 export async function GET() {
   const session = await auth();
-  console.log(session?.user?.id);
-
   const userId = session?.user?.id;
 
   try {

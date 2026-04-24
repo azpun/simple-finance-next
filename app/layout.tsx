@@ -3,9 +3,9 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
+import { ProviderTheme } from "@/components/providers/ProviderTheme";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -43,10 +43,10 @@ export default function RootLayout({
       )}
     >
       <body className="flex flex-col min-h-full">
-        <ThemeProvider attribute="class" enableSystem>
+        <ProviderTheme>
           <SessionProvider>{children}</SessionProvider>
           <Toaster />
-        </ThemeProvider>
+        </ProviderTheme>
       </body>
     </html>
   );
