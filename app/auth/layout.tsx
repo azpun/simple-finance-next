@@ -1,4 +1,3 @@
-import ReactQueryProvider from "@/components/providers/ReactQuery";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 export default function AuthLayout({
@@ -13,9 +12,7 @@ export default function AuthLayout({
           <ThemeSwitcher variant="ghost" />
         </div>
       </header>
-      <main className="px-4">
-        <ReactQueryProvider>{children}</ReactQueryProvider>
-      </main>
+      <main className="px-4">{children}</main>
     </div>
   );
 }

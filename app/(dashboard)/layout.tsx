@@ -1,5 +1,7 @@
+// 'use client';
 import AppSidebar from "@/components/app-sidebar";
 import AddTransactionDialog from "@/components/common/AddTransactionDialog";
+import ReactQueryProvider from "@/components/providers/ReactQuery";
 import SignButtons from "@/components/SignButton";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { Separator } from "@/components/ui/separator";
@@ -52,7 +54,9 @@ export default function DashboardLayout({
             <ThemeSwitcher variant="ghost" />
           </div>
         </header>
-        <div className="px-2 py-2 md:px-20 md:py-6">{children}</div>
+        <div className="px-2 py-2 md:px-20 md:py-6">
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </div>
         <div className="block md:hidden">
           <AddTransactionDialog />
         </div>

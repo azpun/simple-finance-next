@@ -1,7 +1,6 @@
 // app/api/transactions/route.ts
-// import prisma from "@/lib/connectDB";
-// import { CreateTransactionInputType } from "@/validations/transaction.validate";
 
+import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 
@@ -56,6 +55,38 @@ export async function POST(req: Request) {
       success: false,
       status: 500,
       message: "Error creating transaction",
+      error: error,
+    });
+  }
+}
+
+export async function GET() {
+  const session = await auth();
+  console.log(session?.user?.id);
+
+  const userId = session?.user?.id;
+
+  try {
+    const transactions = await prisma.transactions.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        category: true,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      status: 200,
+      message: "Transactions fetched successfully",
+      data: transactions,
+    });
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return NextResponse.json({
+      success: false,
+      status: 500,
+      message: "Error fetching transactions",
       error: error,
     });
   }

@@ -9,6 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Transaction } from "@/types/transactions";
+
+import { useQuery } from "@tanstack/react-query";
 import { MoreHorizontalIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -27,44 +30,16 @@ export default function Transactions() {
 
   const isMobile = useIsMobile();
 
-  const dummyData = [
-    {
-      id: 1,
-      amount: 1000,
-      title: "Transaction 1",
-      description: "Description 1",
-      type: "INCOME",
-      date: "2023-01-01",
-      categoryId: 1,
-      category: "Category 1",
-      userId: 1,
-      createdAt: "2023-01-01",
+  const { data: transactions } = useQuery<Transaction[]>({
+    queryKey: ["transactions"],
+    queryFn: async () => {
+      const response = await fetch(`/api/transactions`);
+      const result = await response.json();
+
+      return result.data;
     },
-    {
-      id: 2,
-      amount: 2000,
-      title: "Transaction 2",
-      description: "Description 2",
-      type: "EXPENSE",
-      date: "2023-01-02",
-      categoryId: 2,
-      category: "Category 1",
-      userId: 1,
-      createdAt: "2023-01-02",
-    },
-    {
-      id: 3,
-      amount: 3000,
-      title: "Transaction 3",
-      description: "Description 3",
-      type: "INCOME",
-      date: "2023-01-03",
-      categoryId: 1,
-      category: "Category 1",
-      userId: 1,
-      createdAt: "2023-01-03",
-    },
-  ];
+  });
+
   return (
     <div>
       <div className="p-6 md:flex md:justify-between">
@@ -83,14 +58,14 @@ export default function Transactions() {
 
       {isMobile ? (
         <div className="flex flex-col gap-4">
-          {dummyData.map(transaction => (
+          {transactions?.map(transaction => (
             <Card
               key={transaction.id}
               className="flex flex-row items-center justify-between p-6"
             >
               <div>
                 <h3>{transaction.title}</h3>
-                <p>{transaction.category}</p>
+                <p>{transaction.category.name}</p>
               </div>
               <div>
                 <p>Rp. {transaction.amount}</p>
@@ -128,10 +103,10 @@ export default function Transactions() {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {dummyData.map(transaction => (
+            {transactions?.map(transaction => (
               <tr key={transaction.id}>
                 <td>{transaction.title}</td>
-                <td>{transaction.category}</td>
+                <td>{transaction.category.name}</td>
                 <td>{transaction.amount}</td>
                 <td>{transaction.type}</td>
                 <td>{transaction.date}</td>
