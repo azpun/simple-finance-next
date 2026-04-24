@@ -8,6 +8,8 @@ import { useEffect } from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import AddTransactionDialog from "@/components/common/AddTransactionDialog";
+import { useQuery } from "@tanstack/react-query";
+import { Transaction } from "@/types/transactions";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -21,6 +23,35 @@ export default function Dashboard() {
       router.push("/auth/login");
     }
   }, [status, router]);
+
+  const { data: dailyTransactions } = useQuery<Transaction[]>({
+    queryKey: ["transactions"],
+    queryFn: async () => {
+      const response = await fetch(`/api/transactions`);
+      const result = await response.json();
+
+      console.log(result);
+
+      result.dailyTransactions = result.dailyTransactions.map(
+        (transaction: Transaction) => {
+          return {
+            ...transaction,
+            date: new Date(transaction.date).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          };
+        },
+      );
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      return result.dailyTransactions;
+    },
+  });
 
   return (
     <div>
@@ -109,9 +140,9 @@ export default function Dashboard() {
             <CardContent>
               <div>
                 <ul>
-                  <li>Transaction 1</li>
-                  <li>Transaction 2</li>
-                  <li>Transaction 3</li>
+                  {dailyTransactions?.map(transaction => (
+                    <li key={transaction.id}>{transaction.title}</li>
+                  ))}
                 </ul>
               </div>
             </CardContent>

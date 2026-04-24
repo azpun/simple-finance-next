@@ -3,6 +3,8 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
+import { startOfDay, endOfDay } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 export async function POST(req: Request) {
   const data = await req.json();
@@ -63,6 +65,12 @@ export async function POST(req: Request) {
 export async function GET() {
   const session = await auth();
   const userId = session?.user?.id;
+  const timezone = "Asia/Jakarta";
+  const nowUtc = new Date();
+  const nowLocal = toZonedTime(nowUtc, timezone);
+
+  const start = startOfDay(nowLocal);
+  const end = endOfDay(nowLocal);
 
   try {
     const transactions = await prisma.transactions.findMany({
@@ -73,11 +81,22 @@ export async function GET() {
         category: true,
       },
     });
+
+    const transactionsDate = await prisma.transactions.findMany({
+      where: {
+        date: {
+          gte: start,
+          lte: end,
+        },
+      },
+    });
+
     return NextResponse.json({
       success: true,
       status: 200,
       message: "Transactions fetched successfully",
       data: transactions,
+      dailyTransactions: transactionsDate,
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);
