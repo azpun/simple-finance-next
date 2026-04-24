@@ -36,6 +36,21 @@ export default function Transactions() {
       const response = await fetch(`/api/transactions`);
       const result = await response.json();
 
+      result.data = result.data.map((transaction: Transaction) => {
+        return {
+          ...transaction,
+          date: new Date(transaction.date).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }),
+        };
+      });
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
       return result.data;
     },
   });
@@ -63,13 +78,12 @@ export default function Transactions() {
               key={transaction.id}
               className="flex flex-row items-center justify-between p-6"
             >
-              <div>
-                <h3>{transaction.title}</h3>
+              <div className="flex flex-col gap-3">
+                <h3 className="text-lg">{transaction.title}</h3>
                 <p>{transaction.category.name}</p>
-              </div>
-              <div>
                 <p>Rp. {transaction.amount}</p>
               </div>
+
               <div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -104,11 +118,11 @@ export default function Transactions() {
           </thead>
           <tbody className="divide-y">
             {transactions?.map(transaction => (
-              <tr key={transaction.id}>
+              <tr key={transaction.id} className="p-2 text-sm">
                 <td>{transaction.title}</td>
-                <td>{transaction.category.name}</td>
-                <td>{transaction.amount}</td>
-                <td>{transaction.type}</td>
+                <td className="capitalize">{transaction.category.name}</td>
+                <td>Rp.{transaction.amount}</td>
+                <td className="">{transaction.type}</td>
                 <td>{transaction.date}</td>
                 <td>
                   <DropdownMenu>
