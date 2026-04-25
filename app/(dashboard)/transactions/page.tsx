@@ -61,93 +61,102 @@ export default function Transactions() {
 
       <div className="p-6">This is for Filter and Search</div>
 
-      {isMobile ? (
-        <div className="flex flex-col gap-4">
-          {result?.data?.transactions.map(transaction => (
-            <Card
-              key={transaction.id}
-              className="flex flex-row items-center justify-between p-6"
-            >
-              <div className="flex flex-col gap-3">
-                <h3 className="text-lg">{transaction.title}</h3>
-                <p>{transaction.category.name}</p>
-                <p>Rp. {transaction.amount}</p>
-              </div>
+      {result?.data.transactions.length !== 0 ? (
+        <>
+          {isMobile ? (
+            <div className="flex flex-col gap-4">
+              {isLoading && <p>Loading...</p>}
+              {result?.data?.transactions.map(transaction => (
+                <Card
+                  key={transaction.id}
+                  className="flex flex-row items-center justify-between p-6"
+                >
+                  <div className="flex flex-col gap-3">
+                    <h3 className="text-lg">{transaction.title}</h3>
+                    <p>{transaction.category.name}</p>
+                    <p>Rp. {transaction.amount}</p>
+                  </div>
 
-              <div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="size-14">
-                      <MoreHorizontalIcon />
-                      <span className="sr-only">Open Menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive">
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </Card>
-          ))}
-        </div>
+                  <div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="size-14">
+                          <MoreHorizontalIcon />
+                          <span className="sr-only">Open Menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive">
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <table className="w-full border border-slate-700">
+              <thead className="">
+                <tr className="text-left bg-slate-700">
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {isLoading && (
+                  <tr>
+                    <td colSpan={6} className="p-2 text-center">
+                      Loading...
+                    </td>
+                  </tr>
+                )}
+                {result?.data?.transactions.map(transaction => (
+                  <tr key={transaction.id} className="p-2 text-sm">
+                    <td>{transaction.title}</td>
+                    <td className="capitalize">{transaction.category.name}</td>
+                    <td>Rp.{transaction.amount}</td>
+                    <td className="">{transaction.type}</td>
+                    <td>
+                      {new Date(transaction.date).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="size-10">
+                            <MoreHorizontalIcon />
+                            <span className="sr-only">Open Menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="center">
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem variant="destructive">
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </>
       ) : (
-        <table className="w-full border border-slate-700">
-          <thead className="">
-            <tr className="text-left bg-slate-700">
-              <th>Title</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Type</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {isLoading && (
-              <tr>
-                <td colSpan={6} className="p-2 text-center">
-                  Loading...
-                </td>
-              </tr>
-            )}
-            {result?.data?.transactions.map(transaction => (
-              <tr key={transaction.id} className="p-2 text-sm">
-                <td>{transaction.title}</td>
-                <td className="capitalize">{transaction.category.name}</td>
-                <td>Rp.{transaction.amount}</td>
-                <td className="">{transaction.type}</td>
-                <td>
-                  {new Date(transaction.date).toLocaleDateString("id-ID", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </td>
-                <td>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="size-10">
-                        <MoreHorizontalIcon />
-                        <span className="sr-only">Open Menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem variant="destructive">
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="p-6 text-center">
+          <p>No transaction found</p>
+        </div>
       )}
     </div>
   );

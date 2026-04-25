@@ -3,8 +3,8 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
-import { startOfDay, endOfDay } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { startOfMonth, endOfMonth } from "date-fns";
+// import { toZonedTime } from "date-fns-tz";
 
 export async function POST(req: Request) {
   const data = await req.json();
@@ -65,12 +65,18 @@ export async function POST(req: Request) {
 export async function GET() {
   const session = await auth();
   const userId = session?.user?.id;
-  const timezone = "Asia/Jakarta";
-  const nowUtc = new Date();
-  const nowLocal = toZonedTime(nowUtc, timezone);
+  console.log(userId);
 
-  const start = startOfDay(nowLocal);
-  const end = endOfDay(nowLocal);
+  // const timezone = "Asia/Jakarta";
+  const nowUtc = new Date();
+  const month = nowUtc.getMonth() + 1; // Months are zero-indexed
+  const year = nowUtc.getFullYear();
+  // const nowLocal = toZonedTime(nowUtc, timezone);
+
+  const referenceDate = new Date(year, month - 1); // First day of the current month
+
+  const start = startOfMonth(referenceDate);
+  const end = endOfMonth(referenceDate);
 
   try {
     const transactions = await prisma.transactions.findMany({
@@ -85,6 +91,7 @@ export async function GET() {
 
     const transactionsDate = await prisma.transactions.findMany({
       where: {
+        userId: userId,
         date: {
           gte: start,
           lte: end,

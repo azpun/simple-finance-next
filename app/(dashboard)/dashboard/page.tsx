@@ -87,7 +87,7 @@ export default function Dashboard() {
             </Card>
             <Card>
               <CardHeader>
-                <h3>Spend so far</h3>
+                <h3>Expenses so far </h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <p className="text-xl font-bold">
@@ -145,11 +145,21 @@ export default function Dashboard() {
                                   {transaction.title}
                                 </h4>
                                 <p className="text-xs capitalize">
-                                  {transaction.category.name}
+                                  {transaction.category.name} - (
+                                  {transaction.type})
                                 </p>
                               </div>
-                              <div>
+                              <div className="flex flex-col items-end">
                                 <p>Rp. {transaction.amount}</p>
+                                <p className="text-xs">
+                                  {new Date(
+                                    transaction.date,
+                                  ).toLocaleDateString("id-ID", {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                  })}
+                                </p>
                               </div>
                             </div>
                           </li>
