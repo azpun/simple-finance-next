@@ -25,7 +25,7 @@ export default function Dashboard() {
   }, [status, router]);
 
   // Get transactions
-  const { data: dailyTransactions } = useQuery<Transaction[]>({
+  const { data: dailyTransactions, isLoading } = useQuery<Transaction[]>({
     queryKey: ["transactions"],
     queryFn: async () => {
       const response = await fetch(`/api/transactions`);
@@ -134,17 +134,21 @@ export default function Dashboard() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="flex flex-col gap-6">
             <CardHeader>
               <h3 className="text-xl">Recent Transactions</h3>
             </CardHeader>
-            <CardContent className="overflow-y-scroll">
-              <div>
-                <ul className="flex flex-col gap-4 p-2">
+            <CardContent>
+              <div className="overflow-y-auto max-h-76">
+                <ul className="flex flex-col gap-2 p-2 ">
                   {dailyTransactions?.length !== 0 ? (
                     <>
+                      {isLoading && <p className="text-center">Loading...</p>}
                       {dailyTransactions?.map(transaction => (
-                        <Card key={transaction.id} className="px-3 mx-0">
+                        <Card
+                          key={transaction.id}
+                          className="px-3 mx-0 border-0"
+                        >
                           <li key={transaction.id}>
                             <div className="flex items-center justify-between">
                               <div>
