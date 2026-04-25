@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import { ProviderTheme } from "@/components/providers/ProviderTheme";
+import ReactQueryProvider from "@/components/providers/ReactQuery";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -44,7 +45,9 @@ export default function RootLayout({
     >
       <body className="flex flex-col min-h-full">
         <ProviderTheme>
-          <SessionProvider>{children}</SessionProvider>
+          <ReactQueryProvider>
+            <SessionProvider>{children}</SessionProvider>
+          </ReactQueryProvider>
           <Toaster />
         </ProviderTheme>
       </body>

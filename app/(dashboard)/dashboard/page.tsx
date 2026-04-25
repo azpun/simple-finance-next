@@ -30,8 +30,6 @@ export default function Dashboard() {
       const response = await fetch(`/api/transactions`);
       const result = await response.json();
 
-      console.log(result);
-
       result.dailyTransactions = result.dailyTransactions.map(
         (transaction: Transaction) => {
           return {
@@ -52,6 +50,8 @@ export default function Dashboard() {
       return result.dailyTransactions;
     },
   });
+
+  useEffect(() => {}, [dailyTransactions]);
 
   return (
     <div>
@@ -139,10 +139,18 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div>
-                <ul>
-                  {dailyTransactions?.map(transaction => (
-                    <li key={transaction.id}>{transaction.title}</li>
-                  ))}
+                <ul className="p-2">
+                  {dailyTransactions?.length !== 0 ? (
+                    <>
+                      {dailyTransactions?.map(transaction => (
+                        <li key={transaction.id}>{transaction.title}</li>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      <li>There are no recent transactions yet</li>
+                    </>
+                  )}
                 </ul>
               </div>
             </CardContent>

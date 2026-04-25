@@ -29,14 +29,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CreateTransactionInputType,
   transactionSchema,
-  validateResponseTransaction,
 } from "@/validations/transaction.validate";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+
+// import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import useAddTransaction from "@/hooks/useAddTransaction";
+import { useState } from "react";
 
 const AddTransactionDialog = () => {
   const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
   const {
     handleSubmit,
     control,
@@ -54,55 +56,26 @@ const AddTransactionDialog = () => {
     resolver: zodResolver(transactionSchema),
   });
 
-  const { push } = useRouter();
+  // const { push } = useRouter();
+  const { mutateAsync } = useAddTransaction();
 
   const onSubmit: SubmitHandler<CreateTransactionInputType> = async data => {
     const userId = session?.user?.id as string;
     const dataWithUserId = { ...data, userId };
-    const jsonData = JSON.stringify(dataWithUserId);
-    // console.log();
 
-    try {
-      const promise = fetch("api/transactions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonData,
-      }).then(async res => {
-        const json = await res.json();
-
-        if (!res.ok) {
-          throw new Error(json.message);
-        }
-
-        return json;
-      });
-
-      toast.promise(promise, {
-        loading: "Creating transaction...",
-        success: "Transaction created successfully",
-        error: "Failed to create transaction",
-      });
-
-      const jsonResult = await promise;
-      const parsedResponse = await validateResponseTransaction(jsonResult);
-
-      if (!parsedResponse.success) {
-        console.error(
-          "Format response tidak sesuai:",
-          parsedResponse.error.message,
-        );
-      }
-      push("/dashboard");
-      return parsedResponse.data;
-    } catch (error) {
-      console.log(error);
-    }
+    await mutateAsync(dataWithUserId, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
   return (
-    <Dialog>
-      <DialogTrigger asChild className="md:hidden">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        asChild
+        className="md:hidden"
+        onClick={() => setOpen(true)}
+      >
         {/* Floating button for mobile */}
         <div className="fixed bottom-10 right-10 md:hidden">
           <Button

@@ -54,7 +54,7 @@ export default function DashboardLayout({
             <ThemeSwitcher variant="ghost" />
           </div>
         </header>
-        <div className="px-2 py-2 md:px-20 md:py-6">
+        <div className="px-2 py-2 md:px-10 md:py-6 lg:px-20">
           <ReactQueryProvider>{children}</ReactQueryProvider>
         </div>
         <div className="block md:hidden">
