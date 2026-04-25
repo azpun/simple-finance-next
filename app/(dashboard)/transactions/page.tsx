@@ -9,7 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Transaction } from "@/types/transactions";
+
+import { TransactionResponse } from "@/validations/transaction.validate";
 
 import { useQuery } from "@tanstack/react-query";
 import { MoreHorizontalIcon } from "lucide-react";
@@ -30,28 +31,17 @@ export default function Transactions() {
 
   const isMobile = useIsMobile();
 
-  const { data: transactions } = useQuery<Transaction[]>({
+  const { data: result, isLoading } = useQuery<TransactionResponse>({
     queryKey: ["transactions"],
     queryFn: async () => {
       const response = await fetch(`/api/transactions`);
-      const result = await response.json();
-
-      result.data = result.data.map((transaction: Transaction) => {
-        return {
-          ...transaction,
-          date: new Date(transaction.date).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          }),
-        };
-      });
+      const result: TransactionResponse = await response.json();
 
       if (!result.success) {
         throw new Error(result.message);
       }
 
-      return result.data;
+      return result;
     },
   });
 
@@ -73,7 +63,7 @@ export default function Transactions() {
 
       {isMobile ? (
         <div className="flex flex-col gap-4">
-          {transactions?.map(transaction => (
+          {result?.data?.transactions.map(transaction => (
             <Card
               key={transaction.id}
               className="flex flex-row items-center justify-between p-6"
@@ -117,13 +107,26 @@ export default function Transactions() {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {transactions?.map(transaction => (
+            {isLoading && (
+              <tr>
+                <td colSpan={6} className="p-2 text-center">
+                  Loading...
+                </td>
+              </tr>
+            )}
+            {result?.data?.transactions.map(transaction => (
               <tr key={transaction.id} className="p-2 text-sm">
                 <td>{transaction.title}</td>
                 <td className="capitalize">{transaction.category.name}</td>
                 <td>Rp.{transaction.amount}</td>
                 <td className="">{transaction.type}</td>
-                <td>{transaction.date}</td>
+                <td>
+                  {new Date(transaction.date).toLocaleDateString("id-ID", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </td>
                 <td>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

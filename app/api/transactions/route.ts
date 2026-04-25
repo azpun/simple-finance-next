@@ -81,6 +81,7 @@ export async function GET() {
         category: true,
       },
     });
+    // console.log(transactions);
 
     const transactionsDate = await prisma.transactions.findMany({
       where: {
@@ -94,12 +95,27 @@ export async function GET() {
       },
     });
 
+    // console.log(transactionsDate);
+
+    const expansesTransactions = transactionsDate.filter(
+      transaction => transaction.type === "EXPENSE",
+    );
+    const sumOfExpanses = expansesTransactions.reduce<number>(
+      (sum, transaction) => sum + transaction.amount,
+      0,
+    );
+
+    // console.log("Sum of expanses today:", sumOfExpanses);
+
     return NextResponse.json({
       success: true,
       status: 200,
       message: "Transactions fetched successfully",
-      data: transactions,
-      dailyTransactions: transactionsDate,
+      data: {
+        transactions: transactions,
+        dailyTransactions: transactionsDate,
+        sumOfExpanses: sumOfExpanses,
+      },
     });
   } catch (error) {
     console.error("Error fetching transactions:", error);
