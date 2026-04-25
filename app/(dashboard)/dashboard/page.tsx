@@ -24,6 +24,7 @@ export default function Dashboard() {
     }
   }, [status, router]);
 
+  // Get transactions
   const { data: dailyTransactions } = useQuery<Transaction[]>({
     queryKey: ["transactions"],
     queryFn: async () => {
@@ -43,6 +44,8 @@ export default function Dashboard() {
         },
       );
 
+      console.log(result.dailyTransactions);
+
       if (!result.success) {
         throw new Error(result.message);
       }
@@ -50,8 +53,6 @@ export default function Dashboard() {
       return result.dailyTransactions;
     },
   });
-
-  useEffect(() => {}, [dailyTransactions]);
 
   return (
     <div>
@@ -137,18 +138,34 @@ export default function Dashboard() {
             <CardHeader>
               <h3 className="text-xl">Recent Transactions</h3>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-y-scroll">
               <div>
-                <ul className="p-2">
+                <ul className="flex flex-col gap-4 p-2">
                   {dailyTransactions?.length !== 0 ? (
                     <>
                       {dailyTransactions?.map(transaction => (
-                        <li key={transaction.id}>{transaction.title}</li>
+                        <Card key={transaction.id} className="px-3 mx-0">
+                          <li key={transaction.id}>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h4 className="font-bold ">
+                                  {transaction.title}
+                                </h4>
+                                <p className="text-xs capitalize">
+                                  {transaction.category.name}
+                                </p>
+                              </div>
+                              <div>
+                                <p>Rp. {transaction.amount}</p>
+                              </div>
+                            </div>
+                          </li>
+                        </Card>
                       ))}
                     </>
                   ) : (
                     <>
-                      <li>There are no recent transactions yet</li>
+                      <li>There are no recent transactions today</li>
                     </>
                   )}
                 </ul>

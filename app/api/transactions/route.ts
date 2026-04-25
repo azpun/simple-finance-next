@@ -89,6 +89,9 @@ export async function GET() {
           lte: end,
         },
       },
+      include: {
+        category: true,
+      },
     });
 
     return NextResponse.json({
