@@ -9,8 +9,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     handleSubmit,
     control,
@@ -73,15 +76,27 @@ const LoginForm = () => {
               control={control}
               name="password"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Input your password"
-                  className={`${errors.password ? "border-2 border-red-500" : ""}`}
-                  aria-invalid={errors.password ? "true" : "false"}
-                />
+                <>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      placeholder="Input your password"
+                      className={`${errors.password ? "border-2 border-red-500" : ""} `}
+                      aria-invalid={errors.password ? "true" : "false"}
+                    />
+                    <Button
+                      className="absolute top-1 right-1 md:cursor-pointer"
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Eye /> : <EyeOff />}
+                    </Button>
+                  </div>
+                </>
               )}
             />
             {errors.password?.message && (

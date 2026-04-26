@@ -13,8 +13,11 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const RegisterForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     handleSubmit,
     control,
@@ -132,16 +135,28 @@ const RegisterForm = () => {
                 },
               }}
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Input your password"
-                  autoComplete="false"
-                  className={`${errors.password ? "border-2 border-red-500" : ""}`}
-                  aria-invalid={errors.password ? "true" : "false"}
-                />
+                <>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      placeholder="Input your password"
+                      autoComplete="false"
+                      className={`${errors.password ? "border-2 border-red-500" : ""}`}
+                      aria-invalid={errors.password ? "true" : "false"}
+                    />
+                    <Button
+                      className="absolute top-1 right-1"
+                      variant="ghost"
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Eye /> : <EyeOff />}
+                    </Button>
+                  </div>
+                </>
               )}
             />
             {errors.password?.message !== "" && (
@@ -154,16 +169,28 @@ const RegisterForm = () => {
               control={control}
               name="confirm"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="password"
-                  id="confirm-password"
-                  name="confirm"
-                  placeholder="Input your password again"
-                  autoComplete="false"
-                  className={`${errors.confirm ? "border-2 border-red-500" : ""}`}
-                  aria-invalid={errors.confirm ? "true" : "false"}
-                />
+                <>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      id="confirm-password"
+                      name="confirm"
+                      placeholder="Input your password again"
+                      autoComplete="false"
+                      className={`${errors.confirm ? "border-2 border-red-500" : ""}`}
+                      aria-invalid={errors.confirm ? "true" : "false"}
+                    />
+                    <Button
+                      className="absolute top-1 right-1"
+                      variant="ghost"
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Eye /> : <EyeOff />}
+                    </Button>
+                  </div>
+                </>
               )}
             />
             {errors.confirm?.message !== "" && (

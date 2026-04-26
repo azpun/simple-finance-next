@@ -27,17 +27,37 @@ export default function Home() {
         </div>
       </div>
       <div>
-        <div className="flex flex-col items-center justify-center gap-2 text-center ">
+        <div className="flex flex-col items-center justify-center gap-4 text-center ">
           <div>
-            <h2>Features</h2>
-            <p>
+            <h2 className="text-xl md:text-center md:text-2xl">Features</h2>
+            <p className="text-sm md:text-center text-balance md:text-lg">
               Dalam aplikasi ini terdapat beberapa fitur, diantaranya adalah
             </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <Card>Smart Transaction Tracking</Card>
-            <Card>Category Management</Card>
-            <Card>Income vs Expense Analytics</Card>
+          <div className="grid w-full gap-4 md:px-10 md:grid-cols-3">
+            <Card className="p-5 md:mx-0 md:p-10">
+              <h3 className="text-lg md:text-xl">Smart Transaction Tracking</h3>
+              <p>
+                Pencatatan pengeluaran dan pemasukan dengan detail judul,
+                nominal, dan tanggal otomatis.
+              </p>
+            </Card>
+            <Card className="p-5 md:mx-0 md:p-10">
+              <h3 className="text-lg md:text-xl">Category Management</h3>
+              <p>
+                Pengelompokan transaksi berdasarkan kategori (seperti Makanan,
+                Transportasi, Hiburan) untuk melihat ke mana uang Anda pergi.
+              </p>
+            </Card>
+            <Card className="p-5 md:mx-0 md:p-10">
+              <h3 className="text-lg md:text-xl">
+                Income vs Expense Analytics
+              </h3>
+              <p>
+                Visualisasi perbandingan antara pemasukan (INCOME) dan
+                pengeluaran (EXPENSE) secara real-time.
+              </p>
+            </Card>
           </div>
         </div>
       </div>
