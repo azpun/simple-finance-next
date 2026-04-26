@@ -10,8 +10,9 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import React from "react";
-
-export const description = "A donut chart";
+import { useQuery } from "@tanstack/react-query";
+import { Transaction } from "@/types/transactions";
+import { TransactionResponse } from "@/validations/transaction.validate";
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -48,6 +49,22 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartPieDonut() {
+  const { data: result } = useQuery<TransactionResponse>({
+    queryKey: ["transactions"],
+    queryFn: async () => {
+      const response = await fetch("/api/transactions");
+      const result: TransactionResponse = await response.json();
+
+      console.log();
+
+      if (!result.success) {
+        console.error(result);
+      }
+      return result;
+    },
+  });
+  // console.log(category);
+
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
   }, []);

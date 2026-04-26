@@ -87,7 +87,7 @@ export default function Dashboard() {
             </Card>
             <Card>
               <CardHeader>
-                <h3>Expenses so far </h3>
+                <h3>Spend so far </h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <p className="text-xl font-bold">

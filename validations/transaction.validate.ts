@@ -42,6 +42,23 @@ export const transactionSchema = zod.object({
   }),
 });
 
+export type CreateTransactionInputType = zod.infer<typeof transactionSchema>;
+
+export const validateResponseTransaction = (payload: unknown) => {
+  return transactionResponseSchema.safeParseAsync(payload);
+};
+
+const withPercentege = zod.object({
+  _sum: zod.object({
+    amount: zod.number(),
+  }),
+  categoryId: zod.string(),
+  category: zod.string(),
+  percentage: zod.number(),
+});
+
+export type TransactionWithPercentage = zod.infer<typeof withPercentege>;
+
 export const transactionResponseSchema = zod.object({
   success: zod.boolean(),
   status: zod.number(),
@@ -50,33 +67,23 @@ export const transactionResponseSchema = zod.object({
     transactions: zod.array(TransactionSchema),
     dailyTransactions: zod.array(TransactionSchema),
     sumOfExpanses: zod.number(),
+    withPercentege: zod.array(withPercentege),
   }),
 });
 
 export type TransactionResponse = zod.infer<typeof transactionResponseSchema>;
+// export const createTrasactionValidation = (
+//   payload: CreateTransactionInputType,
+// ) => {
+//   return transactionSchema.safeParseAsync(payload);
+// };
 
-export const validateResponseTransaction = (payload: unknown) => {
-  return transactionResponseSchema.safeParseAsync(payload);
-};
-
-export const createTrasactionValidation = (
-  payload: CreateTransactionInputType,
-) => {
-  return transactionSchema.safeParseAsync(payload);
-};
-
-export const updateTrasactionValidation = (
-  payload: UpdateTransactionInputType,
-) => {
-  return transactionSchemaPartial.safeParseAsync(payload);
-};
-
-export const transactionSchemaPartial = transactionSchema.partial();
-
-export type Transaction = zod.infer<typeof TransactionSchema>;
-
-export type CreateTransactionInputType = zod.infer<typeof transactionSchema>;
-
-export type UpdateTransactionInputType = zod.infer<
-  typeof transactionSchemaPartial
->;
+// export const transactionSchemaPartial = transactionSchema.partial();
+// export const updateTrasactionValidation = (
+//   payload: UpdateTransactionInputType,
+// ) => {
+//   return transactionSchemaPartial.safeParseAsync(payload);
+// };
+// export type UpdateTransactionInputType = zod.infer<
+//   typeof transactionSchemaPartial
+// >;

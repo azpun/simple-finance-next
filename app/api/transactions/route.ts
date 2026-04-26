@@ -1,9 +1,10 @@
 // app/api/transactions/route.ts
-
+"use server";
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 import { startOfMonth, endOfMonth } from "date-fns";
+
 // import { toZonedTime } from "date-fns-tz";
 
 export async function POST(req: Request) {
@@ -113,6 +114,73 @@ export async function GET() {
 
     // console.log("Sum of expanses today:", sumOfExpanses);
 
+    const transactionGroupByCategories = await prisma.transactions.groupBy({
+      by: ["categoryId"],
+      where: {
+        userId: userId,
+        type: "EXPENSE",
+        date: {
+          gte: start,
+          lte: end,
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const categoryids = transactionGroupByCategories.map(
+      item => item.categoryId,
+    );
+
+    const categories = await prisma.categories.findMany({
+      where: {
+        id: {
+          in: categoryids,
+        },
+      },
+    });
+
+    // console.log(transactionGroupByCategories);
+
+    const total = transactionGroupByCategories.reduce<number>((total, item) => {
+      const { _sum } = item;
+      if (_sum) {
+        total += _sum.amount ?? 0;
+      }
+      return total;
+    }, 0);
+
+    // console.log(total);
+
+    const withPercentage = transactionGroupByCategories.map(item => {
+      const category = categories.find(
+        category => category.id === item.categoryId,
+      );
+      const { _sum } = item;
+      if (_sum) {
+        return {
+          ...item,
+          categoryId: item.categoryId,
+          category: category?.name,
+          percentage: ((_sum.amount ?? 0) / total) * 100,
+        };
+      }
+      return {
+        ...item,
+        categoryId: item.categoryId,
+        category: category?.name,
+        percentage: 0,
+      };
+    });
+
+    const sortedWithPercentage = withPercentage.sort((a, b) => {
+      // Sort berdasarkan yang terbesar
+      return b.percentage - a.percentage;
+    });
+
+    console.log(sortedWithPercentage);
+
     return NextResponse.json({
       success: true,
       status: 200,
@@ -121,6 +189,7 @@ export async function GET() {
         transactions: transactions,
         dailyTransactions: transactionsDate,
         sumOfExpanses: sumOfExpanses,
+        withPercentage: sortedWithPercentage,
       },
     });
   } catch (error) {
