@@ -65,7 +65,6 @@ export async function POST(req: Request) {
 export async function GET() {
   const session = await auth();
   const userId = session?.user?.id;
-  console.log(userId);
 
   // const timezone = "Asia/Jakarta";
   const nowUtc = new Date();

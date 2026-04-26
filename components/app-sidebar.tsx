@@ -34,6 +34,7 @@ export default function AppSidebar({ className }: { className?: string }) {
     { name: "Dashboard", href: "/dashboard" },
     { name: "Transactions", href: "/transactions" },
     { name: "Report", href: "/report" },
+    { name: "Budget", href: "/budget" },
   ];
 
   return (
@@ -46,6 +47,7 @@ export default function AppSidebar({ className }: { className?: string }) {
           {pathname === "/dashboard" ||
           pathname === "/transactions" ||
           pathname === "/report" ||
+          pathname === "/budget" ||
           pathname === "/profile" ? (
             <>
               {navigationMenusDashboard.map(menu => (
@@ -95,17 +97,25 @@ export default function AppSidebar({ className }: { className?: string }) {
                 </div>
               </Card>
             </Link>
-            <Button
-              variant={"default"}
-              size={"lg"}
-              onClick={() => router.push("/dashboard")}
-            >
-              Dashboard
-            </Button>
+            {pathname === "/dashboard" ||
+            pathname === "/transactions" ||
+            pathname === "/budget" ||
+            pathname === "/report" ? (
+              <></>
+            ) : (
+              <Button
+                variant={"default"}
+                size={"lg"}
+                onClick={() => router.push("/dashboard")}
+              >
+                Dashboard
+              </Button>
+            )}
             <Button
               variant={"destructive"}
               size={"lg"}
               onClick={() => signOut()}
+              className="p-5 mb-2"
             >
               Sign Out
             </Button>

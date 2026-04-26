@@ -22,6 +22,7 @@ export default function DashboardLayout({
     { name: "Dashboard", href: "/dashboard" },
     { name: "Transactions", href: "/transactions" },
     { name: "Report", href: "/report" },
+    { name: "Budget", href: "/budget" },
   ];
   return (
     <SidebarProvider defaultOpen={false}>
