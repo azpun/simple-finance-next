@@ -45,22 +45,31 @@ export default function Dashboard() {
     staleTime: 1000 * 60,
   });
 
-  // const query = useQuery({
-  //   queryKey: ["dashboard"],
-  //   queryFn: async () => {
-  //     const response = await fetch(`/api/dashboard`);
-  //     const result: DashboardResponse = await response.json();
-  //     const data: DashboardData = result.data;
+  const treshold = 10;
+  const main = result?.byCategories.filter(item => item.percentage > treshold);
+  const others = result?.byCategories.filter(
+    item => item.percentage <= treshold,
+  );
 
-  //     if (!result.success) {
-  //       throw new Error(result.message);
-  //     }
+  const otherCombine = others?.reduce(
+    (acc, item) => {
+      acc._sum.amount += item._sum.amount;
+      acc.percentage += item.percentage;
+      return acc;
+    },
+    {
+      category: "others",
+      _sum: {
+        amount: 0,
+      },
+      percentage: 0,
+    },
+  );
 
-  //     return data;
-  //   },
-  // });
-
-  // console.log(query);
+  const mainData =
+    (otherCombine?._sum.amount ?? 0) > 0
+      ? [...(main ?? []), otherCombine]
+      : main;
 
   return (
     <div>
@@ -142,23 +151,23 @@ export default function Dashboard() {
                   {result?.byCategories?.length !== 0 ? (
                     <>
                       {isLoading && <p className="text-center">Loading...</p>}
-                      {result?.byCategories?.map(category => (
-                        <li key={category.categoryId}>
+                      {mainData?.map(category => (
+                        <li key={category?.category}>
                           <Card>
                             <CardContent>
                               <div className="flex items-center justify-between">
                                 <h4 className="capitalize">
-                                  {category.category}
+                                  {category?.category}
                                 </h4>
                                 <div className="flex gap-3">
                                   <p>
                                     Rp.{" "}
-                                    {category._sum.amount.toLocaleString(
+                                    {category?._sum.amount.toLocaleString(
                                       "id-ID",
                                     )}
                                   </p>
                                   <p className="text-gray-600 dark:text-gray-500">
-                                    {category.percentage.toPrecision(2)}%
+                                    {category?.percentage.toPrecision(2)}%
                                   </p>
                                 </div>
                               </div>

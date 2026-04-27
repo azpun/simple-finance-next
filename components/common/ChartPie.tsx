@@ -32,18 +32,41 @@ export function ChartPieDonut() {
     },
   });
 
-  // console.log(result);
+  const treshold = 10;
+  const main = result?.byCategories.filter(item => item.percentage > treshold);
+  const others = result?.byCategories.filter(
+    item => item.percentage <= treshold,
+  );
+
+  const otherCombine = others?.reduce(
+    (acc, item) => {
+      acc._sum.amount += item._sum.amount;
+      acc.percentage += item.percentage;
+      return acc;
+    },
+    {
+      category: "others",
+      _sum: {
+        amount: 0,
+      },
+      percentage: 0,
+    },
+  );
+
+  const mainData = React.useMemo(() => {
+    return (otherCombine?._sum.amount ?? 0) > 0
+      ? [...(main ?? []), otherCombine]
+      : main;
+  }, [otherCombine, main]);
 
   const pieChartData = React.useMemo(() => {
-    return (result?.byCategories ?? []).map((item, index) => ({
-      category: item.category,
-      percentages: item.percentage,
-      value: item._sum.amount,
+    return (mainData ?? []).map((item, index) => ({
+      category: item?.category,
+      percentages: item?.percentage,
+      value: item?._sum.amount,
       fill: `var(--chart-${index + 1})`,
     }));
-  }, [result]);
-
-  // console.log(pieChartData);
+  }, [mainData]);
 
   const pieChartConfig = React.useMemo(() => {
     return (result?.byCategories ?? []).reduce(
@@ -62,8 +85,6 @@ export function ChartPieDonut() {
     );
   }, [result?.byCategories]) as ChartConfig;
 
-  // console.log(pieChartConfig);
-
   const sumOfExpanses = React.useMemo(() => {
     return result?.sumOfExpanses;
   }, [result?.sumOfExpanses]);
@@ -76,14 +97,22 @@ export function ChartPieDonut() {
         <PieChart>
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent hideLabel />}
+            content={
+              <ChartTooltipContent
+                hideLabel
+                formatter={(value, name) => [
+                  name,
+                  ` Rp. ${value?.toLocaleString("id-ID")}`,
+                ]}
+              />
+            }
           />
           <Pie
             data={pieChartData}
             dataKey="value"
             nameKey="category"
             innerRadius={85}
-            strokeWidth={5}
+            strokeWidth={10}
           >
             <Label
               content={({ viewBox }) => {
@@ -107,7 +136,7 @@ export function ChartPieDonut() {
                         y={(viewBox.cy || 0) + 24}
                         className="fill-muted-foreground"
                       >
-                        Visitors
+                        Spend so far
                       </tspan>
                     </text>
                   );
