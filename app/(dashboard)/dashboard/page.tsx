@@ -42,7 +42,25 @@ export default function Dashboard() {
 
       return data;
     },
+    staleTime: 1000 * 60,
   });
+
+  // const query = useQuery({
+  //   queryKey: ["dashboard"],
+  //   queryFn: async () => {
+  //     const response = await fetch(`/api/dashboard`);
+  //     const result: DashboardResponse = await response.json();
+  //     const data: DashboardData = result.data;
+
+  //     if (!result.success) {
+  //       throw new Error(result.message);
+  //     }
+
+  //     return data;
+  //   },
+  // });
+
+  // console.log(query);
 
   return (
     <div>
@@ -70,7 +88,9 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3>Spend so far</h3>
-                <p className="text-xl font-bold">Rp. {result?.sumOfExpanses}</p>
+                <p className="text-xl font-bold">
+                  Rp. {result?.sumOfExpanses.toLocaleString("id-ID")}
+                </p>
               </div>
               <div>
                 <h3>Remaining</h3>
@@ -93,7 +113,9 @@ export default function Dashboard() {
                 <h3>Spend so far </h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">Rp. {result?.sumOfExpanses}</p>
+                <p className="text-xl font-bold">
+                  Rp. {result?.sumOfExpanses.toLocaleString("id-ID")}
+                </p>
               </CardContent>
             </Card>
             <Card>
@@ -107,7 +129,7 @@ export default function Dashboard() {
           </div>
         )}
         <div className="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
-          <Card className="flex flex-col gap-6 max-h-162.5">
+          <Card className="flex flex-col gap-6 max-h-212.5">
             <CardHeader>
               <h3 className="text-xl">Spending Breakdown</h3>
             </CardHeader>
@@ -115,31 +137,34 @@ export default function Dashboard() {
               <div>
                 <ChartPieDonut />
               </div>
-              <div className="p-2 overflow-y-auto max-h-65">
+              <div className="p-2 ">
                 <ul className="flex flex-col gap-3">
                   {result?.byCategories?.length !== 0 ? (
                     <>
                       {isLoading && <p className="text-center">Loading...</p>}
                       {result?.byCategories?.map(category => (
-                        <>
-                          <li key={category.categoryId}>
-                            <Card>
-                              <CardContent>
-                                <div className="flex items-center justify-between">
-                                  <h4 className="capitalize">
-                                    {category.category}
-                                  </h4>
-                                  <div className="flex gap-3">
-                                    <p>Rp. {category._sum.amount}</p>
-                                    <p className="text-gray-600 dark:text-gray-500">
-                                      {category.percentage.toPrecision(2)}%
-                                    </p>
-                                  </div>
+                        <li key={category.categoryId}>
+                          <Card>
+                            <CardContent>
+                              <div className="flex items-center justify-between">
+                                <h4 className="capitalize">
+                                  {category.category}
+                                </h4>
+                                <div className="flex gap-3">
+                                  <p>
+                                    Rp.{" "}
+                                    {category._sum.amount.toLocaleString(
+                                      "id-ID",
+                                    )}
+                                  </p>
+                                  <p className="text-gray-600 dark:text-gray-500">
+                                    {category.percentage.toPrecision(2)}%
+                                  </p>
                                 </div>
-                              </CardContent>
-                            </Card>
-                          </li>
-                        </>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </li>
                       ))}
                     </>
                   ) : (
@@ -149,12 +174,12 @@ export default function Dashboard() {
               </div>
             </CardContent>
           </Card>
-          <Card className="flex flex-col gap-6 max-h-162.5">
+          <Card className="flex flex-col gap-6 max-h-212.5">
             <CardHeader>
               <h3 className="text-xl">Recent Transactions</h3>
             </CardHeader>
             <CardContent>
-              <div className="overflow-y-auto max-h-137.5 p-2">
+              <div className="p-2 overflow-y-auto max-h-161">
                 <ul className="flex flex-col gap-2 p-2 ">
                   {result?.transactions?.length !== 0 ? (
                     <>
@@ -176,7 +201,10 @@ export default function Dashboard() {
                                 </p>
                               </div>
                               <div className="flex flex-col items-end">
-                                <p>Rp. {transaction.amount}</p>
+                                <p>
+                                  Rp.{" "}
+                                  {transaction.amount.toLocaleString("id-ID")}
+                                </p>
                                 <p className="text-xs">
                                   {new Date(
                                     transaction.date,

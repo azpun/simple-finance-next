@@ -11,53 +11,19 @@ import {
 } from "@/components/ui/chart";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Transaction } from "@/types/transactions";
+
 import {
-  TransactionData,
-  TransactionResponse,
-} from "@/validations/transaction.validate";
-
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-];
-
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "var(--chart-1)",
-  },
-  safari: {
-    label: "Safari",
-    color: "var(--chart-2)",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "var(--chart-3)",
-  },
-  edge: {
-    label: "Edge",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Other",
-    color: "var(--chart-5)",
-  },
-} satisfies ChartConfig;
+  DashboardData,
+  DashboardResponse,
+} from "@/validations/dashboard.validation";
 
 export function ChartPieDonut() {
-  const { data: result } = useQuery<TransactionData>({
+  const { data: result } = useQuery<DashboardData>({
     queryKey: ["dashboard"],
     queryFn: async () => {
       const response = await fetch("/api/dashboard");
-      const result: TransactionResponse = await response.json();
-      const data: TransactionData = result.data;
+      const result: DashboardResponse = await response.json();
+      const data: DashboardData = result.data;
 
       if (!result.success) {
         console.error(result);
@@ -65,16 +31,47 @@ export function ChartPieDonut() {
       return data;
     },
   });
+
   // console.log(result);
 
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+  const pieChartData = React.useMemo(() => {
+    return (result?.byCategories ?? []).map((item, index) => ({
+      category: item.category,
+      percentages: item.percentage,
+      value: item._sum.amount,
+      fill: `var(--chart-${index + 1})`,
+    }));
+  }, [result]);
+
+  // console.log(pieChartData);
+
+  const pieChartConfig = React.useMemo(() => {
+    return (result?.byCategories ?? []).reduce(
+      (acc, item, index) => {
+        acc[item.category] = {
+          label: item.category.charAt(0).toUpperCase() + item.category.slice(1),
+          color: `var(--chart-${index + 1})`,
+        };
+        return acc;
+      },
+      {
+        category: {
+          label: "Category",
+        },
+      } as ChartConfig,
+    );
+  }, [result?.byCategories]) as ChartConfig;
+
+  // console.log(pieChartConfig);
+
+  const sumOfExpanses = React.useMemo(() => {
+    return result?.sumOfExpanses;
+  }, [result?.sumOfExpanses]);
   return (
     <CardContent className="flex-1 pb-0">
       <ChartContainer
-        config={chartConfig}
-        className="mx-auto aspect-square max-h-62.5"
+        config={pieChartConfig}
+        className="mx-auto aspect-square max-h-75"
       >
         <PieChart>
           <ChartTooltip
@@ -82,10 +79,10 @@ export function ChartPieDonut() {
             content={<ChartTooltipContent hideLabel />}
           />
           <Pie
-            data={chartData}
-            dataKey="visitors"
-            nameKey="browser"
-            innerRadius={60}
+            data={pieChartData}
+            dataKey="value"
+            nameKey="category"
+            innerRadius={85}
             strokeWidth={5}
           >
             <Label
@@ -101,9 +98,9 @@ export function ChartPieDonut() {
                       <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        className="text-3xl font-bold fill-foreground"
+                        className={`${(sumOfExpanses?.toString().length ?? 0) >= 9 ? "text-xl" : "text-2xl"} font-bold fill-foreground`}
                       >
-                        {totalVisitors.toLocaleString()}
+                        Rp.{sumOfExpanses?.toLocaleString("id-ID")}
                       </tspan>
                       <tspan
                         x={viewBox.cx}

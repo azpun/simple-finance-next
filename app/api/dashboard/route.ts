@@ -105,6 +105,14 @@ export async function GET() {
       return b.percentage - a.percentage;
     });
 
+    // const pieChartData = withPercentage.map(item => {
+    //   return {
+    //     category: item.category,
+    //     amount: item._sum.amount,
+    //     percentage: item.percentage,
+    //   };
+    // });
+
     const result = {
       transactions: transactionsDate,
       byCategories: sortedWithPercentage,

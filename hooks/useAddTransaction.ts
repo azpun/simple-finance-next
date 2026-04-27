@@ -1,6 +1,6 @@
 import {
   CreateTransactionInputType,
-  validateResponseTransaction,
+  // validateResponseTransaction,
 } from "@/validations/transaction.validate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -31,19 +31,18 @@ const useAddTransaction = () => {
       });
 
       const jsonResult = await promise;
-      const parsedResponse = await validateResponseTransaction(jsonResult);
 
-      if (!parsedResponse.success) {
-        console.error(
-          "Format response tidak sesuai:",
-          parsedResponse.error.message,
-        );
-      }
+      console.log("JSON result:", jsonResult);
 
-      return parsedResponse.data;
+      return jsonResult;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({
+        queryKey: ["transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard"],
+      });
     },
     onError: (error: Error) => {
       toast.error("Failed to create transaction");
