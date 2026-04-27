@@ -1,3 +1,4 @@
+// components/common/ChartPie.tsx
 "use client";
 
 import { Label, Pie, PieChart } from "recharts";
@@ -13,6 +14,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import {
+  // DashboardByCategories,
   DashboardData,
   DashboardResponse,
 } from "@/validations/dashboard.validation";
@@ -30,6 +32,7 @@ export function ChartPieDonut() {
       }
       return data;
     },
+    staleTime: 0,
   });
 
   const mainData = React.useMemo(() => {

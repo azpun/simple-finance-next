@@ -32,7 +32,7 @@ const useAddTransaction = () => {
 
       const jsonResult = await promise;
 
-      console.log("JSON result:", jsonResult);
+      // console.log("JSON result:", jsonResult);
 
       return jsonResult;
     },
@@ -42,6 +42,7 @@ const useAddTransaction = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["dashboard"],
+        refetchType: "active",
       });
     },
     onError: (error: Error) => {

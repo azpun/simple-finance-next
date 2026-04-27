@@ -1,3 +1,4 @@
+// app/(dashboard)/dashboard/page.tsx
 "use client";
 
 import { ChartPieDonut } from "@/components/common/ChartPie";
@@ -43,7 +44,7 @@ export default function Dashboard() {
 
       return data;
     },
-    staleTime: 1000 * 60,
+    staleTime: 0,
   });
 
   const finalSpendData = React.useMemo(() => {
@@ -141,6 +142,7 @@ export default function Dashboard() {
               <h3 className="text-xl">Spending Breakdown</h3>
             </CardHeader>
             <CardContent className="flex flex-col gap-6">
+              {isLoading && <p className="text-center">Loading...</p>}
               <div>
                 <ChartPieDonut />
               </div>
@@ -148,7 +150,6 @@ export default function Dashboard() {
                 <ul className="flex flex-col gap-3">
                   {result?.byCategories?.length !== 0 ? (
                     <>
-                      {isLoading && <p className="text-center">Loading...</p>}
                       {finalSpendData?.map(category => (
                         <li key={category?.category}>
                           <Card>

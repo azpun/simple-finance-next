@@ -34,3 +34,11 @@ export const dashboardResponseSchema = z.object({
 export type DashboardResponse = z.infer<typeof dashboardResponseSchema>;
 
 export type DashboardData = z.infer<typeof dashboardResponseSchema>["data"];
+
+export type DashboardTransactions = z.infer<
+  typeof dashboardResponseSchema
+>["data"]["transactions"];
+
+export type DashboardByCategories = z.infer<
+  typeof dashboardResponseSchema
+>["data"]["byCategories"];
