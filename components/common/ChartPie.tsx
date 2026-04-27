@@ -12,7 +12,10 @@ import {
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Transaction } from "@/types/transactions";
-import { TransactionResponse } from "@/validations/transaction.validate";
+import {
+  TransactionData,
+  TransactionResponse,
+} from "@/validations/transaction.validate";
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -49,21 +52,20 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartPieDonut() {
-  const { data: result } = useQuery<TransactionResponse>({
-    queryKey: ["transactions"],
+  const { data: result } = useQuery<TransactionData>({
+    queryKey: ["dashboard"],
     queryFn: async () => {
-      const response = await fetch("/api/transactions");
+      const response = await fetch("/api/dashboard");
       const result: TransactionResponse = await response.json();
-
-      console.log();
+      const data: TransactionData = result.data;
 
       if (!result.success) {
         console.error(result);
       }
-      return result;
+      return data;
     },
   });
-  // console.log(category);
+  // console.log(result);
 
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);

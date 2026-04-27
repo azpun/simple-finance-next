@@ -107,7 +107,7 @@ export default function Dashboard() {
           </div>
         )}
         <div className="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
-          <Card>
+          <Card className="flex flex-col gap-6 max-h-162.5">
             <CardHeader>
               <h3 className="text-xl">Spending Breakdown</h3>
             </CardHeader>
@@ -115,21 +115,46 @@ export default function Dashboard() {
               <div>
                 <ChartPieDonut />
               </div>
-              <div>
-                <ul>
-                  <li>Category 1</li>
-                  <li>Category 2</li>
-                  <li>Category 3</li>
+              <div className="p-2 overflow-y-auto max-h-65">
+                <ul className="flex flex-col gap-3">
+                  {result?.byCategories?.length !== 0 ? (
+                    <>
+                      {isLoading && <p className="text-center">Loading...</p>}
+                      {result?.byCategories?.map(category => (
+                        <>
+                          <li key={category.categoryId}>
+                            <Card>
+                              <CardContent>
+                                <div className="flex items-center justify-between">
+                                  <h4 className="capitalize">
+                                    {category.category}
+                                  </h4>
+                                  <div className="flex gap-3">
+                                    <p>Rp. {category._sum.amount}</p>
+                                    <p className="text-gray-600 dark:text-gray-500">
+                                      {category.percentage.toPrecision(2)}%
+                                    </p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </li>
+                        </>
+                      ))}
+                    </>
+                  ) : (
+                    <p className="text-center">No data</p>
+                  )}
                 </ul>
               </div>
             </CardContent>
           </Card>
-          <Card className="flex flex-col gap-6">
+          <Card className="flex flex-col gap-6 max-h-162.5">
             <CardHeader>
               <h3 className="text-xl">Recent Transactions</h3>
             </CardHeader>
             <CardContent>
-              <div className="overflow-y-auto max-h-76">
+              <div className="overflow-y-auto max-h-137.5 p-2">
                 <ul className="flex flex-col gap-2 p-2 ">
                   {result?.transactions?.length !== 0 ? (
                     <>
