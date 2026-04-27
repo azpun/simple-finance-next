@@ -136,10 +136,10 @@ export default function Dashboard() {
                       {isLoading && <p className="text-center">Loading...</p>}
                       {result?.transactions?.map(transaction => (
                         <Card
-                          key={transaction.title}
+                          key={transaction.id}
                           className="px-3 mx-0 border-0"
                         >
-                          <li key={transaction.title}>
+                          <li key={transaction.id}>
                             <div className="flex items-center justify-between">
                               <div>
                                 <h4 className="font-bold ">

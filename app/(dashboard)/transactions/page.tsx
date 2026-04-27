@@ -10,7 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-import { TransactionResponse } from "@/validations/transaction.validate";
+import {
+  TransactionData,
+  TransactionResponse,
+} from "@/validations/transaction.validate";
 
 import { useQuery } from "@tanstack/react-query";
 import { MoreHorizontalIcon } from "lucide-react";
@@ -31,17 +34,18 @@ export default function Transactions() {
 
   const isMobile = useIsMobile();
 
-  const { data: result, isLoading } = useQuery<TransactionResponse>({
+  const { data: result, isLoading } = useQuery<TransactionData>({
     queryKey: ["transactions"],
     queryFn: async () => {
       const response = await fetch(`/api/transactions`);
       const result: TransactionResponse = await response.json();
+      const data: TransactionData = result.data;
 
       if (!result.success) {
         throw new Error(result.message);
       }
 
-      return result;
+      return data;
     },
   });
 
@@ -61,12 +65,12 @@ export default function Transactions() {
 
       <div className="p-6">This is for Filter and Search</div>
 
-      {result?.data.transactions.length !== 0 ? (
+      {result?.length !== 0 ? (
         <>
           {isMobile ? (
             <div className="flex flex-col gap-4">
               {isLoading && <p>Loading...</p>}
-              {result?.data?.transactions.map(transaction => (
+              {result?.map(transaction => (
                 <Card
                   key={transaction.id}
                   className="flex flex-row items-center justify-between p-6"
@@ -117,7 +121,7 @@ export default function Transactions() {
                     </td>
                   </tr>
                 )}
-                {result?.data?.transactions.map(transaction => (
+                {result?.map(transaction => (
                   <tr key={transaction.id} className="p-2 text-sm">
                     <td>{transaction.title}</td>
                     <td className="capitalize">{transaction.category.name}</td>
@@ -139,6 +143,7 @@ export default function Transactions() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="center">
+                          <DropdownMenuItem>Detail</DropdownMenuItem>
                           <DropdownMenuItem>Edit</DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem variant="destructive">

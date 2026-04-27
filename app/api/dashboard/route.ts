@@ -28,6 +28,7 @@ export async function GET() {
         },
       },
       select: {
+        id: true,
         amount: true,
         title: true,
         type: true,
@@ -110,7 +111,7 @@ export async function GET() {
       sumOfExpanses: total,
     };
 
-    console.log(result);
+    // console.log(result);
 
     return NextResponse.json({
       success: true,
