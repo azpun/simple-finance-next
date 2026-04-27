@@ -14,6 +14,7 @@ import {
   DashboardData,
   DashboardResponse,
 } from "@/validations/dashboard.validation";
+import React from "react";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -45,31 +46,28 @@ export default function Dashboard() {
     staleTime: 1000 * 60,
   });
 
-  const treshold = 10;
-  const main = result?.byCategories.filter(item => item.percentage > treshold);
-  const others = result?.byCategories.filter(
-    item => item.percentage <= treshold,
-  );
+  const finalSpendData = React.useMemo(() => {
+    const main = result?.byCategories.slice(0, 5);
+    const others = result?.byCategories.slice(5);
 
-  const otherCombine = others?.reduce(
-    (acc, item) => {
-      acc._sum.amount += item._sum.amount;
-      acc.percentage += item.percentage;
-      return acc;
-    },
-    {
-      category: "others",
-      _sum: {
-        amount: 0,
+    const otherCombine = others?.reduce(
+      (acc, item) => {
+        acc._sum.amount += item._sum.amount ?? 0;
+        acc.percentage += item.percentage ?? 0;
+        return acc;
       },
-      percentage: 0,
-    },
-  );
-
-  const mainData =
-    (otherCombine?._sum.amount ?? 0) > 0
+      {
+        category: "others",
+        _sum: {
+          amount: 0,
+        },
+        percentage: 0,
+      },
+    );
+    return (otherCombine?._sum.amount ?? 0) > 0
       ? [...(main ?? []), otherCombine]
       : main;
+  }, [result?.byCategories]);
 
   return (
     <div>
@@ -151,7 +149,7 @@ export default function Dashboard() {
                   {result?.byCategories?.length !== 0 ? (
                     <>
                       {isLoading && <p className="text-center">Loading...</p>}
-                      {mainData?.map(category => (
+                      {finalSpendData?.map(category => (
                         <li key={category?.category}>
                           <Card>
                             <CardContent>

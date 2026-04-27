@@ -79,12 +79,12 @@ export async function GET() {
       },
     });
 
-    const withPercentage = transactionGroupByCategories.map(item => {
-      // Buat Map untuk lookup kategori berdasarkan categoryId
-      const category = new Map(
-        categories.map(category => [category.id, category]),
-      );
+    // Buat Map untuk lookup kategori berdasarkan categoryId
+    const category = new Map(
+      categories.map(category => [category.id, category]),
+    );
 
+    const withPercentage = transactionGroupByCategories.map(item => {
       const { _sum } = item;
       if (_sum) {
         return {
@@ -100,18 +100,10 @@ export async function GET() {
       };
     });
 
-    const sortedWithPercentage = withPercentage.sort((a, b) => {
+    const sortedWithPercentage = [...withPercentage].sort((a, b) => {
       // Sort berdasarkan yang terbesar
       return b.percentage - a.percentage;
     });
-
-    // const pieChartData = withPercentage.map(item => {
-    //   return {
-    //     category: item.category,
-    //     amount: item._sum.amount,
-    //     percentage: item.percentage,
-    //   };
-    // });
 
     const result = {
       transactions: transactionsDate,

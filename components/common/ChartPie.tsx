@@ -32,32 +32,28 @@ export function ChartPieDonut() {
     },
   });
 
-  const treshold = 10;
-  const main = result?.byCategories.filter(item => item.percentage > treshold);
-  const others = result?.byCategories.filter(
-    item => item.percentage <= treshold,
-  );
-
-  const otherCombine = others?.reduce(
-    (acc, item) => {
-      acc._sum.amount += item._sum.amount;
-      acc.percentage += item.percentage;
-      return acc;
-    },
-    {
-      category: "others",
-      _sum: {
-        amount: 0,
-      },
-      percentage: 0,
-    },
-  );
-
   const mainData = React.useMemo(() => {
+    const main = result?.byCategories.slice(0, 5);
+    const others = result?.byCategories.slice(5);
+
+    const otherCombine = others?.reduce(
+      (acc, item) => {
+        acc._sum.amount += item._sum.amount;
+        acc.percentage += item.percentage;
+        return acc;
+      },
+      {
+        category: "others",
+        _sum: {
+          amount: 0,
+        },
+        percentage: 0,
+      },
+    );
     return (otherCombine?._sum.amount ?? 0) > 0
       ? [...(main ?? []), otherCombine]
       : main;
-  }, [otherCombine, main]);
+  }, [result?.byCategories]);
 
   const pieChartData = React.useMemo(() => {
     return (mainData ?? []).map((item, index) => ({
