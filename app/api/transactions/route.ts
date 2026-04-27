@@ -104,16 +104,6 @@ export async function GET() {
 
     // console.log(transactionsDate);
 
-    const expansesTransactions = transactionsDate.filter(
-      transaction => transaction.type === "EXPENSE",
-    );
-    const sumOfExpanses = expansesTransactions.reduce<number>(
-      (sum, transaction) => sum + transaction.amount,
-      0,
-    );
-
-    // console.log("Sum of expanses today:", sumOfExpanses);
-
     const transactionGroupByCategories = await prisma.transactions.groupBy({
       by: ["categoryId"],
       where: {
@@ -179,7 +169,7 @@ export async function GET() {
       return b.percentage - a.percentage;
     });
 
-    console.log(sortedWithPercentage);
+    // console.log(sortedWithPercentage);
 
     return NextResponse.json({
       success: true,
@@ -188,7 +178,6 @@ export async function GET() {
       data: {
         transactions: transactions,
         dailyTransactions: transactionsDate,
-        sumOfExpanses: sumOfExpanses,
         withPercentage: sortedWithPercentage,
       },
     });

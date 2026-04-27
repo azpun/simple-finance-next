@@ -9,7 +9,11 @@ import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AddTransactionDialog from "@/components/common/AddTransactionDialog";
 import { useQuery } from "@tanstack/react-query";
-import { TransactionResponse } from "@/validations/transaction.validate";
+
+import {
+  DashboardData,
+  DashboardResponse,
+} from "@/validations/dashboard.validation";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -25,17 +29,18 @@ export default function Dashboard() {
   }, [status, router]);
 
   // Get transactions
-  const { data: result, isLoading } = useQuery<TransactionResponse>({
-    queryKey: ["transactions"],
+  const { data: result, isLoading } = useQuery<DashboardData>({
+    queryKey: ["dashboard"],
     queryFn: async () => {
-      const response = await fetch(`/api/transactions`);
-      const result: TransactionResponse = await response.json();
+      const response = await fetch(`/api/dashboard`);
+      const result: DashboardResponse = await response.json();
+      const data: DashboardData = result.data;
 
       if (!result.success) {
         throw new Error(result.message);
       }
 
-      return result;
+      return data;
     },
   });
 
@@ -65,9 +70,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3>Spend so far</h3>
-                <p className="text-xl font-bold">
-                  Rp. {result?.data.sumOfExpanses}
-                </p>
+                <p className="text-xl font-bold">Rp. {result?.sumOfExpanses}</p>
               </div>
               <div>
                 <h3>Remaining</h3>
@@ -90,9 +93,7 @@ export default function Dashboard() {
                 <h3>Spend so far </h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">
-                  Rp. {result?.data.sumOfExpanses}
-                </p>
+                <p className="text-xl font-bold">Rp. {result?.sumOfExpanses}</p>
               </CardContent>
             </Card>
             <Card>
@@ -130,15 +131,15 @@ export default function Dashboard() {
             <CardContent>
               <div className="overflow-y-auto max-h-76">
                 <ul className="flex flex-col gap-2 p-2 ">
-                  {result?.data.dailyTransactions?.length !== 0 ? (
+                  {result?.transactions?.length !== 0 ? (
                     <>
                       {isLoading && <p className="text-center">Loading...</p>}
-                      {result?.data.dailyTransactions?.map(transaction => (
+                      {result?.transactions?.map(transaction => (
                         <Card
-                          key={transaction.id}
+                          key={transaction.title}
                           className="px-3 mx-0 border-0"
                         >
-                          <li key={transaction.id}>
+                          <li key={transaction.title}>
                             <div className="flex items-center justify-between">
                               <div>
                                 <h4 className="font-bold ">
