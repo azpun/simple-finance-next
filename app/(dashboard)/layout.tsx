@@ -10,10 +10,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
 import Link from "next/link";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -24,6 +25,10 @@ export default function DashboardLayout({
     { name: "Report", href: "/report" },
     { name: "Budget", href: "/budget" },
   ];
+  const session = await auth();
+  if (!session) {
+    redirect("/auth/login");
+  }
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar className="block md:hidden" />

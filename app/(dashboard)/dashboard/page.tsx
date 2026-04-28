@@ -4,13 +4,9 @@
 import { ChartPieDonut } from "@/components/common/ChartPie";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
 import { useIsMobile } from "@/hooks/use-mobile";
 import AddTransactionDialog from "@/components/common/AddTransactionDialog";
 import { useQuery } from "@tanstack/react-query";
-
 import {
   DashboardData,
   DashboardResponse,
@@ -18,17 +14,10 @@ import {
 import React from "react";
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
+  const { data: session } = useSession();
   const isMobile = useIsMobile();
 
   // Check if the user is authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/login");
-    }
-  }, [status, router]);
 
   // Get transactions
   const { data: result, isLoading } = useQuery<DashboardData>({
