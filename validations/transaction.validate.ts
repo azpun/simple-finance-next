@@ -4,9 +4,14 @@ const CategorySchema = zod.object({
   name: zod.string(),
 });
 
-const TransactionSchema = zod.object({
+export const TransactionSchema = zod.object({
   id: zod.string(),
-  amount: zod.number(),
+  amount: zod.any().transform(value => {
+    if (value && typeof value === "object" && "toNumber" in value) {
+      return value.toNumber();
+    }
+    return Number(value);
+  }),
   title: zod.string(),
   type: zod.enum(["Income", "Expense"]),
   date: zod.coerce.date(),

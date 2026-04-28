@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import {
   CreateTransactionInputType,
+  TransactionSchema,
   validateCreateTransaction,
 } from "@/validations/transaction.validate";
 import { NextResponse } from "next/server";
@@ -132,14 +133,29 @@ export const GET = auth(async req => {
         },
       },
     });
-    // console.log(transactions);
+
+    const validate =
+      await TransactionSchema.array().safeParseAsync(transactions);
+
+    if (!validate.success) {
+      console.error("Validation error:", validate.error);
+      return NextResponse.json(
+        {
+          success: false,
+          status: 500,
+          message: "Error validating transactions",
+          errors: validate.error.flatten(),
+        },
+        { status: 500 },
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
         status: 200,
         message: "Transactions fetched successfully",
-        data: transactions,
+        data: validate.data,
       },
       { status: 200 },
     );

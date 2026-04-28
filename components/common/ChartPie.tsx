@@ -60,7 +60,9 @@ export function ChartPieDonut() {
 
   const pieChartData = React.useMemo(() => {
     return (mainData ?? []).map((item, index) => ({
-      category: item?.category,
+      category:
+        (item?.category ?? "").charAt(0).toUpperCase() +
+        item?.category.slice(1),
       percentages: Number(item?.percentage.toFixed(1)),
       value: Number(item?._sum.amount),
       fill: `var(--chart-${index + 1})`,

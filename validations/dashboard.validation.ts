@@ -20,7 +20,12 @@ export const dashboardResponseSchema = z.object({
     byCategories: z.array(
       z.object({
         _sum: z.object({
-          amount: z.number(),
+          amount: z.any().transform(value => {
+            if (value && typeof value === "object" && "toNumber" in value) {
+              return value.toNumber();
+            }
+            return Number(value);
+          }),
         }),
         categoryId: z.string(),
         category: z.string(),
@@ -29,6 +34,56 @@ export const dashboardResponseSchema = z.object({
     ),
     sumOfExpanses: z.number(),
   }),
+});
+
+export const dashboardDataSchema = z.object({
+  transactions: z.array(
+    z.object({
+      id: z.string(),
+      amount: z.any().transform(value => {
+        if (value && typeof value === "object" && "toNumber" in value) {
+          return value.toNumber();
+        }
+        return Number(value);
+      }),
+      title: z.string(),
+      type: z.enum(["Income", "Expense"]),
+      date: z.coerce.date(),
+      category: z.object({
+        name: z.string(),
+      }),
+    }),
+  ),
+  byCategories: z.array(
+    z.object({
+      _sum: z.object({
+        amount: z.any().transform(value => {
+          if (value && typeof value === "object" && "toNumber" in value) {
+            return value.toNumber();
+          }
+          return Number(value);
+        }),
+      }),
+      categoryId: z.string(),
+      category: z.string(),
+      percentage: z.number(),
+    }),
+  ),
+  sumOfExpanses: z.number(),
+});
+
+export const byCategoriesSchema = z.object({
+  _sum: z.object({
+    amount: z.any().transform(value => {
+      if (value && typeof value === "object" && "toNumber" in value) {
+        return value.toNumber();
+      }
+      return Number(value);
+    }),
+  }),
+  categoryId: z.string(),
+  category: z.string(),
+  percentage: z.number(),
 });
 
 export type DashboardResponse = z.infer<typeof dashboardResponseSchema>;

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 import { startOfMonth, endOfMonth } from "date-fns";
+import { dashboardDataSchema } from "@/validations/dashboard.validation";
 // import { Decimal } from "@prisma/client/runtime/library"; // Cannot find module '@prisma/client/runtime/library' or its corresponding type declarations.
 
 export async function GET() {
@@ -112,13 +113,28 @@ export async function GET() {
       sumOfExpanses: total,
     };
 
-    // console.log(result);
+    const validate = dashboardDataSchema.safeParse(result);
+
+    if (!validate.success) {
+      console.error("Validation error:", validate.error);
+      return NextResponse.json(
+        {
+          success: false,
+          status: 500,
+          message: "Error validating dashboard data",
+          errors: validate.error.flatten(),
+        },
+        { status: 500 },
+      );
+    }
+
+    console.log(validate.data);
 
     return NextResponse.json({
       success: true,
       status: 200,
       message: "Transactions fetched successfully",
-      data: result,
+      data: validate.data,
     });
   } catch (error) {
     return NextResponse.json({

@@ -119,7 +119,7 @@ export default function Transactions() {
               <tr key={transaction.id} className="p-2 text-sm">
                 <td>{transaction.title}</td>
                 <td className="capitalize">{transaction.category.name}</td>
-                <td>Rp.{transaction.amount}</td>
+                <td>Rp. {transaction.amount.toLocaleString("id-ID")}</td>
                 <td className="">{transaction.type}</td>
                 <td>
                   {new Date(transaction.date).toLocaleDateString("id-ID", {
