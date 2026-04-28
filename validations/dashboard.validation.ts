@@ -10,7 +10,7 @@ export const dashboardResponseSchema = z.object({
         id: z.string(),
         amount: z.number(),
         title: z.string(),
-        type: z.enum(["INCOME", "EXPENSE"]),
+        type: z.enum(["Income", "Expense"]),
         date: z.coerce.date(),
         category: z.object({
           name: z.string(),

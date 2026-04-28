@@ -54,8 +54,8 @@ export default function Home() {
                 Income vs Expense Analytics
               </h3>
               <p>
-                Visualisasi perbandingan antara pemasukan (INCOME) dan
-                pengeluaran (EXPENSE) secara real-time.
+                Visualisasi perbandingan antara pemasukan (Income) dan
+                pengeluaran (Expense) secara real-time.
               </p>
             </Card>
           </div>

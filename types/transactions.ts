@@ -11,7 +11,7 @@ type Transaction = {
   amount: number;
   title: string;
   description: string;
-  type: "INCOME" | "EXPENSE";
+  type: "Income" | "Expense";
   date: string;
   categoryId: string;
   userId: string;

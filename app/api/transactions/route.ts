@@ -48,6 +48,7 @@ export async function POST(req: Request) {
         title: validateData.data.title,
         description: validateData.data.description,
         type: validateData.data.type,
+
         user: {
           connect: {
             id: userId,
@@ -56,13 +57,14 @@ export async function POST(req: Request) {
         category: {
           connectOrCreate: {
             where: {
-              name_userId: {
-                name: validateData.data.category.name,
+              normalizeName_userId: {
+                normalizeName: validateData.data.category.name,
                 userId: userId,
               },
             },
             create: {
-              name: validateData.data.category.name,
+              name: data.category.name,
+              normalizeName: validateData.data.category.name.toLowerCase(),
               type: validateData.data.type,
               user: {
                 connect: {

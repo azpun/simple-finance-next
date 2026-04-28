@@ -8,7 +8,7 @@ const TransactionSchema = zod.object({
   id: zod.string(),
   amount: zod.number(),
   title: zod.string(),
-  type: zod.enum(["INCOME", "EXPENSE"]),
+  type: zod.enum(["Income", "Expense"]),
   date: zod.coerce.date(),
   category: CategorySchema,
 });

@@ -188,8 +188,8 @@ const AddTransactionDialog = () => {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Type</SelectLabel>
-                        <SelectItem value="EXPENSE">Expense</SelectItem>
-                        <SelectItem value="INCOME">Income</SelectItem>
+                        <SelectItem value="Expense">Expense</SelectItem>
+                        <SelectItem value="Income">Income</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>

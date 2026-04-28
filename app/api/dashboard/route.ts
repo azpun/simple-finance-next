@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 import { startOfMonth, endOfMonth } from "date-fns";
+// import { Decimal } from "@prisma/client/runtime/library"; // Cannot find module '@prisma/client/runtime/library' or its corresponding type declarations.
 
 export async function GET() {
   const session = await auth();
@@ -48,7 +49,7 @@ export async function GET() {
       by: ["categoryId"],
       where: {
         userId: userId,
-        type: "EXPENSE",
+        type: "Expense",
         date: {
           gte: start,
           lte: end,
@@ -62,7 +63,7 @@ export async function GET() {
     const total = transactionGroupByCategories.reduce<number>((total, item) => {
       const { _sum } = item;
       if (_sum) {
-        total += _sum.amount ?? 0;
+        total += _sum.amount?.toNumber() ?? 0; // Operator '+=' cannot be applied to types 'number' and 'number | Decimal'.
       }
       return total;
     }, 0);
@@ -90,7 +91,7 @@ export async function GET() {
         return {
           ...item,
           category: category?.get(item.categoryId)?.name,
-          percentage: ((_sum.amount ?? 0) / total) * 100,
+          percentage: ((_sum.amount?.toNumber() ?? 0) / total) * 100, // The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
         };
       }
       return {
