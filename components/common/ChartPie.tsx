@@ -69,8 +69,6 @@ export function ChartPieDonut() {
     }));
   }, [mainData]);
 
-  console.log(pieChartData);
-
   const pieChartConfig = React.useMemo(() => {
     return (result?.byCategories ?? []).reduce(
       (acc, item, index) => {

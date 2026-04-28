@@ -72,20 +72,6 @@ export const dashboardDataSchema = z.object({
   sumOfExpanses: z.number(),
 });
 
-export const byCategoriesSchema = z.object({
-  _sum: z.object({
-    amount: z.any().transform(value => {
-      if (value && typeof value === "object" && "toNumber" in value) {
-        return value.toNumber();
-      }
-      return Number(value);
-    }),
-  }),
-  categoryId: z.string(),
-  category: z.string(),
-  percentage: z.number(),
-});
-
 export type DashboardResponse = z.infer<typeof dashboardResponseSchema>;
 
 export type DashboardData = z.infer<typeof dashboardResponseSchema>["data"];

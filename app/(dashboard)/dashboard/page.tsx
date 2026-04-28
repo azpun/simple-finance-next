@@ -36,8 +36,6 @@ export default function Dashboard() {
     staleTime: 0,
   });
 
-  console.log(result?.transactions);
-
   const finalSpendData = React.useMemo(() => {
     const main = result?.byCategories.slice(0, 5);
     const others = result?.byCategories.slice(5);

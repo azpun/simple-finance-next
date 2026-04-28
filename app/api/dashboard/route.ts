@@ -128,8 +128,6 @@ export async function GET() {
       );
     }
 
-    console.log(validate.data);
-
     return NextResponse.json({
       success: true,
       status: 200,
