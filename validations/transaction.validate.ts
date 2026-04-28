@@ -34,7 +34,6 @@ export const transactionSchema = zod.object({
     name: zod
       .string()
       .trim()
-      .toLowerCase()
       .min(1, "Category name cannot be empty")
       .max(15, "Category name cannot be more than 15 characters long"),
   }),

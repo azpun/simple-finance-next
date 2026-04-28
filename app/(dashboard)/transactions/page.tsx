@@ -91,7 +91,7 @@ export default function Transactions() {
       ) : (
         <table className="w-full border border-slate-700">
           <thead className="">
-            <tr className="text-left bg-slate-700">
+            <tr className="text-left text-white dark:text-white bg-slate-700">
               <th>Title</th>
               <th>Category</th>
               <th>Amount</th>

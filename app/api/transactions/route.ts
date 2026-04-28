@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // const normalizedCategory = validateData.data?.category?.name?.toLowerCase();
+  const normalizedCategory = validateData.data?.category?.name?.toLowerCase();
 
   try {
     const createTransaction = await prisma.transactions.create({
@@ -58,13 +58,13 @@ export async function POST(req: Request) {
           connectOrCreate: {
             where: {
               normalizeName_userId: {
-                normalizeName: validateData.data.category.name,
+                normalizeName: normalizedCategory,
                 userId: userId,
               },
             },
             create: {
-              name: data.category.name,
-              normalizeName: validateData.data.category.name.toLowerCase(),
+              name: validateData.data.category.name,
+              normalizeName: normalizedCategory,
               type: validateData.data.type,
               user: {
                 connect: {
