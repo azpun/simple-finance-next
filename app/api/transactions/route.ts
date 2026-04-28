@@ -1,5 +1,5 @@
 // app/api/transactions/route.ts
-"use server";
+
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import {
@@ -8,11 +8,11 @@ import {
 } from "@/validations/transaction.validate";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  const session = await auth();
-  const userId = session?.user?.id as string;
+export const POST = auth(async req => {
+  // const session = await auth();
+  const session = req.auth;
 
-  if (!userId) {
+  if (!session?.user?.id) {
     return NextResponse.json(
       {
         success: false,
@@ -22,9 +22,8 @@ export async function POST(req: Request) {
       { status: 401 },
     );
   }
-
+  const userId = session?.user?.id as string;
   const data = (await req.json()) as CreateTransactionInputType;
-
   const validateData = await validateCreateTransaction(data);
 
   if (!validateData.success) {
@@ -99,11 +98,21 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
-}
+});
 
-export async function GET() {
-  const session = await auth();
-  const userId = session?.user?.id as string;
+export const GET = auth(async req => {
+  if (!req.auth?.user?.id) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 401,
+        message: "Unauthorized",
+      },
+      { status: 401 },
+    );
+  }
+
+  const userId = req.auth.user.id as string;
 
   try {
     const transactions = await prisma.transactions.findMany({
@@ -145,4 +154,4 @@ export async function GET() {
       { status: 500 },
     );
   }
-}
+});
