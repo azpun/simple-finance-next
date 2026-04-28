@@ -24,21 +24,30 @@ export const transactionSchema = zod.object({
     .max(50, "Title must be at most 50 characters long"),
   description: zod
     .string()
+    .trim()
     .max(200, "Description must be at most 200 characters long")
     .optional(),
-  type: zod.enum(["EXPENSE", "INCOME"]),
+  type: zod.enum(["EXPENSE", "INCOME"], {
+    error: "Type must be either 'EXPENSE' or 'INCOME'",
+  }),
   category: zod.object({
     name: zod
       .string()
+      .trim()
+      .toLowerCase()
+      .min(1, "Category name cannot be empty")
       .max(15, "Category name cannot be more than 15 characters long"),
   }),
 });
 
 export type CreateTransactionInputType = zod.infer<typeof transactionSchema>;
 
-export const validateResponseTransaction = (payload: unknown) => {
-  return transactionResponseSchema.safeParseAsync(payload);
+export const validateCreateTransaction = (
+  payload: CreateTransactionInputType,
+) => {
+  return transactionSchema.safeParseAsync(payload);
 };
+
 // =================================================================
 
 export const transactionResponseSchema = zod.object({
@@ -52,6 +61,9 @@ export type TransactionResponse = zod.infer<typeof transactionResponseSchema>;
 export type TransactionData = zod.infer<
   typeof transactionResponseSchema
 >["data"];
+export const validateResponseTransaction = (payload: unknown) => {
+  return transactionResponseSchema.safeParseAsync(payload);
+};
 // export const createTrasactionValidation = (
 //   payload: CreateTransactionInputType,
 // ) => {

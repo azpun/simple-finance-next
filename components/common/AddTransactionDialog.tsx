@@ -32,12 +32,12 @@ import {
 } from "@/validations/transaction.validate";
 
 // import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import useAddTransaction from "@/hooks/useAddTransaction";
 import { useState } from "react";
 
 const AddTransactionDialog = () => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const {
     handleSubmit,
@@ -60,10 +60,10 @@ const AddTransactionDialog = () => {
   const { mutateAsync } = useAddTransaction();
 
   const onSubmit: SubmitHandler<CreateTransactionInputType> = async data => {
-    const userId = session?.user?.id as string;
-    const dataWithUserId = { ...data, userId };
+    // const userId = session?.user?.id as string;
+    // const dataWithUserId = { ...data, userId };
 
-    await mutateAsync(dataWithUserId, {
+    await mutateAsync(data, {
       onSuccess: () => {
         setOpen(false);
       },

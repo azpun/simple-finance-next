@@ -15,11 +15,11 @@ datasource db {
 
 model Transactions {
   id          String             @id @default(cuid())
-  amount      Int
+  amount      Decimal
   title       String 
   description String? 
   type        TransactionType
-  date        DateTime        @default(now())
+  date        DateTime           @default(now())
 
   // relasi ke kategori
   categoryId  String
@@ -31,16 +31,20 @@ model Transactions {
 
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+
+  @@index([userId,date])
 }
 
 model Categories {
   id          String     @id @default(cuid())
-  name        String  
-  transactions Transactions[]
+  name        String
+  type        CategoryType  
+  userId      String
 
   // relasi ke user
-  userId      String
-  user        Users             @relation(fields: [userId], references: [id])
+  user          Users             @relation(fields: [userId], references: [id])
+  transactions  Transactions[]
+  budgetCategory   BudgetCategory[]
 
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
@@ -56,7 +60,8 @@ model Users {
   id            String          @id @default(cuid())
   fullname      String
   email         String          @unique
-  password      String          
+  password      String     
+
   budgets       Budgets[]          
   transactions  Transactions[]
   categories    Categories[]
@@ -70,17 +75,40 @@ model Budgets {
   userId        String
   user          Users           @relation(fields: [userId], references: [id])
 
-  amount        Int
-  month         Int
+  month         Int             // 1-12
   year          Int
+
+  totalAmount   Decimal
+
+  budgetCategory      BudgetCategory[]
 
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
   @@unique([userId, year, month])
+  @@index([userId, year, month])
+}
+
+model BudgetCategory {
+  id          String       @id @default(cuid())
+
+  budgetId    String
+  budget      Budgets      @relation(fields: [budgetId], references: [id])
+
+  categoryId  String
+  category    Categories   @relation(fields: [categoryId], references: [id])
+
+  amount      Decimal
+
+  @@unique([budgetId, categoryId])
 }
 
 enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum CategoryType {
   INCOME
   EXPENSE
 }

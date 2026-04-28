@@ -143,13 +143,13 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent className="flex flex-col gap-6">
               {isLoading && <p className="text-center">Loading...</p>}
-              <div>
-                <ChartPieDonut />
-              </div>
-              <div className="p-2 ">
-                <ul className="flex flex-col gap-3">
-                  {result?.byCategories?.length !== 0 ? (
-                    <>
+              {result?.byCategories?.length !== 0 ? (
+                <>
+                  <div>
+                    <ChartPieDonut />
+                  </div>
+                  <div className="p-2 ">
+                    <ul className="flex flex-col gap-3">
                       {finalSpendData?.map(category => (
                         <li key={category?.category}>
                           <Card>
@@ -174,12 +174,12 @@ export default function Dashboard() {
                           </Card>
                         </li>
                       ))}
-                    </>
-                  ) : (
-                    <p className="text-center">No data</p>
-                  )}
-                </ul>
-              </div>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <p className="p-2 text-center">No data</p>
+              )}
             </CardContent>
           </Card>
           <Card className="flex flex-col gap-6 max-h-212.5">
@@ -230,7 +230,9 @@ export default function Dashboard() {
                     </>
                   ) : (
                     <>
-                      <li>There are no recent transactions today</li>
+                      <p className="text-center">
+                        There are no recent transactions today
+                      </p>
                     </>
                   )}
                 </ul>
