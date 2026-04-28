@@ -48,7 +48,7 @@ const AddTransactionDialog = () => {
       amount: 0,
       title: "",
       description: "",
-      type: "EXPENSE",
+      type: "Expense",
       category: {
         name: "Not Set",
       },

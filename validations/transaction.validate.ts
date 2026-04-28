@@ -27,8 +27,8 @@ export const transactionSchema = zod.object({
     .trim()
     .max(200, "Description must be at most 200 characters long")
     .optional(),
-  type: zod.enum(["EXPENSE", "INCOME"], {
-    error: "Type must be either 'EXPENSE' or 'INCOME'",
+  type: zod.enum(["Expense", "Income"], {
+    error: "Type must be either 'Expense' or 'Income'",
   }),
   category: zod.object({
     name: zod

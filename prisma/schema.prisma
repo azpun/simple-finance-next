@@ -38,6 +38,7 @@ model Transactions {
 model Categories {
   id          String     @id @default(cuid())
   name        String
+  normalizeName String
   type        CategoryType  
   userId      String
 
@@ -53,7 +54,7 @@ model Categories {
   // Name boleh duplikat (User A punya "Makan", User B punya "Makan").
   // UserId boleh duplikat (User A punya "Makan", User A punya "Transport").
   // PASANGAN keduanya tidak boleh duplikat (User A tidak boleh punya dua kategori "Makan").
-  @@unique([name, userId])
+  @@unique([normalizeName, userId])
 }
 
 model Users {
@@ -104,11 +105,11 @@ model BudgetCategory {
 }
 
 enum TransactionType {
-  INCOME
-  EXPENSE
+  Income
+  Expense
 }
 
 enum CategoryType {
-  INCOME
-  EXPENSE
+  Income
+  Expense
 }
