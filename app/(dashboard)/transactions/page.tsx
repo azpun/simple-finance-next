@@ -1,4 +1,5 @@
 "use client";
+import AddTransactionDialog from "@/components/common/AddTransactionDialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -46,10 +47,9 @@ export default function Transactions() {
           </p>
         </div>
         <div className="hidden md:block">
-          <Button className="mt-6 hover:bg-primary/80">Add Transaction</Button>
+          <AddTransactionDialog />
         </div>
       </div>
-
       <div className="p-6">This is for Filter and Search</div>
       {isMobile ? (
         <div className="flex flex-col gap-4">

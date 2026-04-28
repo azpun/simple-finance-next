@@ -10,7 +10,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center h-[75vh] md:h-[85vh]">
         <div className="flex flex-col gap-2 p-4">
           <h1 className="text-2xl md:text-center md:text-4xl">
-            Handle Your Finances Easily. Effortlessly.
+            Handle Your Finances Easily.
           </h1>
           <p className="text-sm md:text-center text-balance md:text-lg">
             Simplify your finances with intuitive tools, intelligent insights,

@@ -17,7 +17,7 @@ const LoginForm = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginInputType>({
     defaultValues: {
       email: "",
@@ -27,23 +27,27 @@ const LoginForm = () => {
   });
   const { push } = useRouter();
   const onLogin: SubmitHandler<LoginInputType> = async data => {
-    try {
-      const promise = signIn("credentials", {
+    const promise = new Promise(async (resolve, reject) => {
+      const result = await signIn("credentials", {
         email: data.email,
         password: data.password,
         callbackUrl: "/dashboard",
+        redirect: false,
       });
-      toast.promise(promise, {
-        loading: "Logging in...",
-        success: "Login successful",
-        error: "Login failed",
-      });
-      await promise;
-      push("/dashboard");
-    } catch (error) {
-      toast.error("Login failed");
-      console.log(error);
-    }
+      if (result?.error) {
+        reject(new Error("Email or Password is incorrect"));
+      } else {
+        resolve(result);
+      }
+    });
+    toast.promise(promise, {
+      loading: "Logging in...",
+      success: "Login successful",
+      error: (err: Error) => err.message,
+      duration: 5000,
+    });
+    await promise;
+    push("/dashboard");
   };
   return (
     <>
@@ -61,6 +65,7 @@ const LoginForm = () => {
                   id="email"
                   name="email"
                   placeholder="Input your email"
+                  disabled={isSubmitting}
                   className={`${errors.email ? "border-2 border-red-500" : ""}`}
                   aria-invalid={errors.email ? "true" : "false"}
                 />
@@ -84,6 +89,7 @@ const LoginForm = () => {
                       id="password"
                       name="password"
                       placeholder="Input your password"
+                      disabled={isSubmitting}
                       className={`${errors.password ? "border-2 border-red-500" : ""} `}
                       aria-invalid={errors.password ? "true" : "false"}
                     />
@@ -105,7 +111,7 @@ const LoginForm = () => {
           </Field>
 
           <Field className="gap-3">
-            <Button type="submit" className="p-5">
+            <Button type="submit" className="p-5" disabled={isSubmitting}>
               Submit
             </Button>
 
