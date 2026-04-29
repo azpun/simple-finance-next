@@ -17,6 +17,8 @@ export const TransactionSchema = zod.object({
   type: zod.enum(["Income", "Expense"]),
   date: zod.coerce.date(),
   category: CategorySchema,
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
 });
 
 export type TransactionTypes = zod.infer<typeof TransactionSchema>;
@@ -69,18 +71,3 @@ export type TransactionData = zod.infer<
 export const validateResponseTransaction = (payload: unknown) => {
   return transactionResponseSchema.safeParseAsync(payload);
 };
-// export const createTrasactionValidation = (
-//   payload: CreateTransactionInputType,
-// ) => {
-//   return transactionSchema.safeParseAsync(payload);
-// };
-
-// export const transactionSchemaPartial = transactionSchema.partial();
-// export const updateTrasactionValidation = (
-//   payload: UpdateTransactionInputType,
-// ) => {
-//   return transactionSchemaPartial.safeParseAsync(payload);
-// };
-// export type UpdateTransactionInputType = zod.infer<
-//   typeof transactionSchemaPartial
-// >;

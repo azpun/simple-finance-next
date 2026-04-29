@@ -131,6 +131,8 @@ export const GET = auth(async req => {
             name: true,
           },
         },
+        createdAt: true,
+        updatedAt: true,
       },
       orderBy: {
         date: "desc",

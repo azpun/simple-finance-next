@@ -204,7 +204,7 @@ export default function Dashboard() {
                                 </p>
                                 <p className="text-xs">
                                   {new Date(
-                                    transaction.date,
+                                    transaction.updatedAt,
                                   ).toLocaleDateString("id-ID", {
                                     day: "numeric",
                                     month: "long",

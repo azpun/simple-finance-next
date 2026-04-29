@@ -15,6 +15,8 @@ export const dashboardResponseSchema = z.object({
         category: z.object({
           name: z.string(),
         }),
+        createdAt: z.coerce.date(),
+        updatedAt: z.coerce.date(),
       }),
     ),
     byCategories: z.array(
@@ -52,6 +54,8 @@ export const dashboardDataSchema = z.object({
       category: z.object({
         name: z.string(),
       }),
+      createdAt: z.coerce.date(),
+      updatedAt: z.coerce.date(),
     }),
   ),
   byCategories: z.array(

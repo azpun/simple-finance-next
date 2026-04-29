@@ -91,8 +91,16 @@ export default function TransactionContent() {
             >
               <div className="flex flex-col gap-3">
                 <h3 className="text-lg">{transaction.title}</h3>
-                <p>{transaction.category.name}</p>
+                <p className="capitalize">{transaction.category.name}</p>
                 <p>Rp.{transaction.amount.toLocaleString("id-ID")}</p>
+                <p>{transaction.type}</p>
+                <p>
+                  {new Date(transaction.updatedAt).toLocaleDateString("id-ID", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
               </div>
 
               <div>
@@ -139,7 +147,7 @@ export default function TransactionContent() {
                 <td>Rp.{transaction.amount.toLocaleString("id-ID")}</td>
                 <td className="">{transaction.type}</td>
                 <td>
-                  {new Date(transaction.date).toLocaleDateString("id-ID", {
+                  {new Date(transaction.updatedAt).toLocaleDateString("id-ID", {
                     day: "numeric",
                     month: "long",
                     year: "numeric",

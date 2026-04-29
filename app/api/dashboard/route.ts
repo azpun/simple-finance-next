@@ -40,6 +40,8 @@ export async function GET() {
             name: true,
           },
         },
+        createdAt: true,
+        updatedAt: true,
       },
       orderBy: {
         date: "desc",
