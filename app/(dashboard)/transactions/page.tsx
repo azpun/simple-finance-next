@@ -18,6 +18,7 @@ import {
 
 import { useQuery } from "@tanstack/react-query";
 import { MoreHorizontalIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function Transactions() {
   const isMobile = useIsMobile();
@@ -65,7 +66,7 @@ export default function Transactions() {
               <div className="flex flex-col gap-3">
                 <h3 className="text-lg">{transaction.title}</h3>
                 <p>{transaction.category.name}</p>
-                <p>Rp. {transaction.amount}</p>
+                <p>Rp.{transaction.amount.toLocaleString("id-ID")}</p>
               </div>
 
               <div>
@@ -77,6 +78,9 @@ export default function Transactions() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                    <Link href={`/transactions/${transaction.id}`}>
+                      <DropdownMenuItem>Detail</DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem>Edit</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem variant="destructive">
@@ -119,7 +123,7 @@ export default function Transactions() {
               <tr key={transaction.id} className="p-2 text-sm">
                 <td>{transaction.title}</td>
                 <td className="capitalize">{transaction.category.name}</td>
-                <td>Rp. {transaction.amount.toLocaleString("id-ID")}</td>
+                <td>Rp.{transaction.amount.toLocaleString("id-ID")}</td>
                 <td className="">{transaction.type}</td>
                 <td>
                   {new Date(transaction.date).toLocaleDateString("id-ID", {
@@ -137,7 +141,9 @@ export default function Transactions() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="center">
-                      <DropdownMenuItem>Detail</DropdownMenuItem>
+                      <Link href={`/transactions/${transaction.id}`}>
+                        <DropdownMenuItem>Detail</DropdownMenuItem>
+                      </Link>
                       <DropdownMenuItem>Edit</DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem variant="destructive">
