@@ -13,6 +13,7 @@ export const TransactionSchema = zod.object({
     return Number(value);
   }),
   title: zod.string(),
+  description: zod.string().optional(),
   type: zod.enum(["Income", "Expense"]),
   date: zod.coerce.date(),
   category: CategorySchema,

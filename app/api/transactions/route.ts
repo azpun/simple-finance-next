@@ -132,6 +132,9 @@ export const GET = auth(async req => {
           },
         },
       },
+      orderBy: {
+        date: "desc",
+      },
     });
 
     const validate =

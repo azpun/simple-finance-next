@@ -65,6 +65,10 @@ export const TransactionByIdClient = ({ initialData }: Prop) => {
               </p>
             </div>
             <Separator className={isMobile ? "block" : "hidden"} />
+            <div className="flex flex-col gap-2 py-4">
+              <h3 className="text-lg font-bold">Description</h3>
+              <p>{initialData.description || "-"}</p>
+            </div>
           </div>
         </CardContent>
       </Card>

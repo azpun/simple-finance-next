@@ -19,6 +19,7 @@ export const getTrasactionById = async ({
       id: true,
       amount: true,
       title: true,
+      description: true,
       type: true,
       date: true,
       category: {
