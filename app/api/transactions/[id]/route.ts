@@ -1,80 +1,82 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
+import { TransactionSchema } from "@/validations/transaction.validate";
 import { NextResponse } from "next/server";
-// import { TransactionSchema } from "@/validations/transaction.validate";
 
 // Route handler untuk menangani operasi CRUD pada transaksi berdasarkan ID
 // Route ini akan menangani permintaan GET untuk mengambil detail transaksi berdasarkan ID
-// export const GET = auth(async (req, context) => {
-//   // context adalah parameter kedua yang berisi informasi tentang route, termasuk params
-//   // (biasanya digunakan untuk menangkap parameter dinamis dari URL, seperti id transaksi dalam kasus ini)
-//   if (!req.auth?.user?.id) {
-//     return NextResponse.json(
-//       {
-//         success: false,
-//         status: 401,
-//         message: "Unauthorized",
-//       },
-//       { status: 401 },
-//     );
-//   }
-//   const params = await context.params;
-//   const userId = req.auth.user.id as string;
-//   const transactionId = params.id;
+export const GET = auth(async (req, context) => {
+  // context adalah parameter kedua yang berisi informasi tentang route, termasuk params
+  // (biasanya digunakan untuk menangkap parameter dinamis dari URL, seperti id transaksi dalam kasus ini)
+  if (!req.auth?.user?.id) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 401,
+        message: "Unauthorized",
+      },
+      { status: 401 },
+    );
+  }
+  const params = await context.params;
+  const userId = req.auth.user.id as string;
+  const transactionId = params.id;
 
-//   try {
-//     const transactions = await prisma.transactions.findUnique({
-//       where: {
-//         id: transactionId,
-//         userId: userId,
-//       },
-//       select: {
-//         id: true,
-//         amount: true,
-//         title: true,
-//         description: true,
-//         type: true,
-//         date: true,
-//         category: {
-//           select: {
-//             name: true,
-//           },
-//         },
-//       },
-//     });
+  try {
+    const transactions = await prisma.transactions.findUnique({
+      where: {
+        id: transactionId,
+        userId: userId,
+      },
+      select: {
+        id: true,
+        amount: true,
+        title: true,
+        description: true,
+        type: true,
+        date: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
-//     const validate = await TransactionSchema.safeParseAsync(transactions);
+    const validate = await TransactionSchema.safeParseAsync(transactions);
 
-//     if (!validate.success) {
-//       console.error("Validation error:", validate.error);
-//       return NextResponse.json(
-//         {
-//           success: false,
-//           status: 500,
-//           message: "Error validating transaction data",
-//         },
-//         { status: 500 },
-//       );
-//     }
+    if (!validate.success) {
+      console.error("Validation error:", validate.error);
+      return NextResponse.json(
+        {
+          success: false,
+          status: 500,
+          message: "Error validating transaction data",
+        },
+        { status: 500 },
+      );
+    }
 
-//     return NextResponse.json({
-//       success: true,
-//       status: 200,
-//       message: "Transaction retrieved successfully",
-//       data: validate.data,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching transaction:", error);
-//     return NextResponse.json(
-//       {
-//         success: false,
-//         status: 500,
-//         message: "Failed to fetch transaction",
-//       },
-//       { status: 500 },
-//     );
-//   }
-// });
+    return NextResponse.json({
+      success: true,
+      status: 200,
+      message: "Transaction retrieved successfully",
+      data: validate.data,
+    });
+  } catch (error) {
+    console.error("Error fetching transaction:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        status: 500,
+        message: "Failed to fetch transaction",
+      },
+      { status: 500 },
+    );
+  }
+});
 
 // Route handler untuk menangani operasi DELETE pada transaksi berdasarkan ID
 export const DELETE = auth(async (req, context) => {
@@ -105,7 +107,7 @@ export const DELETE = auth(async (req, context) => {
   }
 
   const userId = req.auth.user.id as string;
-  const transactionId = params.id;
+  const transactionId = params.id as string;
 
   try {
     const deletedTransaction = await prisma.transactions.delete({

@@ -6,12 +6,17 @@ const CategorySchema = zod.object({
 
 export const TransactionSchema = zod.object({
   id: zod.string(),
-  amount: zod.any().transform(value => {
-    if (value && typeof value === "object" && "toNumber" in value) {
-      return value.toNumber();
-    }
-    return Number(value);
-  }),
+  amount: zod
+    .any()
+    .transform(value => {
+      if (value && typeof value === "object" && "toNumber" in value) {
+        return value.toNumber();
+      }
+      return Number(value);
+    })
+    .refine(value => !isNaN(value) && value > 0, {
+      message: "Amount must be a number greater than 0",
+    }),
   title: zod.string(),
   description: zod.string().optional(),
   type: zod.enum(["Income", "Expense"]),
@@ -71,3 +76,41 @@ export type TransactionData = zod.infer<
 export const validateResponseTransaction = (payload: unknown) => {
   return transactionResponseSchema.safeParseAsync(payload);
 };
+
+// =================================================================
+
+export const updateTransactionSchema = zod.object({
+  id: zod.string(),
+  amount: zod.any().transform(value => {
+    if (value && typeof value === "object" && "toNumber" in value) {
+      return value.toNumber();
+    }
+    return Number(value);
+  }),
+  title: zod
+    .string()
+    .min(3, "Title must be at least 3 characters long")
+    .max(50, "Title must be at most 50 characters long"),
+  description: zod
+    .string()
+    .trim()
+    .max(200, "Description must be at most 200 characters long")
+    .optional(),
+  type: zod.enum(["Expense", "Income"], {
+    error: "Type must be either 'Expense' or 'Income'",
+  }),
+  date: zod.date(),
+  category: zod.object({
+    name: zod
+      .string()
+      .trim()
+      .min(1, "Category name cannot be empty")
+      .max(15, "Category name cannot be more than 15 characters long"),
+  }),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+export type UpdateTransactionInputType = zod.infer<
+  typeof updateTransactionSchema
+>;

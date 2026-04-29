@@ -24,15 +24,21 @@ import { useState } from "react";
 import { DropdownMenuTransaction } from "./DropdownMenuTransaction";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { UpdateTransactionDialog } from "@/components/common/UpdateTransactionDialog";
 
 export default function TransactionContent() {
   const isMobile = useIsMobile();
 
-  // Modal
+  // Modal Delete
   const [open, setOpen] = useState(false);
+
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   // untuk mengirim id transaksi ke modal/dialog
   const [selectedItem, setSelectedItem] = useState<string>("");
+
+  const [selectedItemForUpdate, setSelectedItemForUpdate] =
+    useState<string>("");
 
   const { data: result, isLoading } = useQuery<TransactionData>({
     queryKey: ["transactions"],
@@ -106,7 +112,9 @@ export default function TransactionContent() {
               <div>
                 <DropdownMenuTransaction
                   setOpen={setOpen}
+                  setOpenUpdate={setOpenUpdate}
                   setSelectedItem={setSelectedItem}
+                  setSelectedItemForUpdate={setSelectedItemForUpdate}
                   transaction={transaction}
                 />
               </div>
@@ -156,7 +164,9 @@ export default function TransactionContent() {
                 <td>
                   <DropdownMenuTransaction
                     setOpen={setOpen}
+                    setOpenUpdate={setOpenUpdate}
                     setSelectedItem={setSelectedItem}
+                    setSelectedItemForUpdate={setSelectedItemForUpdate}
                     transaction={transaction}
                   />
                 </td>
@@ -187,6 +197,11 @@ export default function TransactionContent() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <UpdateTransactionDialog
+        openUpdate={openUpdate}
+        setOpenUpdate={setOpenUpdate}
+        selectedItemForUpdate={selectedItemForUpdate}
+      />
     </>
   );
 }

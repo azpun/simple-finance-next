@@ -57,7 +57,17 @@ export const TransactionByIdClient = ({ initialData }: Prop) => {
             <div className="flex flex-col gap-2 py-4">
               <h3 className="text-lg font-bold">Create At</h3>
               <p>
-                {new Date(initialData.date).toLocaleDateString("id-ID", {
+                {new Date(initialData.createdAt).toLocaleDateString("id-ID", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 py-4">
+              <h3 className="text-lg font-bold">Update At</h3>
+              <p>
+                {new Date(initialData.updatedAt).toLocaleDateString("id-ID", {
                   day: "numeric",
                   month: "long",
                   year: "numeric",

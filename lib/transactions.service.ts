@@ -29,6 +29,8 @@ export const getTrasactionById = async ({
           name: true,
         },
       },
+      createdAt: true,
+      updatedAt: true,
     },
   });
 
