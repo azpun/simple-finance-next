@@ -23,6 +23,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { DropdownMenuTransaction } from "./DropdownMenuTransaction";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function TransactionContent() {
   const isMobile = useIsMobile();
@@ -54,6 +55,7 @@ export default function TransactionContent() {
       const response = await fetch(`/api/transactions/${id}`, {
         method: "DELETE",
       });
+
       const result = await response.json();
       return result;
     },
@@ -64,8 +66,12 @@ export default function TransactionContent() {
       queryClient.invalidateQueries({
         queryKey: ["dashboard"],
       });
+      toast.success("Transaction deleted successfully", { duration: 4000 });
       setSelectedItem("");
       setOpen(false);
+    },
+    onError: () => {
+      toast.error("Failed to delete transaction", { duration: 5000 });
     },
   });
 

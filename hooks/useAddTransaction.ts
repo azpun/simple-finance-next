@@ -39,6 +39,7 @@ const useAddTransaction = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["transactions"],
+        refetchType: "active",
       });
       queryClient.invalidateQueries({
         queryKey: ["dashboard"],
