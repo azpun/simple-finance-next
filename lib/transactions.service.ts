@@ -1,7 +1,6 @@
 // /lib/transactions.service.ts
 import { TransactionSchema } from "@/validations/transaction.validate";
 import prisma from "./connectDB";
-// import { NextResponse } from "next/server";
 
 export const getTrasactionById = async ({
   id,
@@ -10,6 +9,9 @@ export const getTrasactionById = async ({
   id: string;
   userId: string;
 }) => {
+  if (!userId) {
+    return console.error("Unauthorized");
+  }
   const transactions = await prisma.transactions.findUnique({
     where: {
       id: id,
@@ -35,8 +37,6 @@ export const getTrasactionById = async ({
   if (!validate.success) {
     console.error("Validation error:", validate.error);
   }
-
-  //   console.log(validate.data);
 
   return validate.data;
 };

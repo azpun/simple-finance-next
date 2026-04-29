@@ -1,0 +1,175 @@
+// app/(dashboard)/transactions/TransactionContent.tsx
+"use client";
+
+import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import { useIsMobile } from "@/hooks/use-mobile";
+
+import {
+  TransactionData,
+  TransactionResponse,
+} from "@/validations/transaction.validate";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { useState } from "react";
+import { DropdownMenuTransaction } from "./DropdownMenuTransaction";
+import { Button } from "@/components/ui/button";
+
+export default function TransactionContent() {
+  const isMobile = useIsMobile();
+
+  // Modal
+  const [open, setOpen] = useState(false);
+
+  // untuk mengirim id transaksi ke modal/dialog
+  const [selectedItem, setSelectedItem] = useState<string>("");
+
+  const { data: result, isLoading } = useQuery<TransactionData>({
+    queryKey: ["transactions"],
+    queryFn: async () => {
+      const response = await fetch(`/api/transactions`);
+      const result: TransactionResponse = await response.json();
+      const data: TransactionData = result.data;
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      return data;
+    },
+  });
+
+  const queryClient = useQueryClient();
+  const deleteTransaction = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/transactions/${id}`, {
+        method: "DELETE",
+      });
+      const result = await response.json();
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard"],
+      });
+      setSelectedItem("");
+      setOpen(false);
+    },
+  });
+
+  return (
+    <>
+      <div className="p-6">This is for Filter and Search</div>
+      {isMobile ? (
+        <div className="flex flex-col gap-4">
+          {result?.length === 0 && (
+            <p className="p-2 text-center">No transaction found</p>
+          )}
+          {isLoading && <p>Loading...</p>}
+          {result?.map(transaction => (
+            <Card
+              key={transaction.id}
+              className="flex flex-row items-center justify-between p-6"
+            >
+              <div className="flex flex-col gap-3">
+                <h3 className="text-lg">{transaction.title}</h3>
+                <p>{transaction.category.name}</p>
+                <p>Rp.{transaction.amount.toLocaleString("id-ID")}</p>
+              </div>
+
+              <div>
+                <DropdownMenuTransaction
+                  setOpen={setOpen}
+                  setSelectedItem={setSelectedItem}
+                  transaction={transaction}
+                />
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <table className="w-full border border-slate-700">
+          <thead className="">
+            <tr className="text-left text-white dark:text-white bg-slate-700">
+              <th>Title</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {result?.length === 0 && (
+              <tr>
+                <td colSpan={6} className="p-2 text-center">
+                  There is no transactions found
+                </td>
+              </tr>
+            )}
+            {isLoading && (
+              <tr>
+                <td colSpan={6} className="p-2 text-center">
+                  Loading...
+                </td>
+              </tr>
+            )}
+            {result?.map(transaction => (
+              <tr key={transaction.id} className="p-2 text-sm">
+                <td>{transaction.title}</td>
+                <td className="capitalize">{transaction.category.name}</td>
+                <td>Rp.{transaction.amount.toLocaleString("id-ID")}</td>
+                <td className="">{transaction.type}</td>
+                <td>
+                  {new Date(transaction.date).toLocaleDateString("id-ID", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </td>
+                <td>
+                  <DropdownMenuTransaction
+                    setOpen={setOpen}
+                    setSelectedItem={setSelectedItem}
+                    transaction={transaction}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Warning!</DialogTitle>
+          </DialogHeader>
+          Are you sure you want to delete this transaction?
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={() => deleteTransaction.mutate(selectedItem)}
+            >
+              Yes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
