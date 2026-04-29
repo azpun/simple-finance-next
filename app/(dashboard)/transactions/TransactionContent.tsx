@@ -50,7 +50,7 @@ export default function TransactionContent() {
   });
 
   const queryClient = useQueryClient();
-  const deleteTransaction = useMutation({
+  const { mutate: deleteTransaction, isPending } = useMutation({
     mutationFn: async (id: string) => {
       const response = await fetch(`/api/transactions/${id}`, {
         method: "DELETE",
@@ -173,11 +173,14 @@ export default function TransactionContent() {
           Are you sure you want to delete this transaction?
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" disabled={isPending}>
+                Cancel
+              </Button>
             </DialogClose>
             <Button
               variant="destructive"
-              onClick={() => deleteTransaction.mutate(selectedItem)}
+              disabled={isPending}
+              onClick={() => deleteTransaction(selectedItem)}
             >
               Yes
             </Button>
