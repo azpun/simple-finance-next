@@ -102,6 +102,7 @@ export const UpdateTransactionDialog = ({
                       id="title"
                       name="title"
                       type="text"
+                      value={field.value ?? ""}
                       placeholder="Watch a Movie"
                       className={`${errors.title ? "border-2 border-red-500" : ""}`}
                       aria-invalid={errors.title ? "true" : "false"}
@@ -123,6 +124,7 @@ export const UpdateTransactionDialog = ({
                       id="description"
                       name="description"
                       type="text"
+                      value={field.value ?? ""}
                       placeholder="Watch a Movie at Home with Friends"
                       className={`${
                         errors.description ? "border-2 border-red-500" : ""
@@ -147,6 +149,7 @@ export const UpdateTransactionDialog = ({
                       name="amount"
                       placeholder="35000"
                       type="number"
+                      value={field.value ?? 0}
                       // walaupun type number, outputnya string. Jadi diubah ke number
                       onChange={e => {
                         const value = e.target.value;
@@ -172,7 +175,7 @@ export const UpdateTransactionDialog = ({
                     <Select
                       // {...field}
                       onValueChange={field.onChange}
-                      value={field.value}
+                      value={field.value ?? ""}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a type" />

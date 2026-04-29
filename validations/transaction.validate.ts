@@ -22,6 +22,8 @@ export const TransactionSchema = zod.object({
   type: zod.enum(["Income", "Expense"]),
   date: zod.coerce.date(),
   category: CategorySchema,
+
+  // ada kemungkinan akan bug disini saat update
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
 });
