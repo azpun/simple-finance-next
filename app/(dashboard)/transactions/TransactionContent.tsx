@@ -69,40 +69,18 @@ export default function TransactionContent() {
       queryClient.invalidateQueries({
         queryKey: ["dashboard"],
       });
-      toast.success("Transaction deleted successfully", { duration: 4000 });
+      toast.success("Transaction deleted successfully", {
+        duration: 4000,
+        position: "top-center",
+      });
       setSelectedItem("");
       setOpen(false);
     },
     onError: () => {
-      toast.error("Failed to delete transaction", { duration: 5000 });
-    },
-  });
-
-  const { mutate: updateTransaction } = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await fetch(`/api/transactions/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify(data),
+      toast.error("Failed to delete transaction", {
+        duration: 5000,
+        position: "top-center",
       });
-      const result = await response.json();
-      return result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["transactions"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["dashboard"],
-      });
-      toast.success("Transaction updated successfully", { duration: 4000 });
-      setSelectedItem("");
-      setOpenUpdate(false);
-    },
-    onError: () => {
-      toast.error("Failed to update transaction", { duration: 5000 });
     },
   });
 
@@ -139,7 +117,6 @@ export default function TransactionContent() {
                   setOpen={setOpen}
                   setOpenUpdate={setOpenUpdate}
                   setSelectedItem={setSelectedItem}
-                  // setSelectedItemForUpdate={setSelectedItem}
                   transaction={transaction}
                 />
               </div>
@@ -191,7 +168,6 @@ export default function TransactionContent() {
                     setOpen={setOpen}
                     setOpenUpdate={setOpenUpdate}
                     setSelectedItem={setSelectedItem}
-                    // setSelectedItemForUpdate={setSelectedItemForUpdate}
                     transaction={transaction}
                   />
                 </td>

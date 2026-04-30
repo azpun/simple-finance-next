@@ -1,3 +1,5 @@
+// app/components/common/UpdateTransactionDialog.tsx
+"use client";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -21,13 +23,14 @@ import {
 } from "../ui/select";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   UpdateTransactionInputType,
   updateTransactionSchema,
 } from "@/validations/transaction.validate";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   openUpdate: boolean;
@@ -40,6 +43,7 @@ export const UpdateTransactionDialog = ({
   setOpenUpdate,
   selectedItemForUpdate,
 }: Props) => {
+  const [selectedItem, setSelectedItem] = useState<string>("");
   const id = selectedItemForUpdate as string;
 
   const { data: result } = useQuery<UpdateTransactionInputType>({
@@ -75,11 +79,60 @@ export const UpdateTransactionDialog = ({
     }
   }, [result, reset]);
 
+  const queryClient = useQueryClient();
+  const updateTransactionMutation = useMutation({
+    mutationKey: ["update-transaction", id],
+    mutationFn: async (data: UpdateTransactionInputType) => {
+      console.log(data);
+      const response = await fetch(`/api/transactions/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard"],
+      });
+      toast.success("Transaction updated successfully", {
+        duration: 4000,
+        position: "top-center",
+      });
+      setSelectedItem("");
+      setOpenUpdate(false);
+    },
+    onError: error => {
+      console.error("Error updating transaction", error);
+      toast.error("Failed to update transaction", {
+        duration: 5000,
+        position: "top-center",
+      });
+    },
+  });
+
   const onSubmit: SubmitHandler<UpdateTransactionInputType> = async data => {
-    // const userId = session?.user?.id as string;
-    // const dataWithUserId = { ...data, userId };
     console.log(data);
+    updateTransactionMutation.mutate(data);
+
+    if (!updateTransactionMutation.isSuccess) {
+      console.error(
+        "Error updating transaction",
+        updateTransactionMutation.error,
+      );
+    }
+
+    if (updateTransactionMutation.isSuccess) {
+      console.log("Transaction updated successfully");
+    }
   };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (errors: any) => {
     console.log("ERROR NIH", errors);

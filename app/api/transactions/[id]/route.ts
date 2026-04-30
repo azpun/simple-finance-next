@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
-import { TransactionSchema } from "@/validations/transaction.validate";
+import {
+  TransactionSchema,
+  updateTransactionSchema,
+} from "@/validations/transaction.validate";
 import { NextResponse } from "next/server";
 
 // Route handler untuk menangani operasi CRUD pada transaksi berdasarkan ID
@@ -134,6 +137,56 @@ export const DELETE = auth(async (req, context) => {
 
 export const PUT = auth(async (req, context) => {
   console.log("PUT request received");
-  console.log(req);
-  console.log(context);
+
+  console.log(await context.params);
+  if (!req.auth?.user?.id) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 401,
+        message: "Unauthorized",
+      },
+      { status: 401 },
+    );
+  }
+  const params = await context.params;
+
+  if (!params?.id) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 400,
+        message: "Transaction ID is required",
+      },
+      { status: 400 },
+    );
+  }
+
+  const userId = req.auth.user.id as string;
+  const transactionId = params.id as string;
+  const data = await req.json();
+
+  const validateData = updateTransactionSchema.safeParse(data);
+
+  if (!validateData.success) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 400,
+        message: "Invalid User Input",
+        errors: validateData.error.flatten(),
+      },
+      { status: 400 },
+    );
+  }
+
+  console.log("User ID:", userId);
+  console.log("Transaction ID:", transactionId);
+  console.log("Data received:", validateData.data);
+
+  return NextResponse.json({
+    success: true,
+    status: 200,
+    message: "PUT request received",
+  });
 });
