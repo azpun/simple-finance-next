@@ -44,8 +44,9 @@ export const UpdateTransactionDialog = ({
 
   const { data: result } = useQuery<UpdateTransactionInputType>({
     queryKey: ["transactions", id],
-    queryFn: async id => {
-      const response = await fetch(`/api/transactions/${id.queryKey[1]}`);
+    queryFn: async ({ queryKey }) => {
+      const id = queryKey[1];
+      const response = await fetch(`/api/transactions/${id}`);
 
       const result = await response.json();
       const data: UpdateTransactionInputType = result.data;
@@ -73,10 +74,15 @@ export const UpdateTransactionDialog = ({
       reset(result);
     }
   }, [result, reset]);
+
   const onSubmit: SubmitHandler<UpdateTransactionInputType> = async data => {
     // const userId = session?.user?.id as string;
     // const dataWithUserId = { ...data, userId };
     console.log(data);
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onError = (errors: any) => {
+    console.log("ERROR NIH", errors);
   };
 
   return (
@@ -89,7 +95,7 @@ export const UpdateTransactionDialog = ({
               Make changes to your transaction
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="title">Title</FieldLabel>

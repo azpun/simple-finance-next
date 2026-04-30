@@ -37,9 +37,6 @@ export default function TransactionContent() {
   // untuk mengirim id transaksi ke modal/dialog
   const [selectedItem, setSelectedItem] = useState<string>("");
 
-  const [selectedItemForUpdate, setSelectedItemForUpdate] =
-    useState<string>("");
-
   const { data: result, isLoading } = useQuery<TransactionData>({
     queryKey: ["transactions"],
     queryFn: async () => {
@@ -81,6 +78,34 @@ export default function TransactionContent() {
     },
   });
 
+  const { mutate: updateTransaction } = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/transactions/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard"],
+      });
+      toast.success("Transaction updated successfully", { duration: 4000 });
+      setSelectedItem("");
+      setOpenUpdate(false);
+    },
+    onError: () => {
+      toast.error("Failed to update transaction", { duration: 5000 });
+    },
+  });
+
   return (
     <>
       <div className="p-6">This is for Filter and Search</div>
@@ -114,7 +139,7 @@ export default function TransactionContent() {
                   setOpen={setOpen}
                   setOpenUpdate={setOpenUpdate}
                   setSelectedItem={setSelectedItem}
-                  setSelectedItemForUpdate={setSelectedItemForUpdate}
+                  // setSelectedItemForUpdate={setSelectedItem}
                   transaction={transaction}
                 />
               </div>
@@ -166,7 +191,7 @@ export default function TransactionContent() {
                     setOpen={setOpen}
                     setOpenUpdate={setOpenUpdate}
                     setSelectedItem={setSelectedItem}
-                    setSelectedItemForUpdate={setSelectedItemForUpdate}
+                    // setSelectedItemForUpdate={setSelectedItemForUpdate}
                     transaction={transaction}
                   />
                 </td>
@@ -200,7 +225,7 @@ export default function TransactionContent() {
       <UpdateTransactionDialog
         openUpdate={openUpdate}
         setOpenUpdate={setOpenUpdate}
-        selectedItemForUpdate={selectedItemForUpdate}
+        selectedItemForUpdate={selectedItem}
       />
     </>
   );

@@ -131,3 +131,9 @@ export const DELETE = auth(async (req, context) => {
     });
   }
 });
+
+export const PUT = auth(async (req, context) => {
+  console.log("PUT request received");
+  console.log(req);
+  console.log(context);
+});

@@ -101,7 +101,7 @@ export const updateTransactionSchema = zod.object({
   type: zod.enum(["Expense", "Income"], {
     error: "Type must be either 'Expense' or 'Income'",
   }),
-  date: zod.date(),
+
   category: zod.object({
     name: zod
       .string()
@@ -109,8 +109,6 @@ export const updateTransactionSchema = zod.object({
       .min(1, "Category name cannot be empty")
       .max(15, "Category name cannot be more than 15 characters long"),
   }),
-  createdAt: zod.date(),
-  updatedAt: zod.date(),
 });
 
 export type UpdateTransactionInputType = zod.infer<
