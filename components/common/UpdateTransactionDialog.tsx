@@ -43,9 +43,11 @@ export const UpdateTransactionDialog = ({
   setOpenUpdate,
   selectedItemForUpdate,
 }: Props) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedItem, setSelectedItem] = useState<string>("");
   const id = selectedItemForUpdate as string;
 
+  // untuk mengambil data transaksi berdasarkan id
   const { data: result } = useQuery<UpdateTransactionInputType>({
     queryKey: ["transactions", id],
     queryFn: async ({ queryKey }) => {
@@ -73,12 +75,14 @@ export const UpdateTransactionDialog = ({
     resolver: zodResolver(updateTransactionSchema),
   });
 
+  // untuk mengisi form update dengan data transaksi yang diambil berdasarkan id
   useEffect(() => {
     if (result) {
       reset(result);
     }
   }, [result, reset]);
 
+  // untuk memperbarui data transaksi
   const queryClient = useQueryClient();
   const updateTransactionMutation = useMutation({
     mutationKey: ["update-transaction", id],
@@ -120,13 +124,6 @@ export const UpdateTransactionDialog = ({
   const onSubmit: SubmitHandler<UpdateTransactionInputType> = async data => {
     console.log(data);
     updateTransactionMutation.mutate(data);
-
-    if (!updateTransactionMutation.isSuccess) {
-      console.error(
-        "Error updating transaction",
-        updateTransactionMutation.error,
-      );
-    }
 
     if (updateTransactionMutation.isSuccess) {
       console.log("Transaction updated successfully");

@@ -136,9 +136,6 @@ export const DELETE = auth(async (req, context) => {
 });
 
 export const PUT = auth(async (req, context) => {
-  console.log("PUT request received");
-
-  console.log(await context.params);
   if (!req.auth?.user?.id) {
     return NextResponse.json(
       {
@@ -180,13 +177,52 @@ export const PUT = auth(async (req, context) => {
     );
   }
 
-  console.log("User ID:", userId);
-  console.log("Transaction ID:", transactionId);
-  console.log("Data received:", validateData.data);
-
-  return NextResponse.json({
-    success: true,
-    status: 200,
-    message: "PUT request received",
-  });
+  try {
+    const updatedTransaction = await prisma.transactions.update({
+      where: {
+        id: transactionId,
+        userId: userId,
+      },
+      data: {
+        title: validateData.data.title,
+        amount: validateData.data.amount,
+        description: validateData.data.description,
+        type: validateData.data.type,
+        category: {
+          connectOrCreate: {
+            where: {
+              normalizeName_userId: {
+                normalizeName: validateData.data.category.name
+                  .toLowerCase()
+                  .trim(),
+                userId: userId,
+              },
+            },
+            create: {
+              name: validateData.data.category.name,
+              normalizeName: validateData.data.category.name
+                .toLowerCase()
+                .trim(),
+              userId: userId,
+              type: validateData.data.type,
+            },
+          },
+        },
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      status: 200,
+      message: "PUT request received",
+      data: updatedTransaction,
+    });
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    return NextResponse.json({
+      success: false,
+      status: 500,
+      message: "Failed to update transaction",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
 });
