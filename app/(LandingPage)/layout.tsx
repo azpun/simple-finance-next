@@ -55,7 +55,7 @@ export default function LandingLayout({
             <ThemeSwitcher variant="ghost" />
           </div>
         </header>
-        <div className="">{children}</div>
+        <main className="">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

@@ -62,6 +62,7 @@ model Users {
   fullname      String
   email         String          @unique
   password      String     
+  image         String?
 
   budgets       Budgets[]          
   transactions  Transactions[]
