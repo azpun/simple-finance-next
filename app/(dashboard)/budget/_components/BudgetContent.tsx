@@ -12,11 +12,8 @@ import {
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export const BudgetContent = () => {
-  const isMobile = useMediaQuery(1024);
-  //   const isTabletDesktop = useMediaQuery(1024);
-
-  console.log(isMobile);
-  //   console.log(isTabletDesktop);
+  const isMobile = useMediaQuery(1022);
+  const isTabletDesktop = useMediaQuery(1024);
 
   return (
     <div>
@@ -26,19 +23,19 @@ export const BudgetContent = () => {
             <CardHeader>
               <CardTitle>
                 <div>
-                  <h2>Budget Bulan Tahun</h2>
+                  <h2>Budget </h2>
                 </div>
               </CardTitle>
               <CardDescription>
                 <div>
-                  <p>Budget Description</p>
+                  <p>Description</p>
                 </div>
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div>
-                <span>Progression bar of remaining budget</span>
                 <p>Budget Amount and Remaining</p>
+                <span>Progression bar of remaining budget</span>
               </div>
             </CardContent>
             <CardFooter>
@@ -47,29 +44,39 @@ export const BudgetContent = () => {
           </Card>
         </>
       )}
-      {!isMobile && (
-        <>
-          <table className="w-full border">
-            <thead>
+      {!isTabletDesktop && (
+        <div className="relative overflow-x-auto border rounded-md shadow-xs border-default">
+          <table className="w-full text-sm text-left table-auto text-body lg:table-fixed">
+            <thead className="border-b border-defult bg-secondary">
               <tr>
-                <th>Budget Bulan Tahun</th>
-                <th>Budget Description</th>
-                <th>Progression bar </th>
-                <th>Budget Amount and Remaining</th>
-                <th>Actions Button</th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Budget
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Description
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Progression bar
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Budget Amount and Remaining
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Actions Button
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
+              <tr className="border-b even:bg-secondary">
+                <td className="px-6 py-4">1</td>
+                <td className="px-6 py-4">2</td>
+                <td className="px-6 py-4">3</td>
+                <td className="px-6 py-4">4</td>
+                <td className="px-6 py-4">5</td>
               </tr>
             </tbody>
           </table>
-        </>
+        </div>
       )}
     </div>
   );

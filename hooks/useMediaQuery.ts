@@ -10,15 +10,15 @@ export const useMediaQuery = (breakpoint: number) => {
     const mediaQueryList = window.matchMedia(mediaQuery);
 
     // Update the document title using the browser API
-    const onChange = () => {
-      setIsTargetReached(window.innerWidth < breakpoint);
+    const onChange = (event: MediaQueryListEvent) => {
+      setIsTargetReached(event.matches);
     };
 
     mediaQueryList.addEventListener("change", onChange);
 
     // check initial value on mount
     const initialMatches = () => {
-      const isMatch = window.innerWidth < breakpoint;
+      const isMatch = mediaQueryList.matches;
       setIsTargetReached(isMatch);
       return isMatch;
     };

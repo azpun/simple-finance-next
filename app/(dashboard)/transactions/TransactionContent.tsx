@@ -124,57 +124,78 @@ export default function TransactionContent() {
           ))}
         </div>
       ) : (
-        <table className="w-full border border-slate-700">
-          <thead className="">
-            <tr className="text-left text-white dark:text-white bg-slate-700">
-              <th>Title</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Type</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {result?.length === 0 && (
+        <div className="relative overflow-x-auto border rounded-md shadow-xs">
+          <table className="w-full text-sm text-left table-auto text-body lg:table-fixed">
+            <thead className="border-b border-defult bg-secondary">
               <tr>
-                <td colSpan={6} className="p-2 text-center">
-                  There is no transactions found
-                </td>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Title
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Category
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Amount
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Type
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Date
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Action
+                </th>
               </tr>
-            )}
-            {isLoading && (
-              <tr>
-                <td colSpan={6} className="p-2 text-center">
-                  Loading...
-                </td>
-              </tr>
-            )}
-            {result?.map(transaction => (
-              <tr key={transaction.id} className="p-2 text-sm">
-                <td>{transaction.title}</td>
-                <td className="capitalize">{transaction.category.name}</td>
-                <td>Rp.{transaction.amount.toLocaleString("id-ID")}</td>
-                <td className="">{transaction.type}</td>
-                <td>
-                  {new Date(transaction.updatedAt).toLocaleDateString("id-ID", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </td>
-                <td>
-                  <DropdownMenuTransaction
-                    setOpen={setOpen}
-                    setOpenUpdate={setOpenUpdate}
-                    setSelectedItem={setSelectedItem}
-                    transaction={transaction}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y">
+              {result?.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center">
+                    There is no transactions found
+                  </td>
+                </tr>
+              )}
+              {isLoading && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center">
+                    Loading...
+                  </td>
+                </tr>
+              )}
+              {result?.map(transaction => (
+                <tr key={transaction.id} className="p-2 text-sm">
+                  <td className="px-6 py-4">{transaction.title}</td>
+                  <td className="px-6 py-4 capitalize">
+                    {transaction.category.name}
+                  </td>
+                  <td className="px-6 py-4">
+                    Rp.{transaction.amount.toLocaleString("id-ID")}
+                  </td>
+                  <td className="px-6 py-4">{transaction.type}</td>
+                  <td className="px-6 py-4">
+                    {new Date(transaction.updatedAt).toLocaleDateString(
+                      "id-ID",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      },
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    <DropdownMenuTransaction
+                      setOpen={setOpen}
+                      setOpenUpdate={setOpenUpdate}
+                      setSelectedItem={setSelectedItem}
+                      transaction={transaction}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
