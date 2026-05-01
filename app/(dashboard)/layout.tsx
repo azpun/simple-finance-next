@@ -60,9 +60,9 @@ export default async function DashboardLayout({
             <ThemeSwitcher variant="ghost" />
           </div>
         </header>
-        <div className="px-2 py-2 md:px-10 md:py-6 lg:px-20">
+        <main className="px-2 py-2 md:px-10 md:py-6 lg:px-20">
           <ReactQueryProvider>{children}</ReactQueryProvider>
-        </div>
+        </main>
         <div className="block md:hidden">
           <AddTransactionDialog />
         </div>
