@@ -43,7 +43,7 @@ export default function RootLayout({
         inter.variable,
       )}
     >
-      <body className="flex flex-col min-h-full">
+      <body className="flex flex-col min-h-full transition-colors duration-300">
         <ProviderTheme>
           <ReactQueryProvider>
             <SessionProvider>{children}</SessionProvider>
