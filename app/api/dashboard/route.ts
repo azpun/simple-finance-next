@@ -48,6 +48,17 @@ export async function GET() {
       },
     });
 
+    if (!transactionsDate) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Transactions this month not found",
+        },
+        { status: 404 },
+      );
+    }
+
     const transactionGroupByCategories = await prisma.transactions.groupBy({
       by: ["categoryId"],
       where: {
@@ -62,6 +73,17 @@ export async function GET() {
         amount: true,
       },
     });
+
+    if (!transactionGroupByCategories) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Get Transactions Group By Categories this month not found",
+        },
+        { status: 404 },
+      );
+    }
 
     const total = transactionGroupByCategories.reduce<number>((total, item) => {
       const { _sum } = item;
@@ -94,7 +116,7 @@ export async function GET() {
         return {
           ...item,
           category: category?.get(item.categoryId)?.name,
-          percentage: ((_sum.amount?.toNumber() ?? 0) / total) * 100, // The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+          percentage: ((_sum.amount?.toNumber() ?? 0) / total) * 100,
         };
       }
       return {

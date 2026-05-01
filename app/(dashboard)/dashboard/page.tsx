@@ -65,7 +65,13 @@ export default function Dashboard() {
         <div className="flex flex-col">
           <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
           <p className="tracking-tight text-balance">
-            Here&apos;s your financial snapshot for this month
+            Here&apos;s your financial snapshot for{" "}
+            <span className="font-bold">
+              {new Date().toLocaleDateString("id-ID", {
+                month: "long",
+                year: "numeric",
+              })}
+            </span>
           </p>
         </div>
         <div className="hidden md:block">
@@ -81,7 +87,7 @@ export default function Dashboard() {
             <CardContent className="flex flex-col gap-4">
               <div>
                 <h3>Monthly Budget</h3>
-                <p className="text-xl font-bold">$1,100</p>
+                <p className="text-xl font-bold">Rp. 1.000.000</p>
               </div>
               <div>
                 <h3>Spend so far</h3>
@@ -91,7 +97,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3>Remaining</h3>
-                <p className="text-xl font-bold">$600</p>
+                <p className="text-xl font-bold">Rp. 980.000</p>
               </div>
             </CardContent>
           </Card>
@@ -102,7 +108,7 @@ export default function Dashboard() {
                 <h3>Monthly Budget</h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">$1,000</p>
+                <p className="text-xl font-bold">Rp. 1.000.000</p>
               </CardContent>
             </Card>
             <Card>
@@ -120,7 +126,7 @@ export default function Dashboard() {
                 <h3>Remaining</h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">$600</p>
+                <p className="text-xl font-bold">Rp. 980.000</p>
               </CardContent>
             </Card>
           </div>
