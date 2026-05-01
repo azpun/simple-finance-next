@@ -22,8 +22,8 @@ export default async function DashboardLayout({
   const navigationMenus = [
     { name: "Dashboard", href: "/dashboard" },
     { name: "Transactions", href: "/transactions" },
-    { name: "Report", href: "/report" },
     { name: "Budget", href: "/budget" },
+    { name: "Report", href: "/report" },
   ];
   const session = await auth();
   if (!session) {

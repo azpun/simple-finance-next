@@ -2,8 +2,8 @@ import { BudgetContent } from "./_components/BudgetContent";
 
 const BudgetPage = () => {
   return (
-    <div className="min-h-auto">
-      <div className="p-4 md:p-8 lg:p-12">
+    <div className="min-h-screen">
+      <div className="p-4 md:p-6 lg:p-10">
         <div className="space-y-6">
           <div id="hearder">
             <h1 className="text-3xl font-bold lg:text-4xl">Budget</h1>

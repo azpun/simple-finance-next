@@ -60,8 +60,8 @@ export default function Dashboard() {
   }, [result?.byCategories]);
 
   return (
-    <div>
-      <div className="p-6 md:flex md:justify-between">
+    <div className="min-h-screen">
+      <div className="p-4 md:p-6 lg:p-10 md:flex md:justify-between">
         <div className="flex flex-col">
           <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
           <p className="tracking-tight text-balance">
