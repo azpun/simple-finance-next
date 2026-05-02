@@ -13,12 +13,15 @@ const BudgetPage = () => {
                 Here&apos;s your budget list
               </p>
             </div>
-            <div>
+            <div className="hidden md:block">
               <AddBudgetButton />
             </div>
           </div>
-          <div id="content">
+          <main id="content">
             <BudgetContent />
+          </main>
+          <div className="md:hidden">
+            <AddBudgetButton />
           </div>
         </div>
       </div>

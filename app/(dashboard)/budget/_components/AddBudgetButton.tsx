@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -33,11 +34,18 @@ export const AddBudgetButton = () => {
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild className="md:hidden">
-          <Button className="btn btn-primary">Add Budget</Button>
+        <DialogTrigger asChild className="fixed bottom-10 right-10 md:hidden">
+          <Button
+            type="button"
+            className="font-bold text-white rounded-full size-18 bg-primary hover:bg-primary/80"
+          >
+            <PlusIcon />
+          </Button>
         </DialogTrigger>
         <DialogTrigger asChild className="hidden md:block">
-          <Button className="btn btn-primary">Add Budget</Button>
+          <Button type="button" className="btn btn-primary">
+            Add Budget
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
