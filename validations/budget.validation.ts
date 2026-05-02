@@ -28,7 +28,7 @@ export const createBudgetSchema = z.object({
       }
       return Number(value);
     })
-    .refine(value => !isNaN(value) && value === null, {
+    .refine(value => !isNaN(value) && value > 0, {
       message: "Amount budget must be a valid number",
     }),
   description: z

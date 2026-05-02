@@ -30,9 +30,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import useAddBudget from "@/hooks/useAddBudget";
 
 export const AddBudgetButton = () => {
   const [open, setOpen] = useState<boolean>(false);
+
+  const { mutateAsync } = useAddBudget();
 
   const {
     control,
@@ -42,8 +45,16 @@ export const AddBudgetButton = () => {
     resolver: zodResolver(createBudgetSchema),
   });
 
-  const onSubmit: SubmitHandler<CreateBudgetInputType> = data =>
-    console.log(data);
+  const onAddBudget: SubmitHandler<CreateBudgetInputType> = async data => {
+    await mutateAsync(data, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+      onError: error => {
+        console.error("Error creating budget", error.message);
+      },
+    });
+  };
 
   return (
     <div>
@@ -66,7 +77,7 @@ export const AddBudgetButton = () => {
             <DialogTitle>Add Budget</DialogTitle>
             <DialogDescription>add your montly budget</DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onAddBudget)}>
             <FieldGroup>
               <div className="box-border flex items-end gap-2">
                 <Field>
