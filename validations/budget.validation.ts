@@ -1,11 +1,24 @@
 import * as z from "zod";
 
 export const createBudgetSchema = z.object({
-  month: z.number().int().min(1).max(12),
+  month: z
+    .any()
+    .transform(value => {
+      if (typeof value === "string") {
+        const monthNumber = Number(value);
+        if (!isNaN(monthNumber) && monthNumber >= 1 && monthNumber <= 12) {
+          return monthNumber;
+        }
+      }
+      return value;
+    })
+    .refine(value => typeof value === "number" && value >= 1 && value <= 12, {
+      message: "Please select a valid month",
+    }),
   year: z
     .number()
     .int()
-    .min(2025, "Year must be at least 2025")
+    .min(2026, "Year must be at least 2026")
     .max(2100, "Year must be at most 2100"),
   amount: z
     .any()
@@ -15,8 +28,8 @@ export const createBudgetSchema = z.object({
       }
       return Number(value);
     })
-    .refine(value => !isNaN(value) && value > 0, {
-      message: "Amount must be a number greater than 0",
+    .refine(value => !isNaN(value) && value === null, {
+      message: "Amount budget must be a valid number",
     }),
   description: z
     .string()

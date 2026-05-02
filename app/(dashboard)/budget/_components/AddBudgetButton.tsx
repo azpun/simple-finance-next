@@ -22,14 +22,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  CreateBudgetInputType,
+  createBudgetSchema,
+} from "@/validations/budget.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 export const AddBudgetButton = () => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const { control } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(createBudgetSchema),
+  });
+
+  const onSubmit: SubmitHandler<CreateBudgetInputType> = data =>
+    console.log(data);
 
   return (
     <div>
@@ -52,59 +66,94 @@ export const AddBudgetButton = () => {
             <DialogTitle>Add Budget</DialogTitle>
             <DialogDescription>add your montly budget</DialogDescription>
           </DialogHeader>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
-              <Field>
-                <label htmlFor="mont">Month</label>
-                <Controller
-                  control={control}
-                  name="month"
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a month" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Month&apos;s</SelectLabel>
-                          <SelectItem value="1">January</SelectItem>
-                          <SelectItem value="2">February</SelectItem>
-                          <SelectItem value="3">March</SelectItem>
-                          <SelectItem value="4">April</SelectItem>
-                          <SelectItem value="5">May</SelectItem>
-                          <SelectItem value="6">June</SelectItem>
-                          <SelectItem value="7">July</SelectItem>
-                          <SelectItem value="8">August</SelectItem>
-                          <SelectItem value="9">September</SelectItem>
-                          <SelectItem value="10">October</SelectItem>
-                          <SelectItem value="11">November</SelectItem>
-                          <SelectItem value="12">December</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+              <div className="box-border flex items-end gap-2">
+                <Field>
+                  <label
+                    htmlFor="month"
+                    className={errors.month && "text-red-400"}
+                  >
+                    Month
+                  </label>
+                  <Controller
+                    control={control}
+                    name="month"
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        // {value =>
+                        //   field.onChange(parseInt(value, 10))
+                        // }
+                        value={field.value}
+                      >
+                        <SelectTrigger
+                          className={`p-4.75 ${errors.month && "border-red-400"}`}
+                        >
+                          <SelectValue placeholder="Select a month" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Month&apos;s</SelectLabel>
+                            <SelectItem value="1">January</SelectItem>
+                            <SelectItem value="2">February</SelectItem>
+                            <SelectItem value="3">March</SelectItem>
+                            <SelectItem value="4">April</SelectItem>
+                            <SelectItem value="5">May</SelectItem>
+                            <SelectItem value="6">June</SelectItem>
+                            <SelectItem value="7">July</SelectItem>
+                            <SelectItem value="8">August</SelectItem>
+                            <SelectItem value="9">September</SelectItem>
+                            <SelectItem value="10">October</SelectItem>
+                            <SelectItem value="11">November</SelectItem>
+                            <SelectItem value="12">December</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.month && (
+                    <span className={errors.month ? "text-red-400" : ""}>
+                      {errors.month && <>{errors.month.message}</>}
+                    </span>
                   )}
-                />
-              </Field>
-              <Field>
-                <label htmlFor="year">Year</label>
-                <Controller
-                  control={control}
-                  name="year"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Select a year 2025 - 2100"
-                      onChange={e => {
-                        const value = e.target.value;
-                        field.onChange(value === "" ? "" : Number(value));
-                      }}
-                    />
+                </Field>
+                <Field>
+                  <label
+                    htmlFor="year"
+                    className={errors.year && "text-red-400"}
+                  >
+                    Year
+                  </label>
+                  <Controller
+                    control={control}
+                    name="year"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="Select a year 2025 - 2100"
+                        value={field.value ?? 0}
+                        onChange={e => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? "" : Number(value));
+                        }}
+                        className={`${errors.year && "border-red-400"}`}
+                      />
+                    )}
+                  />
+                  {errors.year && (
+                    <span className="text-red-400">{errors.year.message}</span>
                   )}
-                />
-              </Field>
+                </Field>
+              </div>
               <Field>
-                <label htmlFor="amount">Amount</label>
+                <label
+                  htmlFor="amount"
+                  className={errors.amount && "text-red-400"}
+                >
+                  Amount
+                </label>
                 <Controller
                   control={control}
                   name="amount"
@@ -113,13 +162,20 @@ export const AddBudgetButton = () => {
                       {...field}
                       type="number"
                       placeholder="Enter amount"
+                      value={field.value ?? 0}
                       onChange={e => {
                         const value = e.target.value;
                         field.onChange(value === "" ? "" : Number(value));
                       }}
+                      className={`${errors.year && "border-red-400"}`}
                     />
                   )}
                 />
+                {errors.amount && (
+                  <span className={errors.amount ? "text-red-400" : ""}>
+                    {errors.amount && <>{errors.amount.message}</>}
+                  </span>
+                )}
               </Field>
               <Field>
                 <label htmlFor="description">Description</label>
@@ -131,6 +187,7 @@ export const AddBudgetButton = () => {
                       {...field}
                       type="text"
                       placeholder="Enter description"
+                      value={field.value ?? ""}
                     />
                   )}
                 />
