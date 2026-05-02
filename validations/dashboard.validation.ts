@@ -22,12 +22,17 @@ export const dashboardResponseSchema = z.object({
     byCategories: z.array(
       z.object({
         _sum: z.object({
-          amount: z.any().transform(value => {
-            if (value && typeof value === "object" && "toNumber" in value) {
-              return value.toNumber();
-            }
-            return Number(value);
-          }),
+          amount: z
+            .any()
+            .transform(value => {
+              if (value && typeof value === "object" && "toNumber" in value) {
+                return value.toNumber();
+              }
+              return Number(value);
+            })
+            .refine(value => !isNaN(value) && value > 0, {
+              message: "Amount must be a number greater than 0",
+            }),
         }),
         categoryId: z.string(),
         category: z.string(),
@@ -42,12 +47,17 @@ export const dashboardDataSchema = z.object({
   transactions: z.array(
     z.object({
       id: z.string(),
-      amount: z.any().transform(value => {
-        if (value && typeof value === "object" && "toNumber" in value) {
-          return value.toNumber();
-        }
-        return Number(value);
-      }),
+      amount: z
+        .any()
+        .transform(value => {
+          if (value && typeof value === "object" && "toNumber" in value) {
+            return value.toNumber();
+          }
+          return Number(value);
+        })
+        .refine(value => !isNaN(value) && value > 0, {
+          message: "Amount must be a number greater than 0",
+        }),
       title: z.string(),
       type: z.enum(["Income", "Expense"]),
       date: z.coerce.date(),
@@ -61,12 +71,17 @@ export const dashboardDataSchema = z.object({
   byCategories: z.array(
     z.object({
       _sum: z.object({
-        amount: z.any().transform(value => {
-          if (value && typeof value === "object" && "toNumber" in value) {
-            return value.toNumber();
-          }
-          return Number(value);
-        }),
+        amount: z
+          .any()
+          .transform(value => {
+            if (value && typeof value === "object" && "toNumber" in value) {
+              return value.toNumber();
+            }
+            return Number(value);
+          })
+          .refine(value => !isNaN(value) && value > 0, {
+            message: "Amount must be a number greater than 0",
+          }),
       }),
       categoryId: z.string(),
       category: z.string(),

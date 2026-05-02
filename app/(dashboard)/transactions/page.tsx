@@ -20,6 +20,9 @@ export default function Transactions() {
         <main>
           <TransactionContent />
         </main>
+        <div className="md:hidden">
+          <AddTransactionDialog />
+        </div>
       </div>
     </div>
   );

@@ -82,6 +82,8 @@ model Budgets {
 
   totalAmount   Decimal
 
+  description   String?
+
   budgetCategory      BudgetCategory[]
 
   createdAt   DateTime        @default(now())

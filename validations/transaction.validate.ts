@@ -83,12 +83,17 @@ export const validateResponseTransaction = (payload: unknown) => {
 
 export const updateTransactionSchema = zod.object({
   id: zod.string(),
-  amount: zod.any().transform(value => {
-    if (value && typeof value === "object" && "toNumber" in value) {
-      return value.toNumber();
-    }
-    return Number(value);
-  }),
+  amount: zod
+    .any()
+    .transform(value => {
+      if (value && typeof value === "object" && "toNumber" in value) {
+        return value.toNumber();
+      }
+      return Number(value);
+    })
+    .refine(value => !isNaN(value) && value > 0, {
+      message: "Amount must be a number greater than 0",
+    }),
   title: zod
     .string()
     .min(3, "Title must be at least 3 characters long")

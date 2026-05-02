@@ -96,7 +96,7 @@ export default function TransactionContent() {
           {result?.map(transaction => (
             <Card
               key={transaction.id}
-              className="flex flex-row items-center justify-between p-6"
+              className="flex flex-row items-center justify-between p-6 mx-0"
             >
               <div className="flex flex-col gap-3">
                 <h3 className="text-lg">{transaction.title}</h3>

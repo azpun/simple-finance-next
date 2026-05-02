@@ -1,6 +1,5 @@
 // 'use client';
 import AppSidebar from "@/components/app-sidebar";
-import AddTransactionDialog from "@/components/common/AddTransactionDialog";
 import ReactQueryProvider from "@/components/providers/ReactQuery";
 import SignButtons from "@/components/SignButton";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
@@ -63,9 +62,6 @@ export default async function DashboardLayout({
         <main className="px-2 py-2 md:px-10 md:py-6 lg:px-20">
           <ReactQueryProvider>{children}</ReactQueryProvider>
         </main>
-        <div className="block md:hidden">
-          <AddTransactionDialog />
-        </div>
       </SidebarInset>
     </SidebarProvider>
   );
