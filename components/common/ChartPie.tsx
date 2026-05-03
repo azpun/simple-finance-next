@@ -87,8 +87,8 @@ export function ChartPieDonut() {
   }, [result?.byCategories]) as ChartConfig;
 
   const sumOfExpanses = React.useMemo(() => {
-    return result?.sumOfExpanses;
-  }, [result?.sumOfExpanses]);
+    return result?.operationsOf.sumOfExpansesThisMonth;
+  }, [result?.operationsOf.sumOfExpansesThisMonth]);
   return (
     <CardContent className="flex-1 pb-0">
       <ChartContainer
