@@ -40,6 +40,12 @@ export const dashboardResponseSchema = z.object({
       }),
     ),
     sumOfExpanses: z.number(),
+    budget: z.object({
+      totalAmount: z.number(),
+      date: z.string(),
+      createdAt: z.coerce.date(),
+      updatedAt: z.coerce.date(),
+    }),
   }),
 });
 
@@ -89,6 +95,12 @@ export const dashboardDataSchema = z.object({
     }),
   ),
   sumOfExpanses: z.number(),
+  budget: z.object({
+    totalAmount: z.number(),
+    date: z.string(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
+  }),
 });
 
 export type DashboardResponse = z.infer<typeof dashboardResponseSchema>;

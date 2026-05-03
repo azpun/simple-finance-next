@@ -6,7 +6,64 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const session = await auth();
-  const userId = session?.user?.id;
+  const userId = session?.user?.id as string;
+
+  if (!userId) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 401,
+        message: "Unauthorized",
+      },
+      { status: 401 },
+    );
+  }
+
+  try {
+    const getBudgets = await prisma.budgets.findMany({
+      where: {
+        userId: userId,
+      },
+      select: {
+        month: true,
+        year: true,
+        totalAmount: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!getBudgets) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Budget not found",
+        },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        status: 200,
+        message: "Get budgets successfully",
+        data: getBudgets,
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("Error fetching budgets:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        status: 500,
+        message: "Error fetching budgets",
+      },
+      { status: 500 },
+    );
+  }
 }
 
 export async function POST(req: Request) {
@@ -57,7 +114,7 @@ export async function POST(req: Request) {
         userId: userId,
         month: validateData.data.month,
         year: validateData.data.year,
-        totalAmount: validateData.data.amount,
+        totalAmount: validateData.data.totalAmount,
         description: validateData.data.description,
       },
     });

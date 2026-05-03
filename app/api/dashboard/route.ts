@@ -5,16 +5,23 @@ import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { dashboardDataSchema } from "@/validations/dashboard.validation";
+import { formattedDataBudget } from "@/validations/budget.validation";
+
 // import { Decimal } from "@prisma/client/runtime/library"; // Cannot find module '@prisma/client/runtime/library' or its corresponding type declarations.
 
 export async function GET() {
   const session = await auth();
-  const userId = session?.user?.id;
+  const userId = session?.user?.id as string;
 
-  const nowUtc = new Date();
-  const month = nowUtc.getMonth() + 1; // Months are zero-indexed
-  const year = nowUtc.getFullYear();
-  // const nowLocal = toZonedTime(nowUtc, timezone);
+  const getCurrentMonthYear = () => {
+    const now = new Date();
+    return {
+      month: now.getMonth() + 1,
+      year: now.getFullYear(),
+    };
+  };
+
+  const { month, year } = getCurrentMonthYear();
 
   const referenceDate = new Date(year, month - 1); // First day of the current month
 
@@ -73,6 +80,54 @@ export async function GET() {
         amount: true,
       },
     });
+
+    // ===========================================================
+    const getBudget = await prisma.budgets.findUnique({
+      where: {
+        userId_year_month: {
+          userId: userId,
+          year: year,
+          month: month,
+        },
+      },
+      select: {
+        totalAmount: true,
+        month: true,
+        year: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    const formattedDate = new Date(
+      getBudget?.year as number,
+      ((getBudget?.month ?? 0) - 1) as number,
+    ).toLocaleDateString("id-ID", {
+      month: "long",
+      year: "numeric",
+    });
+
+    const mappingBudget = {
+      totalAmount: getBudget?.totalAmount,
+      date: formattedDate,
+      createdAt: getBudget?.createdAt,
+      updatedAt: getBudget?.updatedAt,
+    };
+
+    const validateMappingBudget = formattedDataBudget.safeParse(mappingBudget);
+
+    if (!validateMappingBudget.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 400,
+          message: validateMappingBudget.error.message,
+          error: validateMappingBudget.error.flatten(),
+        },
+        { status: 400 },
+      );
+    }
+    // ===========================================================
 
     if (!transactionGroupByCategories) {
       return NextResponse.json(
@@ -135,6 +190,7 @@ export async function GET() {
       transactions: transactionsDate,
       byCategories: sortedWithPercentage,
       sumOfExpanses: total,
+      budget: validateMappingBudget.data,
     };
 
     const validate = dashboardDataSchema.safeParse(result);

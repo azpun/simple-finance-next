@@ -36,6 +36,8 @@ export default function Dashboard() {
     staleTime: 0,
   });
 
+  console.log(result?.budget);
+
   const finalSpendData = React.useMemo(() => {
     const main = result?.byCategories.slice(0, 5);
     const others = result?.byCategories.slice(5);
@@ -66,12 +68,7 @@ export default function Dashboard() {
           <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
           <p className="tracking-tight text-balance">
             Here&apos;s your financial snapshot for{" "}
-            <span className="font-bold">
-              {new Date().toLocaleDateString("id-ID", {
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
+            <span className="font-bold">{result?.budget.date}</span>
           </p>
         </div>
         <div className="hidden md:block">
@@ -87,7 +84,9 @@ export default function Dashboard() {
             <CardContent className="flex flex-col gap-4">
               <div>
                 <h3>Monthly Budget</h3>
-                <p className="text-xl font-bold">Rp. 1.000.000</p>
+                <p className="text-xl font-bold">
+                  {result?.budget.totalAmount}
+                </p>
               </div>
               <div>
                 <h3>Spend so far</h3>
@@ -108,7 +107,9 @@ export default function Dashboard() {
                 <h3>Monthly Budget</h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">Rp. 1.000.000</p>
+                <p className="text-xl font-bold">
+                  Rp. {result?.budget.totalAmount.toLocaleString("id-ID")}
+                </p>
               </CardContent>
             </Card>
             <Card>

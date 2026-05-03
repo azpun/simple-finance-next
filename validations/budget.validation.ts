@@ -20,7 +20,7 @@ export const createBudgetSchema = z.object({
     .int()
     .min(2026, "Year must be at least 2026")
     .max(2100, "Year must be at most 2100"),
-  amount: z
+  totalAmount: z
     .any()
     .transform(value => {
       if (value && typeof value === "object" && "toNumber" in value) {
@@ -39,3 +39,25 @@ export const createBudgetSchema = z.object({
 });
 
 export type CreateBudgetInputType = z.infer<typeof createBudgetSchema>;
+
+export const formattedDataBudget = z.object({
+  date: z.string(),
+  totalAmount: z
+    .any()
+    .transform(value => {
+      if (value && typeof value === "object" && "toNumber" in value) {
+        return value.toNumber();
+      }
+      return Number(value);
+    })
+    .refine(value => !isNaN(value) && value > 0, {
+      message: "Amount budget must be a valid number",
+    }),
+  description: z
+    .string()
+    .trim()
+    .max(200, "Description must be at most 200 characters long")
+    .optional(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
