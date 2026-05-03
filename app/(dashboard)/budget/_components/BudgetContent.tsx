@@ -10,10 +10,19 @@ import {
 } from "@/components/ui/card";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useQuery } from "@tanstack/react-query";
 
 export const BudgetContent = () => {
   const isMobile = useMediaQuery(1022);
   const isTabletDesktop = useMediaQuery(1024);
+
+  // const { data } = useQuery({
+  //   queryKey: ["budget"],
+  //   queryFn: async () => {
+  //     const response = await fetch("/api/budget");
+  //     return response.json();
+  //   },
+  // });
 
   return (
     <div>

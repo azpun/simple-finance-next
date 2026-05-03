@@ -39,7 +39,12 @@ export const dashboardResponseSchema = z.object({
         percentage: z.number(),
       }),
     ),
-    sumOfExpanses: z.number(),
+    operationsOf: z.object({
+      amountOfBudgetThisMonth: z.number(),
+      sumOfExpansesThisMonth: z.number(),
+      budgetRemaining: z.number(),
+      percentageRemaining: z.number(),
+    }),
     budget: z.object({
       totalAmount: z.number(),
       date: z.string(),
@@ -94,13 +99,25 @@ export const dashboardDataSchema = z.object({
       percentage: z.number(),
     }),
   ),
-  sumOfExpanses: z.number(),
+  operationsOf: z.object({
+    amountOfBudgetThisMonth: z.number(),
+    sumOfExpansesThisMonth: z.number(),
+    budgetRemaining: z.number(),
+    percentageRemaining: z.number(),
+  }),
   budget: z.object({
     totalAmount: z.number(),
     date: z.string(),
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date(),
   }),
+});
+
+export const operationOfSchema = z.object({
+  amountOfBudgetThisMonth: z.number(),
+  sumOfExpansesThisMonth: z.number(),
+  budgetRemaining: z.number(),
+  percentageRemaining: z.number(),
 });
 
 export type DashboardResponse = z.infer<typeof dashboardResponseSchema>;

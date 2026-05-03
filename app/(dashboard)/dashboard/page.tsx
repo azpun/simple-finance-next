@@ -36,8 +36,6 @@ export default function Dashboard() {
     staleTime: 0,
   });
 
-  console.log(result?.budget);
-
   const finalSpendData = React.useMemo(() => {
     const main = result?.byCategories.slice(0, 5);
     const others = result?.byCategories.slice(5);
@@ -91,12 +89,22 @@ export default function Dashboard() {
               <div>
                 <h3>Spend so far</h3>
                 <p className="text-xl font-bold">
-                  Rp. {result?.sumOfExpanses.toLocaleString("id-ID")}
+                  Rp.{" "}
+                  {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                    "id-ID",
+                  )}
+                  <span className="text-gray-500">
+                    {" "}
+                    ({result?.operationsOf.percentageRemaining.toPrecision(2)}%)
+                  </span>
                 </p>
               </div>
               <div>
                 <h3>Remaining</h3>
-                <p className="text-xl font-bold">Rp. 980.000</p>
+                <p className="text-xl font-bold">
+                  Rp.{" "}
+                  {result?.operationsOf.budgetRemaining.toLocaleString("id-ID")}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -118,7 +126,14 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <p className="text-xl font-bold">
-                  Rp. {result?.sumOfExpanses.toLocaleString("id-ID")}
+                  Rp.{" "}
+                  {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                    "id-ID",
+                  )}
+                  <span className="text-gray-500">
+                    {" "}
+                    ({result?.operationsOf.percentageRemaining.toPrecision(2)}%)
+                  </span>
                 </p>
               </CardContent>
             </Card>
@@ -127,7 +142,10 @@ export default function Dashboard() {
                 <h3>Remaining</h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">Rp. 980.000</p>
+                <p className="text-xl font-bold">
+                  Rp.{" "}
+                  {result?.operationsOf.budgetRemaining.toLocaleString("id-ID")}
+                </p>
               </CardContent>
             </Card>
           </div>

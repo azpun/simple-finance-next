@@ -4,7 +4,10 @@ import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
 import { startOfMonth, endOfMonth } from "date-fns";
-import { dashboardDataSchema } from "@/validations/dashboard.validation";
+import {
+  dashboardDataSchema,
+  operationOfSchema,
+} from "@/validations/dashboard.validation";
 import { formattedDataBudget } from "@/validations/budget.validation";
 
 // import { Decimal } from "@prisma/client/runtime/library"; // Cannot find module '@prisma/client/runtime/library' or its corresponding type declarations.
@@ -81,6 +84,17 @@ export async function GET() {
       },
     });
 
+    if (!transactionGroupByCategories) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Get Transactions Group By Categories this month not found",
+        },
+        { status: 404 },
+      );
+    }
+
     // ===========================================================
     const getBudget = await prisma.budgets.findUnique({
       where: {
@@ -129,24 +143,16 @@ export async function GET() {
     }
     // ===========================================================
 
-    if (!transactionGroupByCategories) {
-      return NextResponse.json(
-        {
-          success: false,
-          status: 404,
-          message: "Get Transactions Group By Categories this month not found",
-        },
-        { status: 404 },
-      );
-    }
-
-    const total = transactionGroupByCategories.reduce<number>((total, item) => {
-      const { _sum } = item;
-      if (_sum) {
-        total += _sum.amount?.toNumber() ?? 0; // Operator '+=' cannot be applied to types 'number' and 'number | Decimal'.
-      }
-      return total;
-    }, 0);
+    const sumOfExpenseThisMonth = transactionGroupByCategories.reduce<number>(
+      (total, item) => {
+        const { _sum } = item;
+        if (_sum) {
+          total += _sum.amount?.toNumber() ?? 0; // Operator '+=' cannot be applied to types 'number' and 'number | Decimal'.
+        }
+        return total;
+      },
+      0,
+    );
 
     const categoryids = transactionGroupByCategories.map(
       item => item.categoryId,
@@ -171,7 +177,8 @@ export async function GET() {
         return {
           ...item,
           category: category?.get(item.categoryId)?.name,
-          percentage: ((_sum.amount?.toNumber() ?? 0) / total) * 100,
+          percentage:
+            ((_sum.amount?.toNumber() ?? 0) / sumOfExpenseThisMonth) * 100,
         };
       }
       return {
@@ -186,10 +193,36 @@ export async function GET() {
       return b.percentage - a.percentage;
     });
 
+    const budgetRemaining =
+      validateMappingBudget.data.totalAmount - sumOfExpenseThisMonth;
+
+    const percentageRemaining = (sumOfExpenseThisMonth / budgetRemaining) * 100;
+
+    const operationsOf = {
+      amountOfBudgetThisMonth: validateMappingBudget.data.totalAmount,
+      sumOfExpansesThisMonth: sumOfExpenseThisMonth,
+      budgetRemaining: budgetRemaining,
+      percentageRemaining: percentageRemaining,
+    };
+
+    const validateOperationsOf = operationOfSchema.safeParse(operationsOf);
+
+    if (!validateOperationsOf.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 400,
+          message: validateOperationsOf.error.message,
+          error: validateOperationsOf.error.flatten(),
+        },
+        { status: 400 },
+      );
+    }
+
     const result = {
       transactions: transactionsDate,
       byCategories: sortedWithPercentage,
-      sumOfExpanses: total,
+      operationsOf: validateOperationsOf.data,
       budget: validateMappingBudget.data,
     };
 
