@@ -40,8 +40,34 @@ export const createBudgetSchema = z.object({
 
 export type CreateBudgetInputType = z.infer<typeof createBudgetSchema>;
 
-export const formattedDataBudget = z.object({
-  date: z.string(),
+export const formattedDataBudget = z.array(
+  z.object({
+    monthAndYear: z.string(),
+    totalAmount: z.number(),
+    // .any()
+    //   .transform(value => {
+    //     if (value && typeof value === "object" && "toNumber" in value) {
+    //       return value.toNumber();
+    //     }
+    //     return Number(value);
+    //   })
+    //   .refine(value => !isNaN(value) && value > 0, {
+    //     message: "Amount budget must be a valid number",
+    //   }),
+    description: z
+      .string()
+      .trim()
+      .max(200, "Description must be at most 200 characters long")
+      .optional(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
+  }),
+);
+
+export type FormattedDataBudgetType = z.infer<typeof formattedDataBudget>;
+
+export const DataBudget = z.object({
+  monthAndYear: z.string(),
   totalAmount: z
     .any()
     .transform(value => {
@@ -61,3 +87,5 @@ export const formattedDataBudget = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
+
+export type DataBudgetType = z.infer<typeof DataBudget>;

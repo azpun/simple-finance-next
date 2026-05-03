@@ -51,7 +51,7 @@ export const TransactionByIdClient = ({ initialData }: Prop) => {
             <Separator className={isMobile ? "block" : "hidden"} />
             <div className="flex flex-col gap-2 py-4">
               <h3 className="text-lg font-bold">Category</h3>
-              <p>{initialData.category?.name}</p>
+              <p className="capitalize">{initialData.category?.name}</p>
             </div>
             <Separator className={isMobile ? "block" : "hidden"} />
             <div className="flex flex-col gap-2 py-4">

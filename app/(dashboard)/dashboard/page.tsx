@@ -66,7 +66,7 @@ export default function Dashboard() {
           <h1 className="text-3xl">{`Hello... ${session?.user?.name}`}</h1>
           <p className="tracking-tight text-balance">
             Here&apos;s your financial snapshot for{" "}
-            <span className="font-bold">{result?.budget.date}</span>
+            <span className="font-bold">{result?.budget.monthAndYear}</span>
           </p>
         </div>
         <div className="hidden md:block">

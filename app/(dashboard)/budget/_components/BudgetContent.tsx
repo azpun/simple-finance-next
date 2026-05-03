@@ -10,19 +10,34 @@ import {
 } from "@/components/ui/card";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-// import { useQuery } from "@tanstack/react-query";
+import { FormattedDataBudgetType } from "@/validations/budget.validation";
+import { useQuery } from "@tanstack/react-query";
 
 export const BudgetContent = () => {
   const isMobile = useMediaQuery(1022);
   const isTabletDesktop = useMediaQuery(1024);
 
-  // const { data } = useQuery({
-  //   queryKey: ["budget"],
-  //   queryFn: async () => {
-  //     const response = await fetch("/api/budget");
-  //     return response.json();
-  //   },
-  // });
+  const { data: budget } = useQuery<FormattedDataBudgetType>({
+    queryKey: ["budget"],
+    queryFn: async () => {
+      const response = await fetch("/api/budgets", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch budget");
+      }
+      const result = await response.json();
+      const data: FormattedDataBudgetType = result.data;
+
+      console.log(data);
+
+      return data;
+    },
+  });
 
   return (
     <div>
@@ -76,13 +91,28 @@ export const BudgetContent = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b even:bg-secondary">
-                <td className="px-6 py-4">1</td>
-                <td className="px-6 py-4">2</td>
-                <td className="px-6 py-4">3</td>
-                <td className="px-6 py-4">4</td>
-                <td className="px-6 py-4">5</td>
-              </tr>
+              {budget?.map((item, index) => (
+                <tr key={index} className="border-b even:bg-secondary">
+                  <td className="px-6 py-4">{item.monthAndYear}</td>
+                  <td className="px-6 py-4">{item.description}</td>
+                  <td className="px-6 py-4"></td>
+                  <td className="px-6 py-4">
+                    {item.totalAmount}
+                    {/* {new Date(item.createdAt).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })} */}
+                  </td>
+                  <td className="px-6 py-4">
+                    {/* {new Date(item.updatedAt).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })} */}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

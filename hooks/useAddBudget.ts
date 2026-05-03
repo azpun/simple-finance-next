@@ -8,27 +8,18 @@ const useAddBudget = () => {
 
   return useMutation({
     mutationFn: async (data: CreateBudgetInputType) => {
-      const promise = new Promise(async (resolve, reject) => {
-        const response = await fetch("/api/budgets", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-          reject(new Error("Failed to create budget"));
-        } else {
-          resolve(response.json());
-        }
+      const response = await fetch("/api/budgets", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
-      toast.promise(promise, {
-        loading: "Creating budget...",
-        success: "Create budget successful",
-        error: (err: Error) => err.message,
-        duration: 5000,
-        position: "top-center",
-      });
+      if (!response.ok) {
+        throw new Error("Failed to create budget");
+      }
+      const result = await response.json();
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

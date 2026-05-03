@@ -1,7 +1,10 @@
 "use server";
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
-import { createBudgetSchema } from "@/validations/budget.validation";
+import {
+  createBudgetSchema,
+  formattedDataBudget,
+} from "@/validations/budget.validation";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -28,12 +31,13 @@ export async function GET() {
         month: true,
         year: true,
         totalAmount: true,
+        description: true,
         createdAt: true,
         updatedAt: true,
       },
     });
 
-    if (!getBudgets) {
+    if (getBudgets.length === 0) {
       return NextResponse.json(
         {
           success: false,
@@ -43,13 +47,53 @@ export async function GET() {
         { status: 404 },
       );
     }
+    type FormattedBudget = {
+      monthAndYear: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      totalAmount: any;
+      description: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+
+    const formattedGetBudgets: FormattedBudget[] = getBudgets.map(budget => ({
+      monthAndYear: new Date(budget.year, budget.month - 1).toLocaleDateString(
+        "id-ID",
+        {
+          month: "long",
+          year: "numeric",
+        },
+      ),
+      totalAmount: budget.totalAmount.toNumber(),
+      description: budget.description,
+      createdAt: budget.createdAt,
+      updatedAt: budget.updatedAt,
+    }));
+
+    console.log(Array.isArray(formattedGetBudgets));
+    console.log(formattedGetBudgets);
+
+    const validateData = formattedDataBudget.safeParse(formattedGetBudgets);
+
+    if (!validateData.success) {
+      console.error(validateData.error);
+      return NextResponse.json(
+        {
+          success: false,
+          status: 400,
+          message: validateData.error.message,
+          errors: validateData.error.flatten(),
+        },
+        { status: 400 },
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
         status: 200,
         message: "Get budgets successfully",
-        data: getBudgets,
+        data: validateData.data,
       },
       { status: 200 },
     );

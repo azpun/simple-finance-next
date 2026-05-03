@@ -31,6 +31,7 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import useAddBudget from "@/hooks/useAddBudget";
+import { toast } from "sonner";
 
 export const AddBudgetButton = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -46,14 +47,23 @@ export const AddBudgetButton = () => {
   });
 
   const onAddBudget: SubmitHandler<CreateBudgetInputType> = async data => {
-    await mutateAsync(data, {
-      onSuccess: () => {
-        setOpen(false);
+    await toast.promise(
+      mutateAsync(data, {
+        onSuccess: () => {
+          setOpen(false);
+        },
+        onError: error => {
+          console.error("Error creating budget", error.message);
+        },
+      }),
+      {
+        loading: "Creating budget...",
+        success: "Create budget successful",
+        error: (err: Error) => err.message,
+        duration: 5000,
+        position: "top-center",
       },
-      onError: error => {
-        console.error("Error creating budget", error.message);
-      },
-    });
+    );
   };
 
   return (
@@ -160,14 +170,14 @@ export const AddBudgetButton = () => {
               </div>
               <Field>
                 <label
-                  htmlFor="amount"
-                  className={errors.amount && "text-red-400"}
+                  htmlFor="totalAmount"
+                  className={errors.totalAmount && "text-red-400"}
                 >
                   Amount
                 </label>
                 <Controller
                   control={control}
-                  name="amount"
+                  name="totalAmount"
                   render={({ field }) => (
                     <Input
                       {...field}
@@ -182,9 +192,9 @@ export const AddBudgetButton = () => {
                     />
                   )}
                 />
-                {errors.amount && (
-                  <span className={errors.amount ? "text-red-400" : ""}>
-                    {errors.amount && <>{errors.amount.message}</>}
+                {errors.totalAmount && (
+                  <span className={errors.totalAmount ? "text-red-400" : ""}>
+                    {errors.totalAmount && <>{errors.totalAmount.message}</>}
                   </span>
                 )}
               </Field>

@@ -47,7 +47,7 @@ export const dashboardResponseSchema = z.object({
     }),
     budget: z.object({
       totalAmount: z.number(),
-      date: z.string(),
+      monthAndYear: z.string(),
       createdAt: z.coerce.date(),
       updatedAt: z.coerce.date(),
     }),
@@ -107,7 +107,7 @@ export const dashboardDataSchema = z.object({
   }),
   budget: z.object({
     totalAmount: z.number(),
-    date: z.string(),
+    monthAndYear: z.string(),
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date(),
   }),
