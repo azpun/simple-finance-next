@@ -12,6 +12,7 @@ import {
   DashboardResponse,
 } from "@/validations/dashboard.validation";
 import React from "react";
+import { Progress } from "@/components/ui/progress";
 
 export default function Dashboard() {
   const { data: session } = useSession();
@@ -59,6 +60,8 @@ export default function Dashboard() {
       : main;
   }, [result?.byCategories]);
 
+  console.log(typeof result?.operationsOf.percentageRemaining);
+
   return (
     <div className="min-h-screen">
       <div className="p-4 md:p-6 lg:p-10 md:flex md:justify-between">
@@ -88,16 +91,22 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3>Spend so far</h3>
-                <p className="text-xl font-bold">
-                  Rp.{" "}
-                  {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
-                    "id-ID",
-                  )}
-                  <span className="text-gray-500">
-                    {" "}
-                    ({result?.operationsOf.percentageRemaining.toPrecision(2)}%)
-                  </span>
-                </p>
+                <div>
+                  <p className="text-xl font-bold">
+                    Rp.{" "}
+                    {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                      "id-ID",
+                    )}
+                    <span className="text-gray-500">
+                      {" "}
+                      ({result?.operationsOf.percentageRemaining.toPrecision(2)}
+                      %)
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <Progress value={result?.operationsOf.percentageRemaining} />
+                </div>
               </div>
               <div>
                 <h3>Remaining</h3>
@@ -125,16 +134,22 @@ export default function Dashboard() {
                 <h3>Spend so far </h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">
-                  Rp.{" "}
-                  {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
-                    "id-ID",
-                  )}
-                  <span className="text-gray-500">
+                <div className="flex items-center">
+                  <p className="text-xl font-bold">
+                    Rp.{" "}
+                    {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                      "id-ID",
+                    )}
+                  </p>
+                  <p className="ml-auto text-xl text-gray-500">
                     {" "}
-                    ({result?.operationsOf.percentageRemaining.toPrecision(2)}%)
-                  </span>
-                </p>
+                    ({result?.operationsOf.percentageRemaining.toPrecision(2)}
+                    %)
+                  </p>
+                </div>
+                <div>
+                  <Progress value={result?.operationsOf.percentageRemaining} />
+                </div>
               </CardContent>
             </Card>
             <Card>

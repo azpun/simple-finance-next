@@ -96,21 +96,8 @@ export const BudgetContent = () => {
                   <td className="px-6 py-4">{item.monthAndYear}</td>
                   <td className="px-6 py-4">{item.description}</td>
                   <td className="px-6 py-4"></td>
-                  <td className="px-6 py-4">
-                    {item.totalAmount}
-                    {/* {new Date(item.createdAt).toLocaleDateString("id-ID", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })} */}
-                  </td>
-                  <td className="px-6 py-4">
-                    {/* {new Date(item.updatedAt).toLocaleDateString("id-ID", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })} */}
-                  </td>
+                  <td className="px-6 py-4">{item.totalAmount}</td>
+                  <td className="px-6 py-4"></td>
                 </tr>
               ))}
             </tbody>

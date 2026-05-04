@@ -70,9 +70,6 @@ export async function GET() {
       updatedAt: budget.updatedAt,
     }));
 
-    console.log(Array.isArray(formattedGetBudgets));
-    console.log(formattedGetBudgets);
-
     const validateData = formattedDataBudget.safeParse(formattedGetBudgets);
 
     if (!validateData.success) {

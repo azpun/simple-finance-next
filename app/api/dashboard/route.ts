@@ -8,10 +8,7 @@ import {
   dashboardDataSchema,
   operationOfSchema,
 } from "@/validations/dashboard.validation";
-import {
-  DataBudget,
-  formattedDataBudget,
-} from "@/validations/budget.validation";
+import { DataBudget } from "@/validations/budget.validation";
 
 // import { Decimal } from "@prisma/client/runtime/library"; // Cannot find module '@prisma/client/runtime/library' or its corresponding type declarations.
 
@@ -229,11 +226,7 @@ export async function GET() {
       budget: validateMappingBudget.data,
     };
 
-    console.log(result);
-
     const validate = dashboardDataSchema.safeParse(result);
-
-    console.log(validate.data);
 
     if (!validate.success) {
       console.error("Validation error:", validate.error);
