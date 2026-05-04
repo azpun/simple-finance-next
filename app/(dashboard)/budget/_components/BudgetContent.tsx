@@ -1,3 +1,4 @@
+// app/(dashboard)/budget/_components/BudgetContent.tsx
 "use client";
 
 import {
@@ -8,9 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
+import { Progress } from "@/components/ui/progress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { fetchGetDashboard } from "@/lib/api/dashboard";
 import { FormattedDataBudgetType } from "@/validations/budget.validation";
+import { DashboardData } from "@/validations/dashboard.validation";
 import { useQuery } from "@tanstack/react-query";
 
 export const BudgetContent = () => {
@@ -33,10 +36,15 @@ export const BudgetContent = () => {
       const result = await response.json();
       const data: FormattedDataBudgetType = result.data;
 
-      console.log(data);
-
       return data;
     },
+    staleTime: 1000 * 60, // 1 minutes
+  });
+
+  const { data: dataDashboard } = useQuery<DashboardData>({
+    queryKey: ["dashboard"],
+    queryFn: fetchGetDashboard,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   return (
@@ -70,7 +78,7 @@ export const BudgetContent = () => {
       )}
       {!isTabletDesktop && (
         <div className="relative overflow-x-auto border rounded-md shadow-xs border-default">
-          <table className="w-full text-sm text-left table-auto text-body lg:table-fixed">
+          <table className="w-full text-sm text-left text-body lg:table-fixed">
             <thead className="border-b border-defult bg-secondary">
               <tr>
                 <th scope="col" className="px-6 py-3 font-medium">
@@ -93,10 +101,40 @@ export const BudgetContent = () => {
             <tbody>
               {budget?.map((item, index) => (
                 <tr key={index} className="border-b even:bg-secondary">
-                  <td className="px-6 py-4">{item.monthAndYear}</td>
+                  <td className="px-6 py-4 font-bold">{item.monthAndYear}</td>
                   <td className="px-6 py-4">{item.description}</td>
-                  <td className="px-6 py-4"></td>
-                  <td className="px-6 py-4">{item.totalAmount}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex ">
+                        <p>
+                          Rp.{" "}
+                          {dataDashboard?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                            "id-ID",
+                          )}{" "}
+                          / Rp.{" "}
+                          {dataDashboard?.budget.totalAmount.toLocaleString(
+                            "id-ID",
+                          )}
+                        </p>
+                        <p className="ml-auto">
+                          (
+                          {dataDashboard?.operationsOf.percentageRemaining.toPrecision(
+                            1,
+                          )}
+                          %)
+                        </p>
+                      </div>
+                      <Progress
+                        value={dataDashboard?.operationsOf.percentageRemaining}
+                      />
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    Rp.{item.totalAmount.toLocaleString("id-ID")} / Rp.
+                    {dataDashboard?.operationsOf.budgetRemaining.toLocaleString(
+                      "id-ID",
+                    )}
+                  </td>
                   <td className="px-6 py-4"></td>
                 </tr>
               ))}

@@ -23,6 +23,7 @@ export default function Dashboard() {
   // Get transactions
   const { data: result, isLoading } = useQuery<DashboardData>({
     queryKey: ["dashboard"],
+
     queryFn: async () => {
       const response = await fetch(`/api/dashboard`);
       const result: DashboardResponse = await response.json();
@@ -34,7 +35,6 @@ export default function Dashboard() {
 
       return data;
     },
-    staleTime: 0,
   });
 
   const finalSpendData = React.useMemo(() => {
@@ -141,13 +141,21 @@ export default function Dashboard() {
                       "id-ID",
                     )}
                   </p>
-                  <p className="ml-auto text-xl text-gray-500">
-                    {" "}
-                    ({result?.operationsOf.percentageRemaining.toPrecision(2)}
-                    %)
-                  </p>
                 </div>
-                <div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between text-gray-500">
+                    <p>
+                      Rp.{" "}
+                      {result?.operationsOf.budgetRemaining.toLocaleString(
+                        "id-ID",
+                      )}{" "}
+                      remaining
+                    </p>
+                    <p className="ml-auto ">
+                      {" "}
+                      {result?.operationsOf.percentageRemaining.toPrecision(2)}%
+                    </p>
+                  </div>
                   <Progress value={result?.operationsOf.percentageRemaining} />
                 </div>
               </CardContent>
