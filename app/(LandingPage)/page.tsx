@@ -1,10 +1,9 @@
 "use client";
+import { signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const router = useRouter();
   return (
     <div className="min-h-screen">
       <div className="p-4 md:p-6 lg:p-19">
@@ -20,10 +19,7 @@ export default function Home() {
                 today.
               </p>
               <div className="flex gap-2 mt-8 md:items-center md:justify-center">
-                <Button
-                  className="p-5"
-                  onClick={() => router.push("/auth/login")}
-                >
+                <Button className="p-5" onClick={() => signIn()}>
                   Get Started
                 </Button>
                 <Button variant="ghost" className="p-5">
