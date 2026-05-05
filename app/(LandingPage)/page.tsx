@@ -1,5 +1,5 @@
 "use client";
-import { signIn } from "@/auth";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -19,7 +19,12 @@ export default function Home() {
                 today.
               </p>
               <div className="flex gap-2 mt-8 md:items-center md:justify-center">
-                <Button className="p-5" onClick={() => signIn()}>
+                <Button
+                  className="p-5"
+                  onClick={() => {
+                    signIn();
+                  }}
+                >
                   Get Started
                 </Button>
                 <Button variant="ghost" className="p-5">

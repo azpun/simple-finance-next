@@ -15,6 +15,8 @@ import { fetchGetDashboard } from "@/lib/api/dashboard";
 import { FormattedDataBudgetType } from "@/validations/budget.validation";
 import { DashboardData } from "@/validations/dashboard.validation";
 import { useQuery } from "@tanstack/react-query";
+import { DropdownMenuBudgets } from "./DropdownMenuBudgets";
+import { Circle } from "lucide-react";
 
 export const BudgetContent = () => {
   const isMobile = useMediaQuery(1022);
@@ -51,49 +53,74 @@ export const BudgetContent = () => {
     <div>
       {isMobile && (
         <>
-          <Card className="mx-0 md:mx-1 lg:mx-2">
-            <CardHeader>
-              <CardTitle>
-                <div>
-                  <h2>Budget </h2>
+          {budget?.map(item => (
+            <Card key={item.monthAndYear} className="mx-0 md:mx-1 lg:mx-2">
+              <CardHeader>
+                <CardTitle>
+                  <div>
+                    <h2>{item.monthAndYear}</h2>
+                  </div>
+                </CardTitle>
+                <CardDescription>
+                  <div>
+                    <p>{item.description}</p>
+                  </div>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-2">
+                  <div className="flex ">
+                    <p>
+                      Rp.{" "}
+                      {dataDashboard?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                        "id-ID",
+                      )}{" "}
+                      / Rp.{" "}
+                      {dataDashboard?.budget.totalAmount.toLocaleString(
+                        "id-ID",
+                      )}
+                    </p>
+                    <p className="ml-auto">
+                      (
+                      {dataDashboard?.operationsOf.percentageRemaining.toPrecision(
+                        1,
+                      )}
+                      %)
+                    </p>
+                  </div>
+                  <Progress
+                    value={dataDashboard?.operationsOf.percentageRemaining}
+                  />
                 </div>
-              </CardTitle>
-              <CardDescription>
-                <div>
-                  <p>Description</p>
-                </div>
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div>
-                <p>Budget Amount and Remaining</p>
-                <span>Progression bar of remaining budget</span>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <div>Actions Button</div>
-            </CardFooter>
-          </Card>
+              </CardContent>
+              <CardFooter>
+                <div>Actions Button</div>
+              </CardFooter>
+            </Card>
+          ))}
         </>
       )}
       {!isTabletDesktop && (
         <div className="relative overflow-x-auto border rounded-md shadow-xs border-default">
-          <table className="w-full text-sm text-left text-body lg:table-fixed">
+          <table className="w-full text-sm text-left text-body md:table-fixed">
             <thead className="border-b border-defult bg-secondary">
               <tr>
-                <th scope="col" className="px-6 py-3 font-medium">
-                  Budget
+                <th scope="col" className="px-6 py-3 font-medium w-[10vw]">
+                  Month
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium w-[10vw]">
+                  Budget Amount
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium w-[40vw]">
+                  Usage
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Description
+                  Status
                 </th>
-                <th scope="col" className="px-6 py-3 font-medium">
-                  Progression bar
-                </th>
-                <th scope="col" className="px-6 py-3 font-medium">
-                  Budget Amount and Remaining
-                </th>
-                <th scope="col" className="px-6 py-3 font-medium">
+                <th
+                  scope="col"
+                  className="px-6 py-3 font-medium w-[10vw] text-center"
+                >
                   Actions Button
                 </th>
               </tr>
@@ -102,7 +129,9 @@ export const BudgetContent = () => {
               {budget?.map((item, index) => (
                 <tr key={index} className="border-b even:bg-secondary">
                   <td className="px-6 py-4 font-bold">{item.monthAndYear}</td>
-                  <td className="px-6 py-4">{item.description}</td>
+                  <td className="px-6 py-4">
+                    Rp. {item.totalAmount.toLocaleString("id-ID")}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-2">
                       <div className="flex ">
@@ -126,16 +155,53 @@ export const BudgetContent = () => {
                       </div>
                       <Progress
                         value={dataDashboard?.operationsOf.percentageRemaining}
+                        className="h-2 my-2"
                       />
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    Rp.{item.totalAmount.toLocaleString("id-ID")} / Rp.
-                    {dataDashboard?.operationsOf.budgetRemaining.toLocaleString(
-                      "id-ID",
+                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <
+                      50 && (
+                      <div className="flex items-center gap-2 ">
+                        <Circle
+                          fill="green"
+                          className="w-4 h-4 text-green-500"
+                        />
+                        <span>Good</span>
+                      </div>
+                    )}
+                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >=
+                      50 &&
+                      (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
+                        80 && (
+                        <div className="flex items-center gap-2 ">
+                          <Circle
+                            fill="yellow"
+                            className="w-4 h-4 text-yellow-500"
+                          />
+                          <span>Warning</span>
+                        </div>
+                      )}
+                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >
+                      80 &&
+                      (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
+                        100 && (
+                        <div className="flex items-center gap-2 ">
+                          <Circle fill="red" className="w-4 h-4 text-red-500" />
+                          <span>Danger</span>
+                        </div>
+                      )}
+                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >
+                      100 && (
+                      <div className="flex items-center gap-2 ">
+                        <Circle fill="red" className="w-4 h-4 text-red-500" />
+                        <span>Over Budget</span>
+                      </div>
                     )}
                   </td>
-                  <td className="px-6 py-4"></td>
+                  <td className="px-6 py-4 text-center">
+                    <DropdownMenuBudgets />
+                  </td>
                 </tr>
               ))}
             </tbody>
