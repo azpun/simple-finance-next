@@ -95,7 +95,7 @@ export const BudgetContent = () => {
                   {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <
                     50 && (
                     <div className="flex items-center gap-2 ">
-                      <Circle fill="green" className="w-4 h-4 text-green-500" />
+                      <Circle fill="green" className="w-4 h-4 text-[#008000]" />
                       <span>Good</span>
                     </div>
                   )}
@@ -201,7 +201,7 @@ export const BudgetContent = () => {
                       <div className="flex items-center gap-2 ">
                         <Circle
                           fill="green"
-                          className="w-4 h-4 text-green-500"
+                          className="w-4 h-4 text-[#008000]"
                         />
                         <span>Good</span>
                       </div>

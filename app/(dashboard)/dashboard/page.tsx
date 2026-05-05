@@ -60,8 +60,6 @@ export default function Dashboard() {
       : main;
   }, [result?.byCategories]);
 
-  console.log(typeof result?.operationsOf.percentageRemaining);
-
   return (
     <div className="min-h-screen">
       <div className="p-4 md:p-6 lg:p-10 md:flex md:justify-between">
@@ -80,37 +78,53 @@ export default function Dashboard() {
         {isMobile ? (
           <Card className="flex flex-col gap-6">
             <CardHeader>
-              <h3 className="text-xl">Summary</h3>
+              <h3 className="text-2xl font-bold">Summary</h3>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div>
                 <h3>Monthly Budget</h3>
-                <p className="text-xl font-bold">
-                  {result?.budget.totalAmount}
+                <p className="mt-2 text-xl font-bold">
+                  Rp. {result?.budget.totalAmount.toLocaleString("id-ID")}
                 </p>
               </div>
               <div>
                 <h3>Spend so far</h3>
-                <div>
-                  <p className="text-xl font-bold">
-                    Rp.{" "}
-                    {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
-                      "id-ID",
-                    )}
-                    <span className="text-gray-500">
-                      {" "}
-                      ({result?.operationsOf.percentageRemaining.toPrecision(2)}
-                      %)
-                    </span>
-                  </p>
-                </div>
-                <div>
-                  <Progress value={result?.operationsOf.percentageRemaining} />
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center mt-2">
+                    <p className="text-xl font-bold">
+                      Rp.{" "}
+                      {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                        "id-ID",
+                      )}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between text-gray-500">
+                      <p>
+                        Rp.{" "}
+                        {result?.operationsOf.budgetRemaining.toLocaleString(
+                          "id-ID",
+                        )}{" "}
+                        remaining
+                      </p>
+                      <p className="ml-auto ">
+                        {" "}
+                        {result?.operationsOf.percentageRemaining.toPrecision(
+                          2,
+                        )}
+                        %
+                      </p>
+                    </div>
+                    <Progress
+                      value={result?.operationsOf.percentageRemaining}
+                      className="h-2 my-2"
+                    />
+                  </div>
                 </div>
               </div>
               <div>
                 <h3>Remaining</h3>
-                <p className="text-xl font-bold">
+                <p className="mt-2 text-xl font-bold">
                   Rp.{" "}
                   {result?.operationsOf.budgetRemaining.toLocaleString("id-ID")}
                 </p>
@@ -156,7 +170,10 @@ export default function Dashboard() {
                       {result?.operationsOf.percentageRemaining.toPrecision(2)}%
                     </p>
                   </div>
-                  <Progress value={result?.operationsOf.percentageRemaining} />
+                  <Progress
+                    value={result?.operationsOf.percentageRemaining}
+                    className="h-2 my-2"
+                  />
                 </div>
               </CardContent>
             </Card>
