@@ -42,23 +42,24 @@ export type CreateBudgetInputType = z.infer<typeof createBudgetSchema>;
 
 export const formattedDataBudget = z.array(
   z.object({
+    id: z.string(),
     monthAndYear: z.string(),
-    totalAmount: z.number(),
-    // .any()
-    //   .transform(value => {
-    //     if (value && typeof value === "object" && "toNumber" in value) {
-    //       return value.toNumber();
-    //     }
-    //     return Number(value);
-    //   })
-    //   .refine(value => !isNaN(value) && value > 0, {
-    //     message: "Amount budget must be a valid number",
-    //   }),
+    totalAmount: z
+      .any()
+      .transform(value => {
+        if (value && typeof value === "object" && "toNumber" in value) {
+          return value.toNumber();
+        }
+        return Number(value);
+      })
+      .refine(value => !isNaN(value) && value > 0, {
+        message: "Amount budget must be a valid number",
+      }),
     description: z
       .string()
       .trim()
       .max(200, "Description must be at most 200 characters long")
-      .optional(),
+      .nullable(),
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date(),
   }),
@@ -67,6 +68,7 @@ export const formattedDataBudget = z.array(
 export type FormattedDataBudgetType = z.infer<typeof formattedDataBudget>;
 
 export const DataBudget = z.object({
+  id: z.string(),
   monthAndYear: z.string(),
   totalAmount: z
     .any()
@@ -83,7 +85,7 @@ export const DataBudget = z.object({
     .string()
     .trim()
     .max(200, "Description must be at most 200 characters long")
-    .optional(),
+    .nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

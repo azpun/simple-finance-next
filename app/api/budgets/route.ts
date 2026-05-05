@@ -4,6 +4,7 @@ import prisma from "@/lib/connectDB";
 import {
   createBudgetSchema,
   formattedDataBudget,
+  DataBudgetType,
 } from "@/validations/budget.validation";
 import { NextResponse } from "next/server";
 
@@ -28,6 +29,7 @@ export async function GET() {
         userId: userId,
       },
       select: {
+        id: true,
         month: true,
         year: true,
         totalAmount: true,
@@ -47,16 +49,9 @@ export async function GET() {
         { status: 404 },
       );
     }
-    type FormattedBudget = {
-      monthAndYear: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      totalAmount: any;
-      description: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    };
 
-    const formattedGetBudgets: FormattedBudget[] = getBudgets.map(budget => ({
+    const formattedGetBudgets: DataBudgetType[] = getBudgets.map(budget => ({
+      id: budget.id,
       monthAndYear: new Date(budget.year, budget.month - 1).toLocaleDateString(
         "id-ID",
         {

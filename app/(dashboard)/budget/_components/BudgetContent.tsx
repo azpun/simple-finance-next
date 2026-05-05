@@ -236,7 +236,7 @@ export const BudgetContent = () => {
                     )}
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <DropdownMenuBudgets />
+                    <DropdownMenuBudgets data={budget} />
                   </td>
                 </tr>
               ))}
