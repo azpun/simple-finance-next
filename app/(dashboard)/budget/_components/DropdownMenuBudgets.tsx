@@ -11,11 +11,11 @@ import { FormattedDataBudgetType } from "@/validations/budget.validation";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 
-export const DropdownMenuBudgets = ({
-  data,
-}: {
+type Props = {
   data: FormattedDataBudgetType;
-}) => {
+};
+
+export const DropdownMenuBudgets = ({ data }: Props) => {
   if (!data) {
     console.log("data not found");
     return null;
@@ -31,10 +31,7 @@ export const DropdownMenuBudgets = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <Link
-              href={`/budget/${item.id}`}
-              //   href={`/transactions/${transaction.id}`}
-            >
+            <Link href={`/budget/${item.id}`}>
               <DropdownMenuItem>Detail</DropdownMenuItem>
             </Link>
             <DropdownMenuItem

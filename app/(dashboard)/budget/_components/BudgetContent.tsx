@@ -17,6 +17,9 @@ import { DashboardData } from "@/validations/dashboard.validation";
 import { useQuery } from "@tanstack/react-query";
 import { DropdownMenuBudgets } from "./DropdownMenuBudgets";
 import { Circle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import MobileCardContent from "./MobileCardContent";
+import Link from "next/link";
 
 export const BudgetContent = () => {
   const isMobile = useMediaQuery(1022);
@@ -68,69 +71,22 @@ export const BudgetContent = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col gap-2">
-                  <div className="flex ">
-                    <p>
-                      Rp.{" "}
-                      {dataDashboard?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
-                        "id-ID",
-                      )}{" "}
-                      / Rp.{" "}
-                      {dataDashboard?.budget.totalAmount.toLocaleString(
-                        "id-ID",
-                      )}
-                    </p>
-                    <p className="ml-auto">
-                      (
-                      {dataDashboard?.operationsOf.percentageRemaining.toPrecision(
-                        1,
-                      )}
-                      %)
-                    </p>
-                  </div>
-                  <Progress
-                    value={dataDashboard?.operationsOf.percentageRemaining}
-                    className="w-full h-2 my-2"
-                  />
-                  {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <
-                    50 && (
-                    <div className="flex items-center gap-2 ">
-                      <Circle fill="green" className="w-4 h-4 text-[#008000]" />
-                      <span>Good</span>
-                    </div>
-                  )}
-                  {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >=
-                    50 &&
-                    (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
-                      80 && (
-                      <div className="flex items-center gap-2 ">
-                        <Circle
-                          fill="yellow"
-                          className="w-4 h-4 text-yellow-500"
-                        />
-                        <span>Warning</span>
-                      </div>
-                    )}
-                  {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >
-                    80 &&
-                    (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
-                      100 && (
-                      <div className="flex items-center gap-2 ">
-                        <Circle fill="red" className="w-4 h-4 text-red-500" />
-                        <span>Danger</span>
-                      </div>
-                    )}
-                  {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >
-                    100 && (
-                    <div className="flex items-center gap-2 ">
-                      <Circle fill="red" className="w-4 h-4 text-red-500" />
-                      <span>Over Budget</span>
-                    </div>
-                  )}
-                </div>
+                <MobileCardContent
+                  dataDashboard={dataDashboard as DashboardData}
+                />
               </CardContent>
-              <CardFooter>
-                <div>Actions Button</div>
+              <CardFooter className="grid grid-cols-3 gap-2 space-x-2">
+                <Link href={`/budget/${item.id}`}>
+                  <Button variant="outline" className="w-full h-10">
+                    Detail
+                  </Button>
+                </Link>
+                <Button variant="outline" className="w-full h-10">
+                  Edit
+                </Button>
+                <Button variant="destructive" className="w-full h-10">
+                  Delete
+                </Button>
               </CardFooter>
             </Card>
           ))}
@@ -166,17 +122,17 @@ export const BudgetContent = () => {
                 <tr key={index} className="border-b even:bg-secondary">
                   <td className="px-6 py-4 font-bold">{item.monthAndYear}</td>
                   <td className="px-6 py-4">
-                    Rp. {item.totalAmount.toLocaleString("id-ID")}
+                    Rp.{item.totalAmount.toLocaleString("id-ID")}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-2">
                       <div className="flex ">
                         <p>
-                          Rp.{" "}
+                          Rp.
                           {dataDashboard?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
                             "id-ID",
                           )}{" "}
-                          / Rp.{" "}
+                          / Rp.
                           {dataDashboard?.budget.totalAmount.toLocaleString(
                             "id-ID",
                           )}
