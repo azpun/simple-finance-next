@@ -14,7 +14,6 @@ type Props = {
   setOpen: (open: boolean) => void;
   setOpenUpdate: (openUpdate: boolean) => void;
   setSelectedItem: (id: string) => void;
-  // setSelectedItemForUpdate: (id: string) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transaction: any;
 };
@@ -23,7 +22,6 @@ export const DropdownMenuTransaction = ({
   setOpen,
   setOpenUpdate,
   setSelectedItem,
-  // setSelectedItemForUpdate,
   transaction,
 }: Props) => {
   return (
@@ -42,7 +40,6 @@ export const DropdownMenuTransaction = ({
           <DropdownMenuItem
             onSelect={e => {
               e.preventDefault();
-              // setSelectedItemForUpdate(transaction.id);
               setSelectedItem(transaction.id);
               setOpenUpdate(true);
             }}

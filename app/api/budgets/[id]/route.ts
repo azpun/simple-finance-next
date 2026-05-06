@@ -69,7 +69,7 @@ export const GET = auth(async (req, context) => {
         },
       ),
       totalAmount: budget.totalAmount.toNumber(),
-      description: budget.description,
+      description: budget.description || undefined,
       createdAt: budget.createdAt,
       updatedAt: budget.updatedAt,
     };

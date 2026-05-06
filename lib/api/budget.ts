@@ -1,6 +1,6 @@
 import { DataBudgetType } from "@/validations/budget.validation";
 
-const fetchDataBudget = async (budgetId: string) => {
+const fetchDataBudgetById = async (budgetId: string) => {
   const id = budgetId;
   const response = await fetch(`/api/budgets/${id}`, {
     method: "GET",
@@ -18,4 +18,4 @@ const fetchDataBudget = async (budgetId: string) => {
   return data;
 };
 
-export default fetchDataBudget;
+export default fetchDataBudgetById;

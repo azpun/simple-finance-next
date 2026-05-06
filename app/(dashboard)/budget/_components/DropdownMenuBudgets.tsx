@@ -13,9 +13,17 @@ import Link from "next/link";
 
 type Props = {
   data: FormattedDataBudgetType;
+  setSelectedItem: (id: string) => void;
+  setUpdateModalOpen: (open: boolean) => void;
+  setDeleteModalOpen: (open: boolean) => void;
 };
 
-export const DropdownMenuBudgets = ({ data }: Props) => {
+export const DropdownMenuBudgets = ({
+  data,
+  setSelectedItem,
+  setUpdateModalOpen,
+  setDeleteModalOpen,
+}: Props) => {
   if (!data) {
     console.log("data not found");
     return null;
@@ -35,23 +43,22 @@ export const DropdownMenuBudgets = ({ data }: Props) => {
               <DropdownMenuItem>Detail</DropdownMenuItem>
             </Link>
             <DropdownMenuItem
-            // onSelect={e => {
-            //   e.preventDefault();
-            //   // setSelectedItemForUpdate(transaction.id);
-            //   setSelectedItem(transaction.id);
-            //   setOpenUpdate(true);
-            // }}
+              onSelect={e => {
+                e.preventDefault();
+                setSelectedItem(item.id);
+                setUpdateModalOpen(true);
+              }}
             >
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               variant="destructive"
-              // onSelect={e => {
-              //   e.preventDefault();
-              //   setSelectedItem(transaction.id);
-              //   setOpen(true);
-              // }}
+              onSelect={e => {
+                e.preventDefault();
+                setSelectedItem(item.id);
+                setDeleteModalOpen(true);
+              }}
             >
               Delete
             </DropdownMenuItem>

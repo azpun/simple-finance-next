@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 export const createBudgetSchema = z.object({
+  id: z.string().optional(),
   month: z
     .any()
     .transform(value => {
@@ -85,9 +86,34 @@ export const DataBudget = z.object({
     .string()
     .trim()
     .max(200, "Description must be at most 200 characters long")
-    .nullable(),
+    .optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
 
 export type DataBudgetType = z.infer<typeof DataBudget>;
+
+export const UpdateDataBudget = z.object({
+  id: z.string(),
+  monthAndYear: z.string(),
+  totalAmount: z
+    .any()
+    .transform(value => {
+      if (value && typeof value === "object" && "toNumber" in value) {
+        return value.toNumber();
+      }
+      return Number(value);
+    })
+    .refine(value => !isNaN(value) && value > 0, {
+      message: "Amount budget must be a valid number",
+    }),
+  description: z
+    .string()
+    .trim()
+    .max(200, "Description must be at most 200 characters long")
+    .optional(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type UpdateDataBudgetType = z.infer<typeof UpdateDataBudget>;

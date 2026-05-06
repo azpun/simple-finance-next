@@ -31,6 +31,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import fetchDataTransactionById from "@/lib/api/transaction";
 
 type Props = {
   openUpdate: boolean;
@@ -50,19 +51,7 @@ export const UpdateTransactionDialog = ({
   // untuk mengambil data transaksi berdasarkan id
   const { data: result } = useQuery<UpdateTransactionInputType>({
     queryKey: ["transactions", id],
-    queryFn: async ({ queryKey }) => {
-      const id = queryKey[1];
-      const response = await fetch(`/api/transactions/${id}`);
-
-      const result = await response.json();
-      const data: UpdateTransactionInputType = result.data;
-
-      if (!result.success) {
-        throw new Error(result.message);
-      }
-
-      return data;
-    },
+    queryFn: () => fetchDataTransactionById(id),
     enabled: !!id,
   });
 

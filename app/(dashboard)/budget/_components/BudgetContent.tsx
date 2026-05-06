@@ -20,10 +20,18 @@ import { Circle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MobileCardContent from "./MobileCardContent";
 import Link from "next/link";
+import { useState } from "react";
+import UpdateBudgetModal from "./UpdateBudgetModal";
+import DeleteBudgetModal from "./DeleteBudgetModal";
 
 export const BudgetContent = () => {
   const isMobile = useMediaQuery(1022);
   const isTabletDesktop = useMediaQuery(1024);
+
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [selectedBudget, setSelectedBudget] = useState<string>("");
 
   const { data: budget } = useQuery<FormattedDataBudgetType>({
     queryKey: ["budget"],
@@ -192,7 +200,12 @@ export const BudgetContent = () => {
                     )}
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <DropdownMenuBudgets data={budget} />
+                    <DropdownMenuBudgets
+                      data={budget}
+                      setSelectedItem={setSelectedBudget}
+                      setUpdateModalOpen={setIsUpdateModalOpen}
+                      setDeleteModalOpen={setIsDeleteModalOpen}
+                    />
                   </td>
                 </tr>
               ))}
@@ -200,6 +213,16 @@ export const BudgetContent = () => {
           </table>
         </div>
       )}
+      <UpdateBudgetModal
+        isOpen={isUpdateModalOpen}
+        setIsOpen={setIsUpdateModalOpen}
+        selectedItem={selectedBudget}
+      />
+      <DeleteBudgetModal
+        isOpen={isDeleteModalOpen}
+        setIsOpen={setIsDeleteModalOpen}
+        selectedItem={selectedBudget}
+      />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
-import fetchDataBudget from "@/lib/api/budgetByID";
+import fetchDataBudgetById from "@/lib/api/budget";
 import { DataBudgetType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
@@ -15,7 +15,7 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   const id = budgetId;
   const { data: dataBudget } = useQuery<DataBudgetType>({
     queryKey: ["budget", id],
-    queryFn: () => fetchDataBudget(id),
+    queryFn: () => fetchDataBudgetById(id),
   });
 
   if (dataBudget === undefined) {
