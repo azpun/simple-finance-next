@@ -105,13 +105,26 @@ export async function GET() {
         },
       },
       select: {
+        id: true,
         totalAmount: true,
         month: true,
         year: true,
+        description: true,
         createdAt: true,
         updatedAt: true,
       },
     });
+
+    if (!getBudget) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Budget not found",
+        },
+        { status: 404 },
+      );
+    }
 
     const formattedDate = new Date(
       getBudget?.year as number,
@@ -122,8 +135,10 @@ export async function GET() {
     });
 
     const mappingBudget = {
+      id: getBudget?.id,
       totalAmount: getBudget?.totalAmount,
       monthAndYear: formattedDate,
+      description: getBudget?.description,
       createdAt: getBudget?.createdAt,
       updatedAt: getBudget?.updatedAt,
     };
@@ -131,6 +146,7 @@ export async function GET() {
     const validateMappingBudget = DataBudget.safeParse(mappingBudget);
 
     if (!validateMappingBudget.success) {
+      console.error(validateMappingBudget.error);
       return NextResponse.json(
         {
           success: false,
