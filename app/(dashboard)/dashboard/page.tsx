@@ -7,12 +7,10 @@ import { useSession } from "next-auth/react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AddTransactionDialog from "@/components/common/AddTransactionDialog";
 import { useQuery } from "@tanstack/react-query";
-import {
-  DashboardData,
-  DashboardResponse,
-} from "@/validations/dashboard.validation";
+import { DashboardData } from "@/validations/dashboard.validation";
 import React from "react";
 import { Progress } from "@/components/ui/progress";
+import { fetchGetDashboard } from "@/lib/api/dashboard";
 
 export default function Dashboard() {
   const { data: session } = useSession();
@@ -23,18 +21,7 @@ export default function Dashboard() {
   // Get transactions
   const { data: result, isLoading } = useQuery<DashboardData>({
     queryKey: ["dashboard"],
-
-    queryFn: async () => {
-      const response = await fetch(`/api/dashboard`);
-      const result: DashboardResponse = await response.json();
-      const data: DashboardData = result.data;
-
-      if (!result.success) {
-        throw new Error(result.message);
-      }
-
-      return data;
-    },
+    queryFn: fetchGetDashboard,
   });
 
   const finalSpendData = React.useMemo(() => {
