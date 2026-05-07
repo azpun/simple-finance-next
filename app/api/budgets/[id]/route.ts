@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
-import { DataBudgetType } from "@/validations/budget.validation";
+import { createBudgetSchema } from "@/validations/budget.validation";
 import { NextResponse } from "next/server";
 
 export const GET = auth(async (req, context) => {
@@ -59,29 +59,104 @@ export const GET = auth(async (req, context) => {
       );
     }
 
-    const formattedGetBudgets: DataBudgetType = {
-      id: budget.id,
-      monthAndYear: new Date(budget.year, budget.month - 1).toLocaleDateString(
-        "id-ID",
+    const validateBudget = createBudgetSchema.safeParse(budget);
+
+    if (!validateBudget.success) {
+      console.error("Validation error:", validateBudget.error);
+      return NextResponse.json(
         {
-          month: "long",
-          year: "numeric",
+          success: false,
+          status: 400,
+          message: "Invalid User Input",
         },
-      ),
-      totalAmount: budget.totalAmount.toNumber(),
-      description: budget.description || undefined,
-      createdAt: budget.createdAt,
-      updatedAt: budget.updatedAt,
-    };
+        { status: 400 },
+      );
+    }
 
     return NextResponse.json({
       success: true,
       status: 200,
       message: "Get Budget Success",
-      data: formattedGetBudgets,
+      data: validateBudget.data,
     });
   } catch (error) {
     console.error("Error fetching budget:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        status: 500,
+        message: "Internal Server Error",
+      },
+      { status: 500 },
+    );
+  }
+});
+
+export const PUT = auth(async (req, context) => {
+  if (!req.auth?.user?.id) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 401,
+        message: "Unauthorized",
+      },
+      { status: 401 },
+    );
+  }
+
+  const params = await context.params;
+  const budgetId = params.id;
+
+  if (!budgetId) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 400,
+        message: "Budget ID is required",
+      },
+      { status: 400 },
+    );
+  }
+
+  const userId = req.auth.user.id as string;
+  const data = await req.json();
+
+  const validateBudget = createBudgetSchema.safeParse(data);
+
+  if (!validateBudget.success) {
+    console.error("Validation error:", validateBudget.error);
+    return NextResponse.json(
+      {
+        success: false,
+        status: 400,
+        message: "Invalid User Input",
+        errors: validateBudget.error.flatten(),
+      },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const updateBudget = await prisma.budgets.update({
+      where: {
+        id: budgetId,
+        userId: userId,
+      },
+      data: {
+        month: validateBudget.data.month,
+        year: validateBudget.data.year,
+        totalAmount: validateBudget.data.totalAmount,
+        description: validateBudget.data.description,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      status: 200,
+      message: "Update Budget Success",
+      data: updateBudget,
+    });
+  } catch (error) {
+    console.error("Error updating budget:", error);
     return NextResponse.json(
       {
         success: false,

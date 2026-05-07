@@ -7,6 +7,8 @@ const useUpdateBudget = () => {
   return useMutation({
     mutationKey: ["update-budget"],
     mutationFn: async (data: CreateBudgetInputType) => {
+      console.log(data);
+      console.log(JSON.stringify(data));
       const response = await fetch(`/api/budgets/${data.id}`, {
         method: "PUT",
         headers: {
@@ -14,7 +16,15 @@ const useUpdateBudget = () => {
         },
         body: JSON.stringify(data),
       });
+
+      console.log(response);
       const result = await response.json();
+
+      if (!response.ok) {
+        console.error(result);
+        throw new Error("Failed to update budget");
+      }
+
       return result;
     },
     onSuccess: () => {

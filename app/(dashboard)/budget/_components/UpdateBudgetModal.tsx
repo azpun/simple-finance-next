@@ -66,24 +66,24 @@ const UpdateBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
   }, [fillFormData, reset]);
 
   const onSubmit: SubmitHandler<CreateBudgetInputType> = data => {
-    console.log(data);
-    // toast.promise(
-    //   mutateAsync(data, {
-    //     onSuccess: () => {
-    //       setIsOpen(false);
-    //     },
-    //     onError: error => {
-    //       console.error("Error updating budget", error.message);
-    //     },
-    //   }),
-    //   {
-    //     loading: "Updating budget...",
-    //     success: "Budget updated successfully",
-    //     error: "Failed to update budget",
-    //     duration: 5000,
-    //     position: "top-center",
-    //   },
-    // );
+    // console.log(data);
+    toast.promise(
+      mutateAsync(data, {
+        onSuccess: () => {
+          setIsOpen(false);
+        },
+        onError: error => {
+          console.error("Error updating budget", error.message);
+        },
+      }),
+      {
+        loading: "Updating budget...",
+        success: "Budget updated successfully",
+        error: "Failed to update budget",
+        duration: 5000,
+        position: "top-center",
+      },
+    );
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (errors: any) => {

@@ -89,12 +89,32 @@ export const BudgetContent = () => {
                     Detail
                   </Button>
                 </Link>
-                <Button variant="outline" className="w-full h-10">
-                  Edit
-                </Button>
-                <Button variant="destructive" className="w-full h-10">
-                  Delete
-                </Button>
+                <div>
+                  <Button
+                    variant="outline"
+                    className="w-full h-10"
+                    onClick={e => {
+                      e.preventDefault();
+                      setIsUpdateModalOpen(true);
+                      setSelectedBudget(item.id);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    variant="destructive"
+                    className="w-full h-10"
+                    onClick={e => {
+                      e.preventDefault();
+                      setIsDeleteModalOpen(true);
+                      setSelectedBudget(item.id);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </CardFooter>
             </Card>
           ))}
