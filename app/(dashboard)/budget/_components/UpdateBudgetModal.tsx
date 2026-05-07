@@ -42,7 +42,7 @@ type Props = {
 const UpdateBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
   const budgetId: string = selectedItem;
 
-  const { mutateAsync } = useUpdateBudget();
+  const { mutateAsync, isPending } = useUpdateBudget();
 
   const { data: fillFormData } = useQuery({
     queryKey: ["budget", budgetId],
@@ -113,6 +113,7 @@ const UpdateBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
                   render={({ field }) => (
                     <Select
                       onValueChange={field.onChange}
+                      disabled={isPending}
                       // {value =>
                       //   field.onChange(parseInt(value, 10))
                       // }
@@ -161,6 +162,7 @@ const UpdateBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
                       {...field}
                       type="number"
                       placeholder="Select a year 2025 - 2100"
+                      disabled={isPending}
                       value={field.value ?? 0}
                       onChange={e => {
                         const value = e.target.value;
@@ -190,6 +192,7 @@ const UpdateBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
                     {...field}
                     type="number"
                     placeholder="Enter amount"
+                    disabled={isPending}
                     value={field.value ?? 0}
                     onChange={e => {
                       const value = e.target.value;
@@ -214,6 +217,7 @@ const UpdateBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
                   <Input
                     {...field}
                     type="text"
+                    disabled={isPending}
                     placeholder="Enter description"
                     value={field.value ?? ""}
                   />
@@ -223,9 +227,13 @@ const UpdateBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
           </FieldGroup>
           <DialogFooter className="mt-6">
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" disabled={isPending}>
+                Cancel
+              </Button>
             </DialogClose>
-            <Button type="submit">Add</Button>
+            <Button type="submit" disabled={isPending}>
+              Update
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1,3 +1,4 @@
+// app/api/budgets/[id]/route.ts
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { createBudgetSchema } from "@/validations/budget.validation";
@@ -5,6 +6,7 @@ import { NextResponse } from "next/server";
 
 export const GET = auth(async (req, context) => {
   if (!req.auth?.user?.id) {
+    console.error("Unauthorized");
     return NextResponse.json(
       {
         success: false,
@@ -19,6 +21,7 @@ export const GET = auth(async (req, context) => {
   const budgetId = params.id;
 
   if (!budgetId) {
+    console.error("Budget ID is required");
     return NextResponse.json(
       {
         success: false,
@@ -49,6 +52,7 @@ export const GET = auth(async (req, context) => {
     });
 
     if (!budget) {
+      console.error("Budget not found");
       return NextResponse.json(
         {
           success: false,
@@ -94,6 +98,7 @@ export const GET = auth(async (req, context) => {
 
 export const PUT = auth(async (req, context) => {
   if (!req.auth?.user?.id) {
+    console.error("Unauthorized");
     return NextResponse.json(
       {
         success: false,
@@ -108,6 +113,7 @@ export const PUT = auth(async (req, context) => {
   const budgetId = params.id;
 
   if (!budgetId) {
+    console.error("Budget ID is required");
     return NextResponse.json(
       {
         success: false,
@@ -157,6 +163,64 @@ export const PUT = auth(async (req, context) => {
     });
   } catch (error) {
     console.error("Error updating budget:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        status: 500,
+        message: "Internal Server Error",
+      },
+      { status: 500 },
+    );
+  }
+});
+
+export const DELETE = auth(async (req, context) => {
+  if (!req.auth?.user?.id) {
+    console.error("Unauthorized");
+    return NextResponse.json(
+      {
+        success: false,
+        status: 401,
+        message: "Unauthorized",
+      },
+      { status: 401 },
+    );
+  }
+
+  const params = await context.params;
+  const budgetId = params.id;
+
+  if (!budgetId) {
+    console.error("Budget ID is required");
+    return NextResponse.json(
+      {
+        success: false,
+        status: 400,
+        message: "Budget ID is required",
+      },
+      { status: 400 },
+    );
+  }
+
+  const userId = req.auth.user.id as string;
+
+  try {
+    const deleteBudget = await prisma.budgets.delete({
+      where: {
+        id: budgetId,
+        userId: userId,
+      },
+    });
+
+    console.log("Delete Budget Success");
+    return NextResponse.json({
+      success: true,
+      status: 200,
+      message: "Delete Budget Success",
+      data: deleteBudget,
+    });
+  } catch (error) {
+    console.error("Error deleting budget:", error);
     return NextResponse.json(
       {
         success: false,

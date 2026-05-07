@@ -7,6 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useDeleteBudget } from "@/hooks/useDeleteBudget";
+import { toast } from "sonner";
 
 type Props = {
   isOpen: boolean;
@@ -16,6 +18,9 @@ type Props = {
 
 const DeleteBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
   const id: string = selectedItem;
+
+  const { mutateAsync, isPending } = useDeleteBudget();
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
@@ -25,17 +30,22 @@ const DeleteBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
         Are you sure you want to delete this budget?
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              variant="outline"
-              // disabled={isPending}
-            >
+            <Button variant="outline" disabled={isPending}>
               Cancel
             </Button>
           </DialogClose>
           <Button
             variant="destructive"
-            // disabled={isPending}
-            // onClick={() => deleteTransaction(selectedItem)}
+            disabled={isPending}
+            onClick={() => {
+              toast.promise(mutateAsync(id), {
+                loading: "Deleting budget...",
+                success: "Budget deleted successfully",
+                error: "Error deleting budget",
+                duration: 5000,
+                position: "top-center",
+              });
+            }}
           >
             Yes
           </Button>
