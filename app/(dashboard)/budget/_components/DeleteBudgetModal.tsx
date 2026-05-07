@@ -38,13 +38,23 @@ const DeleteBudgetModal = ({ isOpen, setIsOpen, selectedItem }: Props) => {
             variant="destructive"
             disabled={isPending}
             onClick={() => {
-              toast.promise(mutateAsync(id), {
-                loading: "Deleting budget...",
-                success: "Budget deleted successfully",
-                error: "Error deleting budget",
-                duration: 5000,
-                position: "top-center",
-              });
+              toast.promise(
+                mutateAsync(id, {
+                  onSuccess: () => {
+                    setIsOpen(false);
+                  },
+                  onError: error => {
+                    console.error("Error deleting budget", error.message);
+                  },
+                }),
+                {
+                  loading: "Deleting budget...",
+                  success: "Budget deleted successfully",
+                  error: "Error deleting budget",
+                  duration: 5000,
+                  position: "top-center",
+                },
+              );
             }}
           >
             Yes
