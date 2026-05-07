@@ -4,7 +4,7 @@ import prisma from "@/lib/connectDB";
 import {
   createBudgetSchema,
   formattedDataBudget,
-  DataBudgetType,
+  DataBudgetDescOptionalType,
 } from "@/validations/budget.validation";
 import { NextResponse } from "next/server";
 
@@ -50,20 +50,22 @@ export async function GET() {
       );
     }
 
-    const formattedGetBudgets: DataBudgetType[] = getBudgets.map(budget => ({
-      id: budget.id,
-      monthAndYear: new Date(budget.year, budget.month - 1).toLocaleDateString(
-        "id-ID",
-        {
+    const formattedGetBudgets: DataBudgetDescOptionalType[] = getBudgets.map(
+      budget => ({
+        id: budget.id,
+        monthAndYear: new Date(
+          budget.year,
+          budget.month - 1,
+        ).toLocaleDateString("id-ID", {
           month: "long",
           year: "numeric",
-        },
-      ),
-      totalAmount: budget.totalAmount.toNumber(),
-      description: budget.description,
-      createdAt: budget.createdAt,
-      updatedAt: budget.updatedAt,
-    }));
+        }),
+        totalAmount: budget.totalAmount.toNumber(),
+        description: budget.description,
+        createdAt: budget.createdAt,
+        updatedAt: budget.updatedAt,
+      }),
+    );
 
     const validateData = formattedDataBudget.safeParse(formattedGetBudgets);
 
