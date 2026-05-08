@@ -1,5 +1,4 @@
 // app/api/dashboard/route.ts
-"use server";
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { NextResponse } from "next/server";
@@ -14,7 +13,18 @@ import { DataBudget } from "@/validations/budget.validation";
 
 export async function GET() {
   const session = await auth();
-  const userId = session?.user?.id as string;
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      {
+        success: false,
+        status: 401,
+        message: "Unauthorized",
+      },
+      { status: 401 },
+    );
+  }
+  const userId = session.user.id as string;
 
   const getCurrentMonthYear = () => {
     const now = new Date();
@@ -58,7 +68,7 @@ export async function GET() {
       },
     });
 
-    if (!transactionsDate) {
+    if (transactionsDate.length === 0) {
       return NextResponse.json(
         {
           success: false,
@@ -84,7 +94,7 @@ export async function GET() {
       },
     });
 
-    if (!transactionGroupByCategories) {
+    if (transactionGroupByCategories.length === 0) {
       return NextResponse.json(
         {
           success: false,
@@ -171,7 +181,7 @@ export async function GET() {
     );
 
     const categoryids = transactionGroupByCategories.map(
-      item => item.categoryId,
+      (item) => item.categoryId,
     );
 
     const categories = await prisma.categories.findMany({
@@ -184,10 +194,10 @@ export async function GET() {
 
     // Buat Map untuk lookup kategori berdasarkan categoryId
     const category = new Map(
-      categories.map(category => [category.id, category]),
+      categories.map((category) => [category.id, category]),
     );
 
-    const withPercentage = transactionGroupByCategories.map(item => {
+    const withPercentage = transactionGroupByCategories.map((item) => {
       const { _sum } = item;
       if (_sum) {
         return {
@@ -212,13 +222,20 @@ export async function GET() {
     const budgetRemaining =
       validateMappingBudget.data.totalAmount - sumOfExpenseThisMonth;
 
-    const percentageRemaining = (sumOfExpenseThisMonth / budgetRemaining) * 100;
+    // const percentageRemaining = (sumOfExpenseThisMonth / budgetRemaining) * 100;
+
+    const percentageUsage =
+      (sumOfExpenseThisMonth / validateMappingBudget.data.totalAmount) * 100;
+
+    const percentageRemaining =
+      (budgetRemaining / validateMappingBudget.data.totalAmount) * 100;
 
     const operationsOf = {
       amountOfBudgetThisMonth: validateMappingBudget.data.totalAmount,
       sumOfExpansesThisMonth: sumOfExpenseThisMonth,
       budgetRemaining: budgetRemaining,
       percentageRemaining: percentageRemaining,
+      percentageUsage: percentageUsage,
     };
 
     const validateOperationsOf = operationOfSchema.safeParse(operationsOf);

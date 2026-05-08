@@ -1,4 +1,3 @@
-"use server";
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import {
@@ -10,9 +9,8 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const session = await auth();
-  const userId = session?.user?.id as string;
 
-  if (!userId) {
+  if (!session?.user?.id) {
     return NextResponse.json(
       {
         success: false,
@@ -22,6 +20,7 @@ export async function GET() {
       { status: 401 },
     );
   }
+  const userId = session.user.id as string;
 
   try {
     const getBudgets = await prisma.budgets.findMany({
@@ -51,7 +50,7 @@ export async function GET() {
     }
 
     const formattedGetBudgets: DataBudgetDescOptionalType[] = getBudgets.map(
-      budget => ({
+      (budget) => ({
         id: budget.id,
         monthAndYear: new Date(
           budget.year,

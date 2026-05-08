@@ -105,7 +105,7 @@ const DashboardContent = () => {
                       </p>
                     </div>
                     <Progress
-                      value={result?.operationsOf.percentageRemaining}
+                      value={result?.operationsOf.percentageUsage}
                       className="h-2 my-2"
                     />
                   </div>
@@ -160,7 +160,7 @@ const DashboardContent = () => {
                     </p>
                   </div>
                   <Progress
-                    value={result?.operationsOf.percentageRemaining}
+                    value={result?.operationsOf.percentageUsage}
                     className="h-2 my-2"
                   />
                 </div>
@@ -193,7 +193,7 @@ const DashboardContent = () => {
                   </div>
                   <div className="p-2 ">
                     <ul className="flex flex-col gap-3">
-                      {finalSpendData?.map(category => (
+                      {finalSpendData?.map((category) => (
                         <li key={category?.category}>
                           <Card>
                             <CardContent>
@@ -235,7 +235,7 @@ const DashboardContent = () => {
                   {result?.transactions?.length !== 0 ? (
                     <>
                       {isLoading && <p className="text-center">Loading...</p>}
-                      {result?.transactions?.map(transaction => (
+                      {result?.transactions?.map((transaction) => (
                         <Card
                           key={transaction.id}
                           className="px-3 mx-0 border-0"

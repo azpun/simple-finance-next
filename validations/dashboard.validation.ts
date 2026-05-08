@@ -24,13 +24,13 @@ export const dashboardResponseSchema = z.object({
         _sum: z.object({
           amount: z
             .any()
-            .transform(value => {
+            .transform((value) => {
               if (value && typeof value === "object" && "toNumber" in value) {
                 return value.toNumber();
               }
               return Number(value);
             })
-            .refine(value => !isNaN(value) && value > 0, {
+            .refine((value) => !isNaN(value) && value > 0, {
               message: "Amount must be a number greater than 0",
             }),
         }),
@@ -44,6 +44,7 @@ export const dashboardResponseSchema = z.object({
       sumOfExpansesThisMonth: z.number(),
       budgetRemaining: z.number(),
       percentageRemaining: z.number(),
+      percentageUsage: z.number(),
     }),
     budget: z.object({
       totalAmount: z.number(),
@@ -60,13 +61,13 @@ export const dashboardDataSchema = z.object({
       id: z.string(),
       amount: z
         .any()
-        .transform(value => {
+        .transform((value) => {
           if (value && typeof value === "object" && "toNumber" in value) {
             return value.toNumber();
           }
           return Number(value);
         })
-        .refine(value => !isNaN(value) && value > 0, {
+        .refine((value) => !isNaN(value) && value > 0, {
           message: "Amount must be a number greater than 0",
         }),
       title: z.string(),
@@ -84,13 +85,13 @@ export const dashboardDataSchema = z.object({
       _sum: z.object({
         amount: z
           .any()
-          .transform(value => {
+          .transform((value) => {
             if (value && typeof value === "object" && "toNumber" in value) {
               return value.toNumber();
             }
             return Number(value);
           })
-          .refine(value => !isNaN(value) && value > 0, {
+          .refine((value) => !isNaN(value) && value > 0, {
             message: "Amount must be a number greater than 0",
           }),
       }),
@@ -104,6 +105,7 @@ export const dashboardDataSchema = z.object({
     sumOfExpansesThisMonth: z.number(),
     budgetRemaining: z.number(),
     percentageRemaining: z.number(),
+    percentageUsage: z.number(),
   }),
   budget: z.object({
     totalAmount: z.number(),
@@ -118,6 +120,7 @@ export const operationOfSchema = z.object({
   sumOfExpansesThisMonth: z.number(),
   budgetRemaining: z.number(),
   percentageRemaining: z.number(),
+  percentageUsage: z.number(),
 });
 
 export type DashboardResponse = z.infer<typeof dashboardResponseSchema>;
