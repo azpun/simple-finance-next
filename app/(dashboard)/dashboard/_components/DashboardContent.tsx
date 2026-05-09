@@ -90,18 +90,14 @@ const DashboardContent = () => {
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-gray-500">
                       <p>
-                        Rp.{" "}
-                        {result?.operationsOf.budgetRemaining.toLocaleString(
+                        Usage Rp.{" "}
+                        {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
                           "id-ID",
                         )}{" "}
-                        remaining
+                        / {result?.budget.totalAmount.toLocaleString("id-ID")}
                       </p>
                       <p className="ml-auto ">
-                        {" "}
-                        {result?.operationsOf.percentageRemaining.toPrecision(
-                          2,
-                        )}
-                        %
+                        {result?.operationsOf.percentageUsage.toPrecision(2)}%
                       </p>
                     </div>
                     <Progress
@@ -148,15 +144,14 @@ const DashboardContent = () => {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between text-gray-500">
                     <p>
-                      Rp.{" "}
-                      {result?.operationsOf.budgetRemaining.toLocaleString(
+                      Usage Rp.{" "}
+                      {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
                         "id-ID",
                       )}{" "}
-                      remaining
+                      / {result?.budget.totalAmount.toLocaleString("id-ID")}
                     </p>
                     <p className="ml-auto ">
-                      {" "}
-                      {result?.operationsOf.percentageRemaining.toPrecision(2)}%
+                      {result?.operationsOf.percentageUsage.toPrecision(2)}%
                     </p>
                   </div>
                   <Progress
@@ -193,7 +188,7 @@ const DashboardContent = () => {
                   </div>
                   <div className="p-2 ">
                     <ul className="flex flex-col gap-3">
-                      {finalSpendData?.map((category) => (
+                      {finalSpendData?.map(category => (
                         <li key={category?.category}>
                           <Card>
                             <CardContent>
@@ -235,7 +230,7 @@ const DashboardContent = () => {
                   {result?.transactions?.length !== 0 ? (
                     <>
                       {isLoading && <p className="text-center">Loading...</p>}
-                      {result?.transactions?.map((transaction) => (
+                      {result?.transactions?.map(transaction => (
                         <Card
                           key={transaction.id}
                           className="px-3 mx-0 border-0"
