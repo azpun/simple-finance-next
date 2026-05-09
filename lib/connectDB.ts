@@ -19,7 +19,7 @@ if (!globalForPrisma.prisma) {
   globalForPrisma.prisma = new PrismaClient({ adapter });
 }
 
-const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
 if (!prisma) {
   throw new Error("Prisma Client initialized Failed.");

@@ -1,7 +1,7 @@
 import { UpdateTransactionInputType } from "@/validations/transaction.validate";
 
-const fetchDataTransactionById = async (budgetId: string) => {
-  const id = budgetId;
+const fetchDataTransactionById = async (transactionId: string) => {
+  const id = transactionId;
   const response = await fetch(`/api/transactions/${id}`, {
     method: "GET",
     headers: {
@@ -11,7 +11,7 @@ const fetchDataTransactionById = async (budgetId: string) => {
 
   if (!response.ok) {
     console.error(response);
-    throw new Error("Failed to fetch budget");
+    throw new Error("Failed to fetch transaction");
   }
   const result = await response.json();
   const data: UpdateTransactionInputType = result.data;

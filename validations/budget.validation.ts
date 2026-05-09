@@ -39,6 +39,10 @@ export const createBudgetSchema = z.object({
     .optional(),
 });
 
+export const updateBudgetSchema = createBudgetSchema.extend({
+  id: z.string(),
+});
+
 export type CreateBudgetInputType = z.infer<typeof createBudgetSchema>;
 
 export const formattedDataBudget = z.array(

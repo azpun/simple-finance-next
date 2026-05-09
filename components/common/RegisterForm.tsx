@@ -96,7 +96,7 @@ const RegisterForm = () => {
                 />
               )}
             />
-            {errors.name?.message !== "" && (
+            {errors.name?.message && (
               <FieldError>{errors.name?.message}</FieldError>
             )}
           </Field>
@@ -118,7 +118,7 @@ const RegisterForm = () => {
                 />
               )}
             />
-            {errors.email?.message !== "" && (
+            {errors.email?.message && (
               <FieldError>{errors.email?.message}</FieldError>
             )}
           </Field>
@@ -127,13 +127,6 @@ const RegisterForm = () => {
             <Controller
               control={control}
               name="password"
-              rules={{
-                required: "Password is Required",
-                minLength: {
-                  value: 6,
-                  message: "Password must greater than equal 6 characters",
-                },
-              }}
               render={({ field }) => (
                 <>
                   <div className="relative">
@@ -159,7 +152,7 @@ const RegisterForm = () => {
                 </>
               )}
             />
-            {errors.password?.message !== "" && (
+            {errors.password?.message && (
               <FieldError>{errors.password?.message}</FieldError>
             )}
           </Field>
@@ -193,7 +186,7 @@ const RegisterForm = () => {
                 </>
               )}
             />
-            {errors.confirm?.message !== "" && (
+            {errors.confirm?.message && (
               <FieldError>{errors.confirm?.message}</FieldError>
             )}
           </Field>

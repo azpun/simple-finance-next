@@ -82,7 +82,7 @@ export const validateResponseTransaction = (payload: unknown) => {
 // =================================================================
 
 export const updateTransactionSchema = zod.object({
-  id: zod.string(),
+  // id: zod.string(),
   amount: zod
     .any()
     .transform(value => {

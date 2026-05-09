@@ -10,7 +10,7 @@ const useAddTransaction = () => {
 
   return useMutation({
     mutationFn: async (data: CreateTransactionInputType) => {
-      const promise = fetch("api/transactions", {
+      const promise = fetch("/api/transactions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

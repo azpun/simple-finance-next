@@ -36,6 +36,16 @@ export default function AppSidebar({ className }: { className?: string }) {
     { name: "Report", href: "/report" },
     { name: "Budget", href: "/budget" },
   ];
+  const DASHBOARD_ROUTES = [
+    "/dashboard",
+    "/transactions",
+    "/budget",
+    "/report",
+    "/profile",
+  ];
+  const isDashboardRoute = DASHBOARD_ROUTES.some(route =>
+    pathname.startsWith(route),
+  );
 
   return (
     <Sidebar variant="sidebar" className={className}>
@@ -44,39 +54,42 @@ export default function AppSidebar({ className }: { className?: string }) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {pathname === "/dashboard" ||
-          pathname === "/transactions" ||
-          pathname === "/report" ||
-          pathname === "/budget" ||
-          pathname === "/profile" ? (
-            <>
-              {navigationMenusDashboard.map(menu => (
-                <SidebarMenuItem key={menu.name} className={`px-4`}>
-                  <SidebarMenuButton
-                    asChild
-                    className="p-6"
-                    isActive={pathname === menu.href}
-                  >
-                    <Link href={menu.href}>{menu.name}</Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </>
-          ) : (
-            <>
-              {navigationMenus.map(menu => (
-                <SidebarMenuItem key={menu.name} className={`px-4`}>
-                  <SidebarMenuButton
-                    asChild
-                    className="p-6"
-                    isActive={pathname === menu.href}
-                  >
-                    <Link href={menu.href}>{menu.name}</Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </>
-          )}
+          {
+            // pathname === "/dashboard" ||
+            // pathname === "/transactions" ||
+            // pathname === "/report" ||
+            // pathname === "/budget" ||
+            // pathname === "/profile"
+            isDashboardRoute ? (
+              <>
+                {navigationMenusDashboard.map(menu => (
+                  <SidebarMenuItem key={menu.name} className={`px-4`}>
+                    <SidebarMenuButton
+                      asChild
+                      className="p-6"
+                      isActive={pathname === menu.href}
+                    >
+                      <Link href={menu.href}>{menu.name}</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </>
+            ) : (
+              <>
+                {navigationMenus.map(menu => (
+                  <SidebarMenuItem key={menu.name} className={`px-4`}>
+                    <SidebarMenuButton
+                      asChild
+                      className="p-6"
+                      isActive={pathname === menu.href}
+                    >
+                      <Link href={menu.href}>{menu.name}</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </>
+            )
+          }
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
@@ -97,20 +110,23 @@ export default function AppSidebar({ className }: { className?: string }) {
                 </div>
               </Card>
             </Link>
-            {pathname === "/dashboard" ||
-            pathname === "/transactions" ||
-            pathname === "/budget" ||
-            pathname === "/report" ? (
-              <></>
-            ) : (
-              <Button
-                variant={"default"}
-                size={"lg"}
-                onClick={() => router.push("/dashboard")}
-              >
-                Dashboard
-              </Button>
-            )}
+            {
+              // pathname === "/dashboard" ||
+              // pathname === "/transactions" ||
+              // pathname === "/budget" ||
+              // pathname === "/report"
+              isDashboardRoute ? (
+                <></>
+              ) : (
+                <Button
+                  variant={"default"}
+                  size={"lg"}
+                  onClick={() => router.push("/dashboard")}
+                >
+                  Dashboard
+                </Button>
+              )
+            }
             <Button
               variant={"destructive"}
               size={"lg"}

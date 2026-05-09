@@ -10,7 +10,8 @@ export const getTrasactionById = async ({
   userId: string;
 }) => {
   if (!userId) {
-    return console.error("Unauthorized");
+    throw new Error("Unauthorized");
+    // return console.error("Unauthorized");
   }
   const transactions = await prisma.transactions.findUnique({
     where: {
