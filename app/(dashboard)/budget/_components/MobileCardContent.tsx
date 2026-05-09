@@ -12,13 +12,11 @@ const MobileCardContent = ({ dataDashboard }: Prop) => {
       <div className="flex ">
         <p>
           Rp.{" "}
-          {dataDashboard?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
-            "id-ID",
-          )}{" "}
+          {dataDashboard?.operationsOf.budgetRemaining.toLocaleString("id-ID")}{" "}
           / Rp. {dataDashboard?.budget.totalAmount.toLocaleString("id-ID")}
         </p>
         <p className="ml-auto">
-          ({dataDashboard?.operationsOf.percentageRemaining.toPrecision(1)}
+          ({dataDashboard?.operationsOf.percentageRemaining.toPrecision(3)}
           %)
         </p>
       </div>
@@ -26,32 +24,33 @@ const MobileCardContent = ({ dataDashboard }: Prop) => {
         value={dataDashboard?.operationsOf.percentageRemaining}
         className="w-full h-2 my-2"
       />
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) < 50 && (
-        <div className="flex items-center gap-2 ">
-          <Circle fill="green" className="w-4 h-4 text-[#008000]" />
-          <span>Good</span>
-        </div>
-      )}
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >= 50 &&
-        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 80 && (
-          <div className="flex items-center gap-2 ">
-            <Circle fill="yellow" className="w-4 h-4 text-yellow-500" />
-            <span>Warning</span>
-          </div>
-        )}
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) > 80 &&
-        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 100 && (
-          <div className="flex items-center gap-2 ">
-            <Circle fill="red" className="w-4 h-4 text-red-500" />
-            <span>Danger</span>
-          </div>
-        )}
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) > 100 && (
+      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 0 && (
         <div className="flex items-center gap-2 ">
           <Circle fill="red" className="w-4 h-4 text-red-500" />
           <span>Over Budget</span>
         </div>
       )}
+      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >= 1 &&
+        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 50 && (
+          <div className="flex items-center gap-2 ">
+            <Circle fill="red" className="w-4 h-4 text-red-500" />
+            <span>Danger</span>
+          </div>
+        )}
+      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >= 20 &&
+        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 50 && (
+          <div className="flex items-center gap-2 ">
+            <Circle fill="yellow" className="w-4 h-4 text-yellow-500" />
+            <span>Warning</span>
+          </div>
+        )}
+      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) > 50 &&
+        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 100 && (
+          <div className="flex items-center gap-2 ">
+            <Circle fill="green" className="w-4 h-4 text-[#008000]" />
+            <span>Good</span>
+          </div>
+        )}
     </div>
   );
 };

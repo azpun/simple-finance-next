@@ -157,7 +157,7 @@ export const BudgetContent = () => {
                       <div className="flex ">
                         <p>
                           Rp.
-                          {dataDashboard?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                          {dataDashboard?.operationsOf.budgetRemaining.toLocaleString(
                             "id-ID",
                           )}{" "}
                           / Rp.
@@ -168,7 +168,7 @@ export const BudgetContent = () => {
                         <p className="ml-auto">
                           (
                           {dataDashboard?.operationsOf.percentageRemaining.toPrecision(
-                            1,
+                            3,
                           )}
                           %)
                         </p>
@@ -180,20 +180,26 @@ export const BudgetContent = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <
-                      50 && (
+                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
+                      0 && (
                       <div className="flex items-center gap-2 ">
-                        <Circle
-                          fill="green"
-                          className="w-4 h-4 text-[#008000]"
-                        />
-                        <span>Good</span>
+                        <Circle fill="red" className="w-4 h-4 text-red-500" />
+                        <span>Over Budget</span>
                       </div>
                     )}
                     {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >=
-                      50 &&
+                      1 &&
                       (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
-                        80 && (
+                        50 && (
+                        <div className="flex items-center gap-2 ">
+                          <Circle fill="red" className="w-4 h-4 text-red-500" />
+                          <span>Danger</span>
+                        </div>
+                      )}
+                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >=
+                      20 &&
+                      (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
+                        50 && (
                         <div className="flex items-center gap-2 ">
                           <Circle
                             fill="yellow"
@@ -203,21 +209,17 @@ export const BudgetContent = () => {
                         </div>
                       )}
                     {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >
-                      80 &&
+                      50 &&
                       (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
                         100 && (
                         <div className="flex items-center gap-2 ">
-                          <Circle fill="red" className="w-4 h-4 text-red-500" />
-                          <span>Danger</span>
+                          <Circle
+                            fill="green"
+                            className="w-4 h-4 text-[#008000]"
+                          />
+                          <span>Good</span>
                         </div>
                       )}
-                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >
-                      100 && (
-                      <div className="flex items-center gap-2 ">
-                        <Circle fill="red" className="w-4 h-4 text-red-500" />
-                        <span>Over Budget</span>
-                      </div>
-                    )}
                   </td>
                   <td className="px-6 py-4 text-center">
                     <DropdownMenuBudgets
