@@ -31,7 +31,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import fetchDataTransactionById from "@/lib/api/transaction";
+import { fetchDataTransactionById } from "@/lib/api/transaction";
 
 type Props = {
   openUpdate: boolean;

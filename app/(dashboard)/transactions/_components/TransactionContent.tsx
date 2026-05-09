@@ -13,18 +13,17 @@ import {
 
 import { useIsMobile } from "@/hooks/use-mobile";
 
-import {
-  TransactionData,
-  TransactionResponse,
-} from "@/validations/transaction.validate";
+import { TransactionData } from "@/validations/transaction.validate";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { useState } from "react";
 import { DropdownMenuTransaction } from "./DropdownMenuTransaction";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { UpdateTransactionDialog } from "@/components/common/UpdateTransactionDialog";
+import { fetchDataTransactions } from "@/lib/api/transaction";
+import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
 
 export default function TransactionContent() {
   const isMobile = useIsMobile();
@@ -39,50 +38,10 @@ export default function TransactionContent() {
 
   const { data: result, isLoading } = useQuery<TransactionData>({
     queryKey: ["transactions"],
-    queryFn: async () => {
-      const response = await fetch(`/api/transactions`);
-      const result: TransactionResponse = await response.json();
-      const data: TransactionData = result.data;
-
-      if (!result.success) {
-        throw new Error(result.message);
-      }
-
-      return data;
-    },
+    queryFn: fetchDataTransactions,
   });
 
-  const queryClient = useQueryClient();
-  const { mutate: deleteTransaction, isPending } = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await fetch(`/api/transactions/${id}`, {
-        method: "DELETE",
-      });
-
-      const result = await response.json();
-      return result;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["transactions"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["dashboard"],
-      });
-      toast.success("Transaction deleted successfully", {
-        duration: 4000,
-        position: "top-center",
-      });
-      setSelectedItem("");
-      setOpen(false);
-    },
-    onError: () => {
-      toast.error("Failed to delete transaction", {
-        duration: 5000,
-        position: "top-center",
-      });
-    },
-  });
+  const { mutateAsync: deleteTransaction, isPending } = useDeleteTransaction();
 
   return (
     <>
@@ -212,7 +171,23 @@ export default function TransactionContent() {
             <Button
               variant="destructive"
               disabled={isPending}
-              onClick={() => deleteTransaction(selectedItem)}
+              onClick={() =>
+                deleteTransaction(selectedItem, {
+                  onSuccess: () => {
+                    toast.success("Transaction deleted successfully", {
+                      duration: 4000,
+                      position: "top-center",
+                    });
+                    setOpen(false);
+                  },
+                  onError: () => {
+                    toast.error("Failed to delete transaction", {
+                      duration: 5000,
+                      position: "top-center",
+                    });
+                  },
+                })
+              }
             >
               Yes
             </Button>

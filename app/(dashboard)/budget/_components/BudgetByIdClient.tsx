@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
-import fetchDataBudgetById from "@/lib/api/budget";
+import { fetchDataBudgetById } from "@/lib/api/budget";
 import { DataBudgetType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";

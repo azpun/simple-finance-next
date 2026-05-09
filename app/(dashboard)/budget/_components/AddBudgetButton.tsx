@@ -47,7 +47,7 @@ export const AddBudgetButton = () => {
   });
 
   const onAddBudget: SubmitHandler<CreateBudgetInputType> = async data => {
-    await toast.promise(
+    toast.promise(
       mutateAsync(data, {
         onSuccess: () => {
           setOpen(false);

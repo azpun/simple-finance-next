@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useUpdateBudget from "@/hooks/useUpdateBudget";
-import fetchDataBudgetById from "@/lib/api/budget";
+import { fetchDataBudgetById } from "@/lib/api/budget";
 import {
   CreateBudgetInputType,
   createBudgetSchema,

@@ -48,7 +48,18 @@ export const GET = auth(async (req, context) => {
       },
     });
 
-    const validate = await TransactionSchema.safeParseAsync(transactions);
+    if (!transactions) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Transaction not found or already deleted",
+        },
+        { status: 404 },
+      );
+    }
+
+    const validate = TransactionSchema.safeParse(transactions);
 
     if (!validate.success) {
       console.error("Validation error:", validate.error);
@@ -56,7 +67,7 @@ export const GET = auth(async (req, context) => {
         {
           success: false,
           status: 500,
-          message: "Error validating transaction data",
+          message: `Error validating transaction data`,
         },
         { status: 500 },
       );

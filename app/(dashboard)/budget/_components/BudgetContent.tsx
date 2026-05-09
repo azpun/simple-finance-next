@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useState } from "react";
 import UpdateBudgetModal from "./UpdateBudgetModal";
 import DeleteBudgetModal from "./DeleteBudgetModal";
+import { fetchDataBudgets } from "@/lib/api/budget";
 
 export const BudgetContent = () => {
   const isMobile = useMediaQuery(1022);
@@ -35,22 +36,7 @@ export const BudgetContent = () => {
 
   const { data: budget } = useQuery<FormattedDataBudgetType>({
     queryKey: ["budget"],
-    queryFn: async () => {
-      const response = await fetch("/api/budgets", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch budget");
-      }
-      const result = await response.json();
-      const data: FormattedDataBudgetType = result.data;
-
-      return data;
-    },
+    queryFn: fetchDataBudgets,
     staleTime: 1000 * 60, // 1 minutes
   });
 
