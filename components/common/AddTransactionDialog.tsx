@@ -35,6 +35,7 @@ import {
 // import { useSession } from "next-auth/react";
 import useAddTransaction from "@/hooks/useAddTransaction";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const AddTransactionDialog = () => {
   // const { data: session } = useSession();
@@ -60,14 +61,20 @@ const AddTransactionDialog = () => {
   const { mutateAsync } = useAddTransaction();
 
   const onSubmit: SubmitHandler<CreateTransactionInputType> = async data => {
-    // const userId = session?.user?.id as string;
-    // const dataWithUserId = { ...data, userId };
-
-    await mutateAsync(data, {
-      onSuccess: () => {
-        setOpen(false);
+    toast.promise(
+      mutateAsync(data, {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      }),
+      {
+        loading: "Creating transaction...",
+        success: "Create transaction successful",
+        error: "Failed to create transaction",
+        duration: 5000,
+        position: "top-center",
       },
-    });
+    );
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
