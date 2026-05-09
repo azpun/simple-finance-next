@@ -19,6 +19,7 @@ const DashboardContent = () => {
   const { data: result, isLoading } = useQuery<DashboardData>({
     queryKey: ["dashboard"],
     queryFn: fetchGetDashboard,
+    staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
   const finalSpendData = React.useMemo(() => {

@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { UpdateTransactionDialog } from "@/components/common/UpdateTransactionDialog";
 import { fetchDataTransactions } from "@/lib/api/transaction";
 import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
+import { Select, SelectTrigger } from "@/components/ui/select";
 
 export default function TransactionContent() {
   const isMobile = useIsMobile();
@@ -39,13 +40,18 @@ export default function TransactionContent() {
   const { data: result, isLoading } = useQuery<TransactionData>({
     queryKey: ["transactions"],
     queryFn: fetchDataTransactions,
+    staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
   const { mutateAsync: deleteTransaction, isPending } = useDeleteTransaction();
 
   return (
     <>
-      <div className="p-6">This is for Filter and Search</div>
+      <div className="p-6">
+        <Select>
+          <SelectTrigger>Filter</SelectTrigger>
+        </Select>
+      </div>
       {isMobile ? (
         <div className="flex flex-col gap-4">
           {result?.length === 0 && (
