@@ -24,15 +24,7 @@ import { toast } from "sonner";
 import { UpdateTransactionDialog } from "@/components/common/UpdateTransactionDialog";
 import { fetchDataTransactions } from "@/lib/api/transaction";
 import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectSeparator,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { FilterSelectContent } from "./FilterSelectContent";
 
 export default function TransactionContent() {
   const isMobile = useIsMobile();
@@ -53,28 +45,27 @@ export default function TransactionContent() {
 
   const { mutateAsync: deleteTransaction, isPending } = useDeleteTransaction();
 
+  if (result === undefined) {
+    console.log("no data");
+    return null;
+  }
+
+  // console.log(result);
+
+  // const filteredResult = result.filter(item => item.type);
+
+  const uniqueAvailableCategories = [
+    ...new Map(
+      result.map(item => [item.category.name, item.category]),
+    ).values(),
+  ];
+
   return (
     <>
-      <div className="p-6">
-        <Select>
-          <SelectTrigger>Filter</SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Type</SelectLabel>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="income">Income</SelectItem>
-              <SelectItem value="expense">Expense</SelectItem>
-            </SelectGroup>
-            <SelectSeparator />
-            <SelectGroup>
-              <SelectLabel>Category</SelectLabel>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="food">Food</SelectItem>
-              <SelectItem value="transportation">Transportation</SelectItem>
-              <SelectItem value="entertainment">Entertainment</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <div className="flex items-center gap-3 my-3">
+        <FilterSelectContent
+          uniqueAvailableCategories={uniqueAvailableCategories}
+        />
       </div>
       {isMobile ? (
         <div className="flex flex-col gap-4">
