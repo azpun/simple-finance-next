@@ -41,6 +41,10 @@ export default function TransactionContent() {
   // untuk mengirim id transaksi ke modal/dialog
   const [selectedItem, setSelectedItem] = useState<string>("");
 
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+
+  const [filterType, setFilterType] = useState<string>("all");
+
   const { data: result, isLoading } = useQuery<TransactionData>({
     queryKey: ["transactions"],
     queryFn: fetchDataTransactions,
@@ -73,6 +77,10 @@ export default function TransactionContent() {
       <div className="flex items-center gap-3 my-3">
         <FilterSelectContent
           uniqueAvailableCategories={availableCategories()}
+          setFilterCategory={setFilterCategory}
+          setFilterType={setFilterType}
+          filterCategory={filterCategory}
+          filterType={filterType}
         />
       </div>
       {isMobile ? (
