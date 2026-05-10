@@ -8,13 +8,15 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 
-type Props = {
-  uniqueAvailableCategories: {
-    name: string;
-  }[];
+type Category = {
+  name: string;
 };
 
-export const FilterSelectContent = ({ uniqueAvailableCategories }: Props) => {
+export const FilterSelectContent = ({
+  uniqueAvailableCategories,
+}: {
+  uniqueAvailableCategories: Category[];
+}) => {
   return (
     <div className="flex items-center gap-3">
       <div className="flex items-center gap-2">

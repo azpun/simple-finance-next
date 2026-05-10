@@ -26,6 +26,10 @@ import { fetchDataTransactions } from "@/lib/api/transaction";
 import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
 import { FilterSelectContent } from "./FilterSelectContent";
 
+type Category = {
+  name: string;
+};
+
 export default function TransactionContent() {
   const isMobile = useIsMobile();
 
@@ -50,21 +54,25 @@ export default function TransactionContent() {
     return null;
   }
 
-  // console.log(result);
+  const availableCategories = (): Category[] => {
+    const uniqueAvailableCategories = [
+      ...new Map(
+        result.map(item => [item.category.name, item.category]),
+      ).values(),
+    ];
 
-  // const filteredResult = result.filter(item => item.type);
+    if (uniqueAvailableCategories.length === 0) {
+      return [{ name: "No category" }];
+    }
 
-  const uniqueAvailableCategories = [
-    ...new Map(
-      result.map(item => [item.category.name, item.category]),
-    ).values(),
-  ];
+    return uniqueAvailableCategories;
+  };
 
   return (
     <>
       <div className="flex items-center gap-3 my-3">
         <FilterSelectContent
-          uniqueAvailableCategories={uniqueAvailableCategories}
+          uniqueAvailableCategories={availableCategories()}
         />
       </div>
       {isMobile ? (
