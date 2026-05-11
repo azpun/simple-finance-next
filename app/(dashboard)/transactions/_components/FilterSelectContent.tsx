@@ -44,8 +44,8 @@ export const FilterSelectContent = ({
             <SelectGroup>
               <SelectLabel>Type</SelectLabel>
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="income">Income</SelectItem>
-              <SelectItem value="expense">Expense</SelectItem>
+              <SelectItem value="Income">Income</SelectItem>
+              <SelectItem value="Expense">Expense</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

@@ -68,15 +68,10 @@ export default function TransactionContent() {
     }
   }, [filterType, filterCategory, result]);
 
-  if (result === undefined) {
-    console.log("no data");
-    return null;
-  }
-
   const availableCategories = (): Category[] => {
     const uniqueAvailableCategories = [
       ...new Map(
-        result.map(item => [item.category.name, item.category]),
+        result?.map(item => [item.category.name, item.category]),
       ).values(),
     ];
 
@@ -86,9 +81,6 @@ export default function TransactionContent() {
 
     return uniqueAvailableCategories;
   };
-
-  console.log(filterCategory);
-  console.log(filterType);
 
   return (
     <>
