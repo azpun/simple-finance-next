@@ -1,7 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
-export const SearchBox = () => {
+export const SearchBox = ({
+  setValueSearch,
+}: {
+  setValueSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) => {
   return (
     <>
       <span className="sr-only">Search</span>
@@ -11,7 +15,7 @@ export const SearchBox = () => {
           type="search"
           placeholder="Search by name"
           className="pl-9"
-          onChange={() => {}}
+          onChange={setValueSearch}
         />
       </div>
     </>

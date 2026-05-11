@@ -26,6 +26,8 @@ import { fetchDataTransactions } from "@/lib/api/transaction";
 import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
 import { FilterSelectContent } from "./FilterSelectContent";
 import { SearchBox } from "./SearchBox";
+import { useInput } from "@/hooks/useInput";
+import { useDebounce } from "@/hooks/useDebounce";
 
 type Category = {
   name: string;
@@ -46,6 +48,12 @@ export default function TransactionContent() {
   // untuk filter
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
+
+  const [value, onChange] = useInput();
+
+  const debounceValue = useDebounce(value, 1000);
+
+  console.log("debounceValue", debounceValue);
 
   const { data: result, isLoading } = useQuery<TransactionData>({
     queryKey: ["transactions"],
@@ -86,7 +94,7 @@ export default function TransactionContent() {
 
   return (
     <>
-      <div className="flex items-center gap-3 my-3">
+      <div className="flex flex-col gap-3 my-3 md:flex-row">
         <FilterSelectContent
           uniqueAvailableCategories={availableCategories()}
           setFilterCategory={setFilterCategory}
@@ -94,7 +102,7 @@ export default function TransactionContent() {
           filterCategory={filterCategory}
           filterType={filterType}
         />
-        <SearchBox />
+        <SearchBox setValueSearch={onChange} />
       </div>
       {isMobile ? (
         <div className="flex flex-col gap-4">
