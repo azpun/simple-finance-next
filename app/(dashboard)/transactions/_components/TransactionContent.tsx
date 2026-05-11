@@ -17,7 +17,7 @@ import { TransactionData } from "@/validations/transaction.validate";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DropdownMenuTransaction } from "./DropdownMenuTransaction";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -53,6 +53,21 @@ export default function TransactionContent() {
 
   const { mutateAsync: deleteTransaction, isPending } = useDeleteTransaction();
 
+  const filteredResult = useMemo(() => {
+    if (filterCategory === "all" && filterType === "all") {
+      return result;
+    } else if (filterCategory === "all" && filterType !== "all") {
+      return result?.filter(item => item.type === filterType);
+    } else if (filterCategory !== "all" && filterType === "all") {
+      return result?.filter(item => item.category.name === filterCategory);
+    } else {
+      return result?.filter(
+        item =>
+          item.category.name === filterCategory && item.type === filterType,
+      );
+    }
+  }, [filterType, filterCategory, result]);
+
   if (result === undefined) {
     console.log("no data");
     return null;
@@ -72,6 +87,9 @@ export default function TransactionContent() {
     return uniqueAvailableCategories;
   };
 
+  console.log(filterCategory);
+  console.log(filterType);
+
   return (
     <>
       <div className="flex items-center gap-3 my-3">
@@ -85,11 +103,11 @@ export default function TransactionContent() {
       </div>
       {isMobile ? (
         <div className="flex flex-col gap-4">
-          {result?.length === 0 && (
+          {filteredResult?.length === 0 && (
             <p className="p-2 text-center">No transaction found</p>
           )}
           {isLoading && <p>Loading...</p>}
-          {result?.map(transaction => (
+          {filteredResult?.map(transaction => (
             <Card
               key={transaction.id}
               className="flex flex-row items-center justify-between p-6 mx-0"
@@ -145,7 +163,7 @@ export default function TransactionContent() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {result?.length === 0 && (
+              {filteredResult?.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-6 py-4 text-center">
                     There is no transactions found
@@ -159,7 +177,7 @@ export default function TransactionContent() {
                   </td>
                 </tr>
               )}
-              {result?.map(transaction => (
+              {filteredResult?.map(transaction => (
                 <tr key={transaction.id} className="p-2 text-sm">
                   <td className="px-6 py-4">{transaction.title}</td>
                   <td className="px-6 py-4 capitalize">
