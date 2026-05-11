@@ -25,6 +25,7 @@ import { UpdateTransactionDialog } from "@/components/common/UpdateTransactionDi
 import { fetchDataTransactions } from "@/lib/api/transaction";
 import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
 import { FilterSelectContent } from "./FilterSelectContent";
+import { SearchBox } from "./SearchBox";
 
 type Category = {
   name: string;
@@ -36,13 +37,14 @@ export default function TransactionContent() {
   // Modal Delete
   const [open, setOpen] = useState(false);
 
+  // Modal Update
   const [openUpdate, setOpenUpdate] = useState(false);
 
   // untuk mengirim id transaksi ke modal/dialog
   const [selectedItem, setSelectedItem] = useState<string>("");
 
+  // untuk filter
   const [filterCategory, setFilterCategory] = useState<string>("all");
-
   const [filterType, setFilterType] = useState<string>("all");
 
   const { data: result, isLoading } = useQuery<TransactionData>({
@@ -92,6 +94,7 @@ export default function TransactionContent() {
           filterCategory={filterCategory}
           filterType={filterType}
         />
+        <SearchBox />
       </div>
       {isMobile ? (
         <div className="flex flex-col gap-4">
