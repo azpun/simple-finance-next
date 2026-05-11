@@ -49,15 +49,15 @@ export default function TransactionContent() {
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
 
+  // untuk search
   const [value, onChange] = useInput();
 
+  // untuk efek debounce saat search
   const debounceValue = useDebounce(value, 1000);
 
-  console.log("debounceValue", debounceValue);
-
   const { data: result, isLoading } = useQuery<TransactionData>({
-    queryKey: ["transactions"],
-    queryFn: fetchDataTransactions,
+    queryKey: ["transactions", debounceValue],
+    queryFn: () => fetchDataTransactions(debounceValue),
     staleTime: 1000 * 60 * 2, // 2 minutes
   });
 

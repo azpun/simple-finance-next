@@ -113,12 +113,22 @@ export const GET = auth(async req => {
     );
   }
 
+  const { searchParams } = new URL(req.url);
+  const transactionName = searchParams.get("transaction");
+
   const userId = req.auth.user.id as string;
 
   try {
     const transactions = await prisma.transactions.findMany({
       where: {
         userId: userId,
+
+        ...(transactionName && {
+          title: {
+            contains: transactionName,
+            mode: "insensitive",
+          },
+        }),
       },
       select: {
         id: true,
@@ -150,6 +160,7 @@ export const GET = auth(async req => {
           status: 500,
           message: "Error validating transactions",
           errors: validate.error.flatten(),
+          transactionName,
         },
         { status: 500 },
       );

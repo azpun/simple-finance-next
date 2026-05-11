@@ -28,8 +28,14 @@ export const fetchDataTransactionById = async (transactionId: string) => {
   return data;
 };
 
-export const fetchDataTransactions = async () => {
-  const response = await fetch(`/api/transactions`);
+export const fetchDataTransactions = async (transactionName: string | null) => {
+  const params = new URLSearchParams();
+
+  if (transactionName) {
+    params.set("transaction", transactionName);
+  }
+
+  const response = await fetch(`/api/transactions?${params.toString()}`);
   const result: TransactionResponse = await response.json();
   const data: TransactionData = result.data;
 
