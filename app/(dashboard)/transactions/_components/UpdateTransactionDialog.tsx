@@ -41,7 +41,7 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
   openUpdate: boolean;
-  setOpenUpdate: (openUpdate: boolean) => void;
+  setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   selectedItemForUpdate: string;
 };
 

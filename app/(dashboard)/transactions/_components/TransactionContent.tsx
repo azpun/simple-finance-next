@@ -8,28 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TransactionData } from "@/validations/transaction.validate";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { DropdownMenuTransaction } from "./DropdownMenuTransaction";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { UpdateTransactionDialog } from "@/app/(dashboard)/transactions/_components/UpdateTransactionDialog";
 import { fetchDataTransactions } from "@/lib/api/transaction";
-import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
 import { FilterSelectContent } from "./FilterSelectContent";
 import { SearchBox } from "./SearchBox";
 import { useInput } from "@/hooks/useInput";
 import { useDebounce } from "@/hooks/useDebounce";
+import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import Link from "next/link";
 
 type Category = {
@@ -40,7 +31,7 @@ export default function TransactionContent() {
   const isMobile = useIsMobile();
 
   // Modal Delete
-  const [open, setOpenDelete] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   // Modal Update
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -63,8 +54,6 @@ export default function TransactionContent() {
     queryFn: () => fetchDataTransactions(debounceValue),
     staleTime: 1000 * 60 * 2, // 2 minutes
   });
-
-  const { mutateAsync: deleteTransaction, isPending } = useDeleteTransaction();
 
   const filteredResult = useMemo(() => {
     if (filterCategory === "all" && filterType === "all") {
@@ -243,44 +232,11 @@ export default function TransactionContent() {
           </table>
         </div>
       )}
-      <Dialog open={open} onOpenChange={setOpenDelete}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Warning!</DialogTitle>
-          </DialogHeader>
-          Are you sure you want to delete this transaction?
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" disabled={isPending}>
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button
-              variant="destructive"
-              disabled={isPending}
-              onClick={() =>
-                deleteTransaction(selectedItem, {
-                  onSuccess: () => {
-                    toast.success("Transaction deleted successfully", {
-                      duration: 4000,
-                      position: "top-center",
-                    });
-                    setOpenDelete(false);
-                  },
-                  onError: () => {
-                    toast.error("Failed to delete transaction", {
-                      duration: 5000,
-                      position: "top-center",
-                    });
-                  },
-                })
-              }
-            >
-              Yes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteTransactionDialog
+        isOpen={openDelete}
+        setIsOpen={setOpenDelete}
+        selectedItem={selectedItem}
+      />
       <UpdateTransactionDialog
         openUpdate={openUpdate}
         setOpenUpdate={setOpenUpdate}
