@@ -1,7 +1,7 @@
 // components/common/AddTransactionDialog.tsx
 "use client";
 import { PlusIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../../../components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -11,9 +11,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
+} from "../../../../components/ui/dialog";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "../../../../components/ui/field";
+import { Input } from "../../../../components/ui/input";
 import {
   Select,
   SelectContent,
@@ -22,7 +27,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../../../components/ui/select";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

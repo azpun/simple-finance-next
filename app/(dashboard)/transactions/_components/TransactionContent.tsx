@@ -1,7 +1,13 @@
 // app/(dashboard)/transactions/TransactionContent.tsx
 "use client";
 
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -10,24 +16,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
 import { useIsMobile } from "@/hooks/use-mobile";
-
 import { TransactionData } from "@/validations/transaction.validate";
-
 import { useQuery } from "@tanstack/react-query";
-
 import { useMemo, useState } from "react";
 import { DropdownMenuTransaction } from "./DropdownMenuTransaction";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { UpdateTransactionDialog } from "@/components/common/UpdateTransactionDialog";
+import { UpdateTransactionDialog } from "@/app/(dashboard)/transactions/_components/UpdateTransactionDialog";
 import { fetchDataTransactions } from "@/lib/api/transaction";
 import { useDeleteTransaction } from "@/hooks/useDeleteTransaction";
 import { FilterSelectContent } from "./FilterSelectContent";
 import { SearchBox } from "./SearchBox";
 import { useInput } from "@/hooks/useInput";
 import { useDebounce } from "@/hooks/useDebounce";
+import Link from "next/link";
 
 type Category = {
   name: string;
@@ -37,7 +40,7 @@ export default function TransactionContent() {
   const isMobile = useIsMobile();
 
   // Modal Delete
-  const [open, setOpen] = useState(false);
+  const [open, setOpenDelete] = useState(false);
 
   // Modal Update
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -111,12 +114,13 @@ export default function TransactionContent() {
           )}
           {isLoading && <p>Loading...</p>}
           {filteredResult?.map(transaction => (
-            <Card
-              key={transaction.id}
-              className="flex flex-row items-center justify-between p-6 mx-0"
-            >
-              <div className="flex flex-col gap-3">
-                <h3 className="text-lg">{transaction.title}</h3>
+            <Card key={transaction.id} className="mx-0 ">
+              <CardHeader>
+                <CardTitle>
+                  <h3 className="text-lg">{transaction.title}</h3>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
                 <p className="capitalize">{transaction.category.name}</p>
                 <p>Rp.{transaction.amount.toLocaleString("id-ID")}</p>
                 <p>{transaction.type}</p>
@@ -127,16 +131,41 @@ export default function TransactionContent() {
                     year: "numeric",
                   })}
                 </p>
-              </div>
+              </CardContent>
 
-              <div>
-                <DropdownMenuTransaction
-                  setOpen={setOpen}
-                  setOpenUpdate={setOpenUpdate}
-                  setSelectedItem={setSelectedItem}
-                  transaction={transaction}
-                />
-              </div>
+              <CardFooter className="grid grid-cols-3 gap-2 space-x-2">
+                <Link href={`/budget/${transaction.id}`}>
+                  <Button variant="outline" className="w-full h-10">
+                    Detail
+                  </Button>
+                </Link>
+                <div>
+                  <Button
+                    variant="outline"
+                    className="w-full h-10"
+                    onClick={e => {
+                      e.preventDefault();
+                      setOpenUpdate(true);
+                      setSelectedItem(transaction.id);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    variant="destructive"
+                    className="w-full h-10"
+                    onClick={e => {
+                      e.preventDefault();
+                      setOpenDelete(true);
+                      setSelectedItem(transaction.id);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </CardFooter>
             </Card>
           ))}
         </div>
@@ -202,7 +231,7 @@ export default function TransactionContent() {
                   </td>
                   <td className="px-6 py-4">
                     <DropdownMenuTransaction
-                      setOpen={setOpen}
+                      setOpen={setOpenDelete}
                       setOpenUpdate={setOpenUpdate}
                       setSelectedItem={setSelectedItem}
                       transaction={transaction}
@@ -214,7 +243,7 @@ export default function TransactionContent() {
           </table>
         </div>
       )}
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpenDelete}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Warning!</DialogTitle>
@@ -236,7 +265,7 @@ export default function TransactionContent() {
                       duration: 4000,
                       position: "top-center",
                     });
-                    setOpen(false);
+                    setOpenDelete(false);
                   },
                   onError: () => {
                     toast.error("Failed to delete transaction", {

@@ -1,6 +1,6 @@
 // app/components/common/UpdateTransactionDialog.tsx
 "use client";
-import { Button } from "../ui/button";
+
 import {
   Dialog,
   DialogClose,
@@ -9,9 +9,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
+} from "../../../../components/ui/dialog";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "../../../../components/ui/field";
+import { Input } from "../../../../components/ui/input";
 import {
   Select,
   SelectContent,
@@ -20,7 +25,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../../../components/ui/select";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -32,6 +37,7 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { fetchDataTransactionById } from "@/lib/api/transaction";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   openUpdate: boolean;

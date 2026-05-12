@@ -1,5 +1,5 @@
 // /app/(dashboard)/transactions/page.tsx
-import AddTransactionDialog from "@/components/common/AddTransactionDialog";
+import AddTransactionDialog from "@/app/(dashboard)/transactions/_components/AddTransactionDialog";
 import TransactionContent from "./_components/TransactionContent";
 
 export default function Transactions() {

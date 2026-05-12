@@ -2,7 +2,7 @@
 
 import { ChartPieDonut } from "@/components/common/ChartPie";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import AddTransactionDialog from "@/components/common/AddTransactionDialog";
+import AddTransactionDialog from "@/app/(dashboard)/transactions/_components/AddTransactionDialog";
 import { useQuery } from "@tanstack/react-query";
 import { DashboardData } from "@/validations/dashboard.validation";
 import React from "react";
