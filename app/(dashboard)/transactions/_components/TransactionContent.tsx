@@ -22,6 +22,7 @@ import { useInput } from "@/hooks/useInput";
 import { useDebounce } from "@/hooks/useDebounce";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import Link from "next/link";
+import { Dot, Trash2Icon } from "lucide-react";
 
 type Category = {
   name: string;
@@ -29,23 +30,17 @@ type Category = {
 
 export default function TransactionContent() {
   const isMobile = useIsMobile();
-
   // Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
-
   // Modal Update
   const [openUpdate, setOpenUpdate] = useState(false);
-
   // untuk mengirim id transaksi ke modal/dialog
   const [selectedItem, setSelectedItem] = useState<string>("");
-
   // untuk filter
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
-
-  // untuk search
+  // untuk input search
   const [value, onChange] = useInput();
-
   // untuk efek debounce saat search
   const debounceValue = useDebounce(value, 1000);
 
@@ -103,32 +98,48 @@ export default function TransactionContent() {
           )}
           {isLoading && <p>Loading...</p>}
           {filteredResult?.map(transaction => (
-            <Card key={transaction.id} className="mx-0 ">
-              <CardHeader>
-                <CardTitle>
-                  <h3 className="text-lg">{transaction.title}</h3>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="capitalize">{transaction.category.name}</p>
-                <p>Rp.{transaction.amount.toLocaleString("id-ID")}</p>
-                <p>{transaction.type}</p>
-                <p>
-                  {new Date(transaction.updatedAt).toLocaleDateString("id-ID", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-              </CardContent>
-
-              <CardFooter className="grid grid-cols-3 gap-2 space-x-2">
-                <Link href={`/budget/${transaction.id}`}>
+            <Card key={transaction.id}>
+              <div className="p-4 space-y-2">
+                <CardHeader>
+                  <CardTitle>
+                    <h3 className="text-lg font-semibold">
+                      {transaction.title}
+                    </h3>
+                  </CardTitle>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <p>{transaction.type}</p>
+                    <span>
+                      <Dot />
+                    </span>
+                    <p className="capitalize">{transaction.category.name}</p>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p
+                    className={`text-2xl font-bold
+                    ${transaction.type === "Expense" ? "text-red-400/80" : "text-green-400/80"}`}
+                  >
+                    Rp.{transaction.amount.toLocaleString("id-ID")}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date(transaction.updatedAt).toLocaleDateString(
+                      "id-ID",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      },
+                    )}
+                  </p>
+                </CardContent>
+              </div>
+              <CardFooter className="flex space-x-2">
+                <Link className="flex-1" href={`/budget/${transaction.id}`}>
                   <Button variant="outline" className="w-full h-10">
                     Detail
                   </Button>
                 </Link>
-                <div>
+                <div className="flex-1">
                   <Button
                     variant="outline"
                     className="w-full h-10"
@@ -151,7 +162,7 @@ export default function TransactionContent() {
                       setSelectedItem(transaction.id);
                     }}
                   >
-                    Delete
+                    <Trash2Icon />
                   </Button>
                 </div>
               </CardFooter>
