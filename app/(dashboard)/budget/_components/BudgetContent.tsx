@@ -111,22 +111,13 @@ export const BudgetContent = () => {
           <table className="w-full text-sm text-left text-body md:table-fixed">
             <thead className="border-b border-defult bg-secondary">
               <tr>
-                <th scope="col" className="px-6 py-3 font-medium w-[10vw]">
-                  Month
-                </th>
-                <th scope="col" className="px-6 py-3 font-medium w-[10vw]">
+                <th className="px-6 py-3 font-medium w-[10vw]">Month</th>
+                <th className="px-6 py-3 font-medium w-[10vw]">
                   Budget Amount
                 </th>
-                <th scope="col" className="px-6 py-3 font-medium w-[40vw]">
-                  Usage
-                </th>
-                <th scope="col" className="px-6 py-3 font-medium">
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 font-medium w-[10vw] text-center"
-                >
+                <th className="px-6 py-3 font-medium w-[40vw]">Usage</th>
+                <th className="px-6 py-3 font-medium">Status</th>
+                <th className="px-6 py-3 font-medium w-[10vw] text-center">
                   Actions Button
                 </th>
               </tr>
@@ -147,9 +138,7 @@ export const BudgetContent = () => {
                             "id-ID",
                           )}{" "}
                           / Rp.
-                          {dataDashboard?.budget.totalAmount.toLocaleString(
-                            "id-ID",
-                          )}
+                          {item?.totalAmount.toLocaleString("id-ID")}
                         </p>
                         <p className="ml-auto">
                           (
@@ -209,7 +198,7 @@ export const BudgetContent = () => {
                   </td>
                   <td className="px-6 py-4 text-center">
                     <DropdownMenuBudgets
-                      data={budget}
+                      data={item}
                       setSelectedItem={setSelectedBudget}
                       setUpdateModalOpen={setIsUpdateModalOpen}
                       setDeleteModalOpen={setIsDeleteModalOpen}

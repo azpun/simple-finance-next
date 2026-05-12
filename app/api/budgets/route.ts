@@ -50,7 +50,7 @@ export async function GET() {
     }
 
     const formattedGetBudgets: DataBudgetDescOptionalType[] = getBudgets.map(
-      (budget) => ({
+      budget => ({
         id: budget.id,
         monthAndYear: new Date(
           budget.year,
