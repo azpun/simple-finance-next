@@ -91,14 +91,14 @@ export default function TransactionContent() {
         />
         <SearchBox setValueSearch={onChange} />
       </div>
+      {isLoading && <p>Loading...</p>}
       {isMobile ? (
         <div className="flex flex-col gap-4">
           {filteredResult?.length === 0 && (
             <p className="p-2 text-center">No transaction found</p>
           )}
-          {isLoading && <p>Loading...</p>}
           {filteredResult?.map(transaction => (
-            <Card key={transaction.id}>
+            <Card key={transaction.id} className="mx-0">
               <div className="p-4 space-y-2">
                 <CardHeader>
                   <CardTitle>
@@ -117,7 +117,7 @@ export default function TransactionContent() {
                 <CardContent>
                   <p
                     className={`text-2xl font-bold
-                    ${transaction.type === "Expense" ? "text-red-400/80" : "text-green-400/80"}`}
+                    ${transaction.type === "Expense" ? "text-red-400" : "text-green-400"}`}
                   >
                     Rp.{transaction.amount.toLocaleString("id-ID")}
                   </p>
@@ -172,7 +172,7 @@ export default function TransactionContent() {
       ) : (
         <div className="relative overflow-x-auto border rounded-md shadow-xs">
           <table className="w-full text-sm text-left table-auto text-body lg:table-fixed">
-            <thead className="border-b border-defult bg-secondary">
+            <thead className="border-b border-defult bg-zinc-300/20 dark:bg-zinc-300/10">
               <tr>
                 <th scope="col" className="px-6 py-3 font-medium">
                   Title
@@ -202,24 +202,30 @@ export default function TransactionContent() {
                   </td>
                 </tr>
               )}
-              {isLoading && (
+              {/* {isLoading && (
                 <tr>
                   <td colSpan={6} className="px-6 py-4 text-center">
                     Loading...
                   </td>
                 </tr>
-              )}
+              )} */}
               {filteredResult?.map(transaction => (
                 <tr key={transaction.id} className="p-2 text-sm">
-                  <td className="px-6 py-4">{transaction.title}</td>
-                  <td className="px-6 py-4 capitalize">
+                  <td className="px-6 py-3 font-semibold">
+                    {transaction.title}
+                  </td>
+                  <td className="px-6 py-3 capitalize text-muted-foreground">
                     {transaction.category.name}
                   </td>
-                  <td className="px-6 py-4">
+                  <td
+                    className={`px-6 py-3 ${transaction.type === "Expense" ? "text-red-400 " : "text-green-400"}`}
+                  >
                     Rp.{transaction.amount.toLocaleString("id-ID")}
                   </td>
-                  <td className="px-6 py-4">{transaction.type}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-3 text-muted-foreground">
+                    {transaction.type}
+                  </td>
+                  <td className="px-6 py-3 text-muted-foreground">
                     {new Date(transaction.updatedAt).toLocaleDateString(
                       "id-ID",
                       {
@@ -229,7 +235,7 @@ export default function TransactionContent() {
                       },
                     )}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-3">
                     <DropdownMenuTransaction
                       setOpen={setOpenDelete}
                       setOpenUpdate={setOpenUpdate}
