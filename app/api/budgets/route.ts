@@ -2,9 +2,10 @@ import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import {
   createBudgetSchema,
-  formattedDataBudget,
-  DataBudgetDescOptionalType,
+  DataBudgetWitStats,
+  DataBudgetWitStatsType,
 } from "@/validations/budget.validation";
+import { endOfMonth, startOfMonth } from "date-fns";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -23,7 +24,7 @@ export async function GET() {
   const userId = session.user.id as string;
 
   try {
-    const getBudgets = await prisma.budgets.findMany({
+    const dataBudgets = await prisma.budgets.findMany({
       where: {
         userId: userId,
       },
@@ -38,7 +39,7 @@ export async function GET() {
       },
     });
 
-    if (getBudgets.length === 0) {
+    if (dataBudgets.length === 0) {
       return NextResponse.json(
         {
           success: false,
@@ -49,33 +50,67 @@ export async function GET() {
       );
     }
 
-    const formattedGetBudgets: DataBudgetDescOptionalType[] = getBudgets.map(
-      budget => ({
-        id: budget.id,
-        monthAndYear: new Date(
-          budget.year,
-          budget.month - 1,
-        ).toLocaleDateString("id-ID", {
-          month: "long",
-          year: "numeric",
-        }),
-        totalAmount: budget.totalAmount.toNumber(),
-        description: budget.description,
-        createdAt: budget.createdAt,
-        updatedAt: budget.updatedAt,
+    const dataBudgetWithStats: DataBudgetWitStatsType[] = await Promise.all(
+      dataBudgets.map(async budget => {
+        const startMonth = startOfMonth(
+          new Date(budget.year, budget.month - 1, 1),
+        );
+        const endMonth = endOfMonth(
+          new Date(budget.year, budget.month, 0, 23, 59, 59),
+        );
+        const dataTransaction = await prisma.transactions.aggregate({
+          where: {
+            userId: userId,
+            type: "Expense",
+            date: {
+              gte: startMonth,
+              lte: endMonth,
+            },
+          },
+          _sum: {
+            amount: true,
+          },
+        });
+
+        const remaining =
+          Number(budget.totalAmount) - Number(dataTransaction._sum.amount);
+
+        const percentageUsage =
+          (Number(dataTransaction._sum.amount) / Number(budget.totalAmount)) *
+          100;
+
+        return {
+          // ...budget,
+          id: budget.id,
+          monthAndYear: new Date(
+            budget.year,
+            budget.month - 1,
+          ).toLocaleDateString("id-ID", {
+            month: "long",
+            year: "numeric",
+          }),
+          description: budget.description,
+          totalAmount: Number(budget.totalAmount),
+          totalExpense: {
+            amount: Number(dataTransaction._sum.amount),
+          },
+          remaining: remaining,
+          percentageUsage: percentageUsage,
+        };
       }),
     );
 
-    const validateData = formattedDataBudget.safeParse(formattedGetBudgets);
+    const validateDataWithStats =
+      DataBudgetWitStats.array().safeParse(dataBudgetWithStats);
 
-    if (!validateData.success) {
-      console.error(validateData.error);
+    if (!validateDataWithStats.success) {
+      console.error(validateDataWithStats.error);
       return NextResponse.json(
         {
           success: false,
           status: 400,
-          message: validateData.error.message,
-          errors: validateData.error.flatten(),
+          message: validateDataWithStats.error.message,
+          errors: validateDataWithStats.error.flatten(),
         },
         { status: 400 },
       );
@@ -86,7 +121,7 @@ export async function GET() {
         success: true,
         status: 200,
         message: "Get budgets successfully",
-        data: validateData.data,
+        data: validateDataWithStats.data,
       },
       { status: 200 },
     );

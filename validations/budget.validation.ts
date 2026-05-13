@@ -121,6 +121,24 @@ export const DataBudgetDescOptional = z.object({
 export type DataBudgetType = z.infer<typeof DataBudget>;
 export type DataBudgetDescOptionalType = z.infer<typeof DataBudgetDescOptional>;
 
+export const DataBudgetWitStats = z.object({
+  id: z.string(),
+  monthAndYear: z.string(),
+  totalAmount: z.number(),
+  totalExpense: z.object({
+    amount: z.number(),
+  }),
+  remaining: z.number(),
+  percentageUsage: z.number(),
+  description: z
+    .string()
+    .trim()
+    .max(200, "Description must be at most 200 characters long")
+    .nullable(),
+});
+
+export type DataBudgetWitStatsType = z.infer<typeof DataBudgetWitStats>;
+
 export const UpdateDataBudget = z.object({
   id: z.string(),
   monthAndYear: z.string(),

@@ -1,6 +1,6 @@
 import {
   DataBudgetType,
-  FormattedDataBudgetType,
+  DataBudgetWitStatsType,
 } from "@/validations/budget.validation";
 
 export const fetchDataBudgetById = async (budgetId: string) => {
@@ -33,7 +33,7 @@ export const fetchDataBudgets = async () => {
     throw new Error("Failed to fetch budget");
   }
   const result = await response.json();
-  const data: FormattedDataBudgetType = result.data;
+  const data: DataBudgetWitStatsType[] = result.data;
 
   return data;
 };

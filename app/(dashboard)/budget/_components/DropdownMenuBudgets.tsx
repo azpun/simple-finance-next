@@ -7,12 +7,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DataBudgetDescOptionalType } from "@/validations/budget.validation";
+import { DataBudgetWitStatsType } from "@/validations/budget.validation";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
-  data: DataBudgetDescOptionalType;
+  data: DataBudgetWitStatsType;
   setSelectedItem: (id: string) => void;
   setUpdateModalOpen: (open: boolean) => void;
   setDeleteModalOpen: (open: boolean) => void;

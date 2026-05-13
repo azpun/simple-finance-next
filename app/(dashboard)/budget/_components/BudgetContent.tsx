@@ -11,9 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { fetchGetDashboard } from "@/lib/api/dashboard";
-import { FormattedDataBudgetType } from "@/validations/budget.validation";
-import { DashboardData } from "@/validations/dashboard.validation";
+import { DataBudgetWitStatsType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
 import { DropdownMenuBudgets } from "./DropdownMenuBudgets";
 import { Circle } from "lucide-react";
@@ -34,16 +32,10 @@ export const BudgetContent = () => {
 
   const [selectedBudget, setSelectedBudget] = useState<string>("");
 
-  const { data: budget } = useQuery<FormattedDataBudgetType>({
+  const { data: budget } = useQuery<DataBudgetWitStatsType[]>({
     queryKey: ["budget"],
     queryFn: fetchDataBudgets,
     staleTime: 1000 * 60, // 1 minutes
-  });
-
-  const { data: dataDashboard } = useQuery<DashboardData>({
-    queryKey: ["dashboard"],
-    queryFn: fetchGetDashboard,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   return (
@@ -51,7 +43,7 @@ export const BudgetContent = () => {
       {isMobile && (
         <>
           {budget?.map(item => (
-            <Card key={item.monthAndYear} className="mx-0 md:mx-1 lg:mx-2">
+            <Card key={item.monthAndYear} className="mx-0 my-4 md:mx-1 lg:mx-2">
               <CardHeader>
                 <CardTitle>
                   <div>
@@ -65,9 +57,7 @@ export const BudgetContent = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <MobileCardContent
-                  dataDashboard={dataDashboard as DashboardData}
-                />
+                <MobileCardContent dataBudget={item} />
               </CardContent>
               <CardFooter className="grid grid-cols-3 gap-2 space-x-2">
                 <Link href={`/budget/${item.id}`}>
@@ -124,58 +114,49 @@ export const BudgetContent = () => {
             </thead>
             <tbody>
               {budget?.map((item, index) => (
-                <tr key={index} className="border-b even:bg-secondary">
+                <tr key={index} className="border-b ">
                   <td className="px-6 py-4 font-bold">{item.monthAndYear}</td>
                   <td className="px-6 py-4">
                     Rp.{item.totalAmount.toLocaleString("id-ID")}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-2">
-                      <div className="flex ">
+                      <div className="flex text-muted-foreground">
                         <p>
                           Rp.
-                          {dataDashboard?.operationsOf.budgetRemaining.toLocaleString(
-                            "id-ID",
-                          )}{" "}
-                          / Rp.
+                          {item.totalExpense.amount.toLocaleString("id-ID")} /
+                          Rp.
                           {item?.totalAmount.toLocaleString("id-ID")}
                         </p>
                         <p className="ml-auto">
-                          (
-                          {dataDashboard?.operationsOf.percentageRemaining.toPrecision(
-                            3,
-                          )}
-                          %)
+                          {item.percentageUsage.toPrecision(3)}% Usage
                         </p>
                       </div>
                       <Progress
-                        value={dataDashboard?.operationsOf.percentageRemaining}
+                        value={item.percentageUsage}
                         className="h-2 my-2"
                       />
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
-                      0 && (
-                      <div className="flex items-center gap-2 ">
+                    {(item.percentageUsage ?? 0) > 100 && (
+                      <div className="flex items-center gap-2">
                         <Circle fill="red" className="w-4 h-4 text-red-500" />
                         <span>Over Budget</span>
                       </div>
                     )}
-                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >=
-                      1 &&
-                      (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
-                        50 && (
-                        <div className="flex items-center gap-2 ">
+
+                    {(item.percentageUsage ?? 0) >= 81 &&
+                      (item.percentageUsage ?? 0) <= 100 && (
+                        <div className="flex items-center gap-2">
                           <Circle fill="red" className="w-4 h-4 text-red-500" />
                           <span>Danger</span>
                         </div>
                       )}
-                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >=
-                      20 &&
-                      (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
-                        50 && (
-                        <div className="flex items-center gap-2 ">
+
+                    {(item.percentageUsage ?? 0) >= 51 &&
+                      (item.percentageUsage ?? 0) <= 80 && (
+                        <div className="flex items-center gap-2">
                           <Circle
                             fill="yellow"
                             className="w-4 h-4 text-yellow-500"
@@ -183,14 +164,13 @@ export const BudgetContent = () => {
                           <span>Warning</span>
                         </div>
                       )}
-                    {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >
-                      50 &&
-                      (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <=
-                        100 && (
-                        <div className="flex items-center gap-2 ">
+
+                    {(item.percentageUsage ?? 0) >= 0 &&
+                      (item.percentageUsage ?? 0) <= 50 && (
+                        <div className="flex items-center gap-2">
                           <Circle
                             fill="green"
-                            className="w-4 h-4 text-[#008000]"
+                            className="w-4 h-4 text-green-500"
                           />
                           <span>Good</span>
                         </div>

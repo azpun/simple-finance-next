@@ -1,53 +1,55 @@
 import { Progress } from "@/components/ui/progress";
-import { DashboardData } from "@/validations/dashboard.validation";
+import { DataBudgetWitStatsType } from "@/validations/budget.validation";
+
 import { Circle } from "lucide-react";
 
 type Prop = {
-  dataDashboard: DashboardData;
+  dataBudget: DataBudgetWitStatsType;
 };
 
-const MobileCardContent = ({ dataDashboard }: Prop) => {
+const MobileCardContent = ({ dataBudget }: Prop) => {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex ">
+      <div className="flex text-muted-foreground">
         <p>
-          Rp.{" "}
-          {dataDashboard?.operationsOf.budgetRemaining.toLocaleString("id-ID")}{" "}
-          / Rp. {dataDashboard?.budget.totalAmount.toLocaleString("id-ID")}
+          Rp. {dataBudget.totalExpense.amount.toLocaleString("id-ID")} / Rp.{" "}
+          {dataBudget?.totalAmount.toLocaleString("id-ID")}
         </p>
         <p className="ml-auto">
-          ({dataDashboard?.operationsOf.percentageRemaining.toPrecision(3)}
-          %)
+          {dataBudget.percentageUsage.toPrecision(3)}% Usage
         </p>
       </div>
       <Progress
-        value={dataDashboard?.operationsOf.percentageRemaining}
+        value={dataBudget.percentageUsage}
         className="w-full h-2 my-2"
       />
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 0 && (
-        <div className="flex items-center gap-2 ">
+      {(dataBudget.percentageUsage ?? 0) > 100 && (
+        <div className="flex items-center gap-2">
           <Circle fill="red" className="w-4 h-4 text-red-500" />
           <span>Over Budget</span>
         </div>
       )}
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >= 1 &&
-        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 50 && (
-          <div className="flex items-center gap-2 ">
+
+      {(dataBudget.percentageUsage ?? 0) >= 81 &&
+        (dataBudget.percentageUsage ?? 0) <= 100 && (
+          <div className="flex items-center gap-2">
             <Circle fill="red" className="w-4 h-4 text-red-500" />
             <span>Danger</span>
           </div>
         )}
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) >= 20 &&
-        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 50 && (
-          <div className="flex items-center gap-2 ">
+
+      {(dataBudget.percentageUsage ?? 0) >= 51 &&
+        (dataBudget.percentageUsage ?? 0) <= 80 && (
+          <div className="flex items-center gap-2">
             <Circle fill="yellow" className="w-4 h-4 text-yellow-500" />
             <span>Warning</span>
           </div>
         )}
-      {(dataDashboard?.operationsOf?.percentageRemaining ?? 0) > 50 &&
-        (dataDashboard?.operationsOf?.percentageRemaining ?? 0) <= 100 && (
-          <div className="flex items-center gap-2 ">
-            <Circle fill="green" className="w-4 h-4 text-[#008000]" />
+
+      {(dataBudget.percentageUsage ?? 0) >= 0 &&
+        (dataBudget.percentageUsage ?? 0) <= 50 && (
+          <div className="flex items-center gap-2">
+            <Circle fill="green" className="w-4 h-4 text-green-500" />
             <span>Good</span>
           </div>
         )}
