@@ -14,7 +14,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { DataBudgetWitStatsType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
 import { DropdownMenuBudgets } from "./DropdownMenuBudgets";
-import { Circle } from "lucide-react";
+import { Circle, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MobileCardContent from "./MobileCardContent";
 import Link from "next/link";
@@ -59,13 +59,13 @@ export const BudgetContent = () => {
               <CardContent>
                 <MobileCardContent dataBudget={item} />
               </CardContent>
-              <CardFooter className="grid grid-cols-3 gap-2 space-x-2">
-                <Link href={`/budget/${item.id}`}>
+              <CardFooter className="flex items-center gap-2 space-x-1">
+                <Link href={`/budget/${item.id}`} className="w-full">
                   <Button variant="outline" className="w-full h-10">
                     Detail
                   </Button>
                 </Link>
-                <div>
+                <div className="w-full">
                   <Button
                     variant="outline"
                     className="w-full h-10"
@@ -88,7 +88,7 @@ export const BudgetContent = () => {
                       setSelectedBudget(item.id);
                     }}
                   >
-                    Delete
+                    <Trash2Icon />
                   </Button>
                 </div>
               </CardFooter>

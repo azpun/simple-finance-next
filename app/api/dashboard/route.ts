@@ -7,9 +7,7 @@ import {
   dashboardDataSchema,
   operationOfSchema,
 } from "@/validations/dashboard.validation";
-import { DataBudget } from "@/validations/budget.validation";
-
-// import { Decimal } from "@prisma/client/runtime/library"; // Cannot find module '@prisma/client/runtime/library' or its corresponding type declarations.
+import { DataBudgetMapped } from "@/validations/budget.validation";
 
 export async function GET() {
   const session = await auth();
@@ -153,7 +151,7 @@ export async function GET() {
       updatedAt: getBudget?.updatedAt,
     };
 
-    const validateMappingBudget = DataBudget.safeParse(mappingBudget);
+    const validateMappingBudget = DataBudgetMapped.safeParse(mappingBudget);
 
     if (!validateMappingBudget.success) {
       console.error(validateMappingBudget.error);
@@ -181,7 +179,7 @@ export async function GET() {
     );
 
     const categoryids = transactionGroupByCategories.map(
-      (item) => item.categoryId,
+      item => item.categoryId,
     );
 
     const categories = await prisma.categories.findMany({
@@ -194,10 +192,10 @@ export async function GET() {
 
     // Buat Map untuk lookup kategori berdasarkan categoryId
     const category = new Map(
-      categories.map((category) => [category.id, category]),
+      categories.map(category => [category.id, category]),
     );
 
-    const withPercentage = transactionGroupByCategories.map((item) => {
+    const withPercentage = transactionGroupByCategories.map(item => {
       const { _sum } = item;
       if (_sum) {
         return {
