@@ -1,7 +1,10 @@
 // app/api/budgets/[id]/route.ts
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
-import { createBudgetSchema } from "@/validations/budget.validation";
+import {
+  createBudgetSchema,
+  DataBudget,
+} from "@/validations/budget.validation";
 import { NextResponse } from "next/server";
 
 export const GET = auth(async (req, context) => {
@@ -63,7 +66,22 @@ export const GET = auth(async (req, context) => {
       );
     }
 
-    const validateBudget = createBudgetSchema.safeParse(budget);
+    const reformattedBudget = {
+      id: budget.id,
+      monthAndYear: new Date(budget.year, budget.month - 1).toLocaleDateString(
+        "id-ID",
+        {
+          month: "long",
+          year: "numeric",
+        },
+      ),
+      totalAmount: budget.totalAmount,
+      description: budget.description,
+      createdAt: budget.createdAt,
+      updatedAt: budget.updatedAt,
+    };
+
+    const validateBudget = DataBudget.safeParse(reformattedBudget);
 
     if (!validateBudget.success) {
       console.error("Validation error:", validateBudget.error);
