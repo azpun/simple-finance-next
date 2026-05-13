@@ -67,6 +67,7 @@ export const GET = auth(async (req, context) => {
     }
 
     const reformattedBudget = {
+      ...budget,
       id: budget.id,
       monthAndYear: new Date(budget.year, budget.month - 1).toLocaleDateString(
         "id-ID",

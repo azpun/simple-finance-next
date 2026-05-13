@@ -74,6 +74,8 @@ export type FormattedDataBudgetType = z.infer<typeof formattedDataBudget>;
 
 export const DataBudget = z.object({
   id: z.string(),
+  month: z.number(),
+  year: z.number(),
   monthAndYear: z.string(),
   totalAmount: z
     .any()

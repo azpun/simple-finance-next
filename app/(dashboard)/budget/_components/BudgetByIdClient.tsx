@@ -18,8 +18,6 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
     queryFn: () => fetchDataBudgetById(id),
   });
 
-  console.log(dataBudget);
-
   if (dataBudget === undefined) {
     return <div>Loading...</div>;
   }
