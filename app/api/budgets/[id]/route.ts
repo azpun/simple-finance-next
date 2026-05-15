@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import {
   createBudgetSchema,
-  DataBudget,
+  DataBudgetDescOptional,
 } from "@/validations/budget.validation";
 import { NextResponse } from "next/server";
 
@@ -82,7 +82,7 @@ export const GET = auth(async (req, context) => {
       updatedAt: budget.updatedAt,
     };
 
-    const validateBudget = DataBudget.safeParse(reformattedBudget);
+    const validateBudget = DataBudgetDescOptional.safeParse(reformattedBudget);
 
     if (!validateBudget.success) {
       console.error("Validation error:", validateBudget.error);

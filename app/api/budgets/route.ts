@@ -37,6 +37,9 @@ export async function GET() {
         createdAt: true,
         updatedAt: true,
       },
+      orderBy: {
+        month: "asc",
+      },
     });
 
     if (dataBudgets.length === 0) {
