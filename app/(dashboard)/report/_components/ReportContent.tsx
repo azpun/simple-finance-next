@@ -1,9 +1,13 @@
 // app/(dashboard)/report/_components/ReportContent.tsx
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { ChartPieDonut } from "@/components/common/ChartPie";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { fetchGetDashboard } from "@/lib/api/dashboard";
 import { getDataReport } from "@/lib/api/report";
+import { DashboardData } from "@/validations/dashboard.validation";
 import { ReportDataType } from "@/validations/report.validation";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export const ReportContent = () => {
   const { data: report } = useQuery<ReportDataType>({
@@ -11,15 +15,43 @@ export const ReportContent = () => {
     queryFn: getDataReport,
   });
 
+  const { data: result, isLoading } = useQuery<DashboardData>({
+    queryKey: ["dashboard"],
+    queryFn: fetchGetDashboard,
+  });
+
+  const finalSpendData = useMemo(() => {
+    const main = result?.byCategories.slice(0, 5);
+    const others = result?.byCategories.slice(5);
+
+    const otherCombine = others?.reduce(
+      (acc, item) => {
+        acc._sum.amount += item._sum.amount ?? 0;
+        acc.percentage += item.percentage ?? 0;
+        return acc;
+      },
+      {
+        category: "others",
+        _sum: {
+          amount: 0,
+        },
+        percentage: 0,
+      },
+    );
+    return (otherCombine?._sum.amount ?? 0) > 0
+      ? [...(main ?? []), otherCombine]
+      : main;
+  }, [result?.byCategories]);
+
   return (
-    <div>
+    <div className="mt-2 space-y-4">
       <div>
-        <div>
+        <div className="mx-4">
           <span>Filter Section Here</span>
         </div>
       </div>
       <div>
-        <Card className="mx-0 my-4">
+        <Card className="my-4 ">
           <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3 ">
             <div className="space-y-2">
               <h2>Total Pendapatan (Income)</h2>
@@ -42,71 +74,124 @@ export const ReportContent = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="">
-          <Card className="mx-0 h-113">
-            <CardContent>
+      <div className="">
+        <Card className="">
+          <CardContent>
+            <div>
               <div>
-                <div>
-                  <h2>Transactions Income</h2>
-                </div>
-                <div className="overflow-y-auto max-h-100">
-                  <ul>
-                    {report?.listTransactionsIncome.map((item, index) => (
-                      <li key={"Item ke-" + index}>
-                        <div className="p-4 mt-4 border rounded-xl">
+                <h2 className="text-xl">Income Summary Card</h2>
+              </div>
+              <div className="my-4">
+                <ul>
+                  {report?.listTransactionsIncome.map((item, index) => (
+                    <div key={index} className="flex flex-col gap-4">
+                      <div>
+                        <h3>Income This Month</h3>
+                        <p>Rp.{item.amount.toLocaleString("id-ID")}</p>
+                      </div>
+                      <div>
+                        <h3>Main Source</h3>
+                        <li
+                          key={"Item ke-" + index}
+                          className="p-4 mt-4 border rounded-xl"
+                        >
                           <div className="flex items-center justify-between">
-                            <div className="flex flex-col gap-2">
-                              <span>{item.title}</span>
-                              <span>
-                                Rp.{item.amount.toLocaleString("id-ID")}
-                              </span>
+                            <div className="flex flex-col">
+                              <p>{item.title}</p>
+                              <p>Rp.{item.amount.toLocaleString("id-ID")}</p>
                             </div>
                             <div>
                               {new Date(item.date).toLocaleDateString("id-ID")}
                             </div>
                           </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        </li>
+                      </div>
+                    </div>
+                  ))}
+                </ul>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-        <div>
-          <Card className="mx-0">
-            <CardContent>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <div>
+        <Card className="">
+          <CardContent>
+            <div>
               <div>
-                <div>
-                  <h2>Transactions Expanse</h2>
-                </div>
-                <div className="overflow-y-scroll max-h-100">
-                  <ul>
-                    {report?.listTransactionsExpense.map((item, index) => (
-                      <li key={"Item ke-" + index}>
-                        <div className="p-4 mt-4 border rounded-xl">
-                          <div className="flex items-center justify-between">
-                            <div className="flex flex-col gap-2">
-                              <span>{item.title}</span>
-                              <span>
-                                Rp.{item.amount.toLocaleString("id-ID")}
-                              </span>
-                            </div>
-                            <div>
-                              {new Date(item.date).toLocaleDateString("id-ID")}
-                            </div>
+                <h2 className="text-xl">Expanse Transaction List</h2>
+              </div>
+              <div className="overflow-y-scroll max-h-100">
+                <ul>
+                  {report?.listTransactionsExpense.map((item, index) => (
+                    <li key={"Item ke-" + index} className="mr-2">
+                      <div className="p-4 mt-4 border rounded-xl">
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col gap-2">
+                            <span>{item.title}</span>
+                            <span>
+                              Rp.{item.amount.toLocaleString("id-ID")}
+                            </span>
+                          </div>
+                          <div>
+                            {new Date(item.date).toLocaleDateString("id-ID")}
                           </div>
                         </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <div>
+        <Card className="flex flex-col gap-6 max-h-212.5">
+          <CardHeader>
+            <h3 className="text-xl">Spending Breakdown</h3>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-6">
+            {isLoading && <p className="text-center">Loading...</p>}
+            {result?.byCategories?.length !== 0 ? (
+              <>
+                <div>
+                  <ChartPieDonut />
+                </div>
+                <div className="p-2 ">
+                  <ul className="flex flex-col gap-3">
+                    {finalSpendData?.map(category => (
+                      <li key={category?.category}>
+                        <Card>
+                          <CardContent>
+                            <div className="flex items-center justify-between">
+                              <h4 className="capitalize">
+                                {category?.category}
+                              </h4>
+                              <div className="flex gap-3">
+                                <p>
+                                  Rp.{" "}
+                                  {category?._sum.amount.toLocaleString(
+                                    "id-ID",
+                                  )}
+                                </p>
+                                <p className="text-gray-600 dark:text-gray-500">
+                                  {category?.percentage.toPrecision(2)}%
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
                       </li>
                     ))}
                   </ul>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </>
+            ) : (
+              <p className="p-2 text-center">No data</p>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

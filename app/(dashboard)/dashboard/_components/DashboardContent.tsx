@@ -1,6 +1,5 @@
 "use client";
 
-import { ChartPieDonut } from "@/components/common/ChartPie";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import AddTransactionDialog from "@/app/(dashboard)/transactions/_components/AddTransactionDialog";
 import { useQuery } from "@tanstack/react-query";
@@ -21,29 +20,6 @@ const DashboardContent = () => {
     queryFn: fetchGetDashboard,
     staleTime: 1000 * 60 * 2, // 2 minutes
   });
-
-  const finalSpendData = React.useMemo(() => {
-    const main = result?.byCategories.slice(0, 5);
-    const others = result?.byCategories.slice(5);
-
-    const otherCombine = others?.reduce(
-      (acc, item) => {
-        acc._sum.amount += item._sum.amount ?? 0;
-        acc.percentage += item.percentage ?? 0;
-        return acc;
-      },
-      {
-        category: "others",
-        _sum: {
-          amount: 0,
-        },
-        percentage: 0,
-      },
-    );
-    return (otherCombine?._sum.amount ?? 0) > 0
-      ? [...(main ?? []), otherCombine]
-      : main;
-  }, [result?.byCategories]);
 
   // Check if the user is authenticated
   if (!user?.id || user.id === undefined) {
@@ -176,57 +152,12 @@ const DashboardContent = () => {
           </div>
         )}
         <div className="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
-          <Card className="flex flex-col gap-6 max-h-212.5">
-            <CardHeader>
-              <h3 className="text-xl">Spending Breakdown</h3>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-6">
-              {isLoading && <p className="text-center">Loading...</p>}
-              {result?.byCategories?.length !== 0 ? (
-                <>
-                  <div>
-                    <ChartPieDonut />
-                  </div>
-                  <div className="p-2 ">
-                    <ul className="flex flex-col gap-3">
-                      {finalSpendData?.map(category => (
-                        <li key={category?.category}>
-                          <Card>
-                            <CardContent>
-                              <div className="flex items-center justify-between">
-                                <h4 className="capitalize">
-                                  {category?.category}
-                                </h4>
-                                <div className="flex gap-3">
-                                  <p>
-                                    Rp.{" "}
-                                    {category?._sum.amount.toLocaleString(
-                                      "id-ID",
-                                    )}
-                                  </p>
-                                  <p className="text-gray-600 dark:text-gray-500">
-                                    {category?.percentage.toPrecision(2)}%
-                                  </p>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </>
-              ) : (
-                <p className="p-2 text-center">No data</p>
-              )}
-            </CardContent>
-          </Card>
-          <Card className="flex flex-col gap-6 max-h-212.5">
+          <Card className="flex flex-col gap-6 max-h-125">
             <CardHeader>
               <h3 className="text-xl">Recent Transactions</h3>
             </CardHeader>
             <CardContent>
-              <div className="p-2 overflow-y-auto max-h-161">
+              <div className="p-2 overflow-y-auto max-h-125">
                 <ul className="flex flex-col gap-2 p-2 ">
                   {result?.transactions?.length !== 0 ? (
                     <>
