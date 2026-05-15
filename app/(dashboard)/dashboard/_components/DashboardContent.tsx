@@ -151,7 +151,7 @@ const DashboardContent = () => {
             </Card>
           </div>
         )}
-        <div className="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 ">
           <Card className="flex flex-col gap-6 max-h-125">
             <CardHeader>
               <h3 className="text-xl">Recent Transactions</h3>

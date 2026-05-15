@@ -13,11 +13,13 @@ export const ReportContent = () => {
   const { data: report } = useQuery<ReportDataType>({
     queryKey: ["report"],
     queryFn: getDataReport,
+    staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
   const { data: result, isLoading } = useQuery<DashboardData>({
     queryKey: ["dashboard"],
     queryFn: fetchGetDashboard,
+    staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
   const finalSpendData = useMemo(() => {
@@ -54,19 +56,19 @@ export const ReportContent = () => {
         <Card className="my-4 ">
           <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3 ">
             <div className="space-y-2">
-              <h2>Total Pendapatan (Income)</h2>
+              <h2>Total Pendapatan</h2>
               <p className="text-lg font-bold md:text-2xl">
                 Rp.{report?.totalIncome.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="space-y-2">
-              <h2>Total Pengeluaran (Expense)</h2>
+              <h2>Total Pengeluaran</h2>
               <p className="text-lg font-bold md:text-2xl">
                 Rp.{report?.totalExpense.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="space-y-2">
-              <h2>Sisa Saldo Bersih (Net Balance)</h2>
+              <h2>Sisa Saldo Kas</h2>
               <p className="text-lg font-bold md:text-2xl">
                 Rp.{report?.netBalance.toLocaleString("id-ID")}
               </p>
@@ -79,25 +81,25 @@ export const ReportContent = () => {
           <CardContent>
             <div>
               <div>
-                <h2 className="text-xl">Income Summary Card</h2>
+                <h2 className="text-xl">Ringkasan Pendapatan</h2>
               </div>
               <div className="my-4">
                 <ul>
                   {report?.listTransactionsIncome.map((item, index) => (
                     <div key={index} className="flex flex-col gap-4">
                       <div>
-                        <h3>Income This Month</h3>
+                        <h3>Pendapatan Bulan Ini</h3>
                         <p>Rp.{item.amount.toLocaleString("id-ID")}</p>
                       </div>
                       <div>
-                        <h3>Main Source</h3>
+                        <h3>Sumber Utama</h3>
                         <li
                           key={"Item ke-" + index}
                           className="p-4 mt-4 border rounded-xl"
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex flex-col">
-                              <p>{item.title}</p>
+                              <p className="capitalize">{item.category.name}</p>
                               <p>Rp.{item.amount.toLocaleString("id-ID")}</p>
                             </div>
                             <div>
@@ -119,7 +121,7 @@ export const ReportContent = () => {
           <CardContent>
             <div>
               <div>
-                <h2 className="text-xl">Expanse Transaction List</h2>
+                <h2 className="text-xl">List Pengeluaran</h2>
               </div>
               <div className="overflow-y-scroll max-h-100">
                 <ul>
@@ -149,7 +151,7 @@ export const ReportContent = () => {
       <div>
         <Card className="flex flex-col gap-6 max-h-212.5">
           <CardHeader>
-            <h3 className="text-xl">Spending Breakdown</h3>
+            <h3 className="text-xl">Pengeluaran Per Kategori</h3>
           </CardHeader>
           <CardContent className="flex flex-col gap-6">
             {isLoading && <p className="text-center">Loading...</p>}
