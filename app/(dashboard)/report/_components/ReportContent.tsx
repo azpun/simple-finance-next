@@ -42,6 +42,72 @@ export const ReportContent = () => {
           </CardContent>
         </Card>
       </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="">
+          <Card className="mx-0 h-113">
+            <CardContent>
+              <div>
+                <div>
+                  <h2>Transactions Income</h2>
+                </div>
+                <div className="overflow-y-auto max-h-100">
+                  <ul>
+                    {report?.listTransactionsIncome.map((item, index) => (
+                      <li key={"Item ke-" + index}>
+                        <div className="p-4 mt-4 border rounded-xl">
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col gap-2">
+                              <span>{item.title}</span>
+                              <span>
+                                Rp.{item.amount.toLocaleString("id-ID")}
+                              </span>
+                            </div>
+                            <div>
+                              {new Date(item.date).toLocaleDateString("id-ID")}
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Card className="mx-0">
+            <CardContent>
+              <div>
+                <div>
+                  <h2>Transactions Expanse</h2>
+                </div>
+                <div className="overflow-y-scroll max-h-100">
+                  <ul>
+                    {report?.listTransactionsExpense.map((item, index) => (
+                      <li key={"Item ke-" + index}>
+                        <div className="p-4 mt-4 border rounded-xl">
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col gap-2">
+                              <span>{item.title}</span>
+                              <span>
+                                Rp.{item.amount.toLocaleString("id-ID")}
+                              </span>
+                            </div>
+                            <div>
+                              {new Date(item.date).toLocaleDateString("id-ID")}
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };

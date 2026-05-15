@@ -1,5 +1,7 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
+import { reportDataSchema } from "@/validations/report.validation";
+import { TransactionSchema } from "@/validations/transaction.validate";
 import { NextResponse } from "next/server";
 
 export const GET = auth(async req => {
@@ -16,7 +18,49 @@ export const GET = auth(async req => {
 
   const userId = req.auth.user.id;
   try {
-    const dataTransactionExpense = await prisma.transactions.aggregate({
+    const listTransactions = await prisma.transactions.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        category: true,
+      },
+    });
+
+    if (listTransactions.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "List Transactions Not Found",
+        },
+        { status: 404 },
+      );
+    }
+
+    const validateListTransactions =
+      TransactionSchema.array().safeParse(listTransactions);
+
+    if (!validateListTransactions.success) {
+      console.error(validateListTransactions.error);
+      return NextResponse.json(
+        {
+          success: false,
+          status: 400,
+          message: "Invalid Data",
+        },
+        { status: 400 },
+      );
+    }
+
+    const listTransactionsExpense = listTransactions.filter(
+      transaction => transaction.type === "Expense",
+    );
+    const listTransactionsIncome = listTransactions.filter(
+      transaction => transaction.type === "Income",
+    );
+
+    const amountTransactionExpense = await prisma.transactions.aggregate({
       where: {
         userId: userId,
         type: "Expense",
@@ -26,7 +70,7 @@ export const GET = auth(async req => {
       },
     });
 
-    const dataTransactionIncome = await prisma.transactions.aggregate({
+    const amountTransactionIncome = await prisma.transactions.aggregate({
       where: {
         userId: userId,
         type: "Income",
@@ -36,22 +80,47 @@ export const GET = auth(async req => {
       },
     });
 
+    if (!amountTransactionExpense || !amountTransactionIncome) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Report not found",
+        },
+        { status: 404 },
+      );
+    }
+
     const netBalance =
-      Number(dataTransactionIncome._sum.amount) -
-      Number(dataTransactionExpense._sum.amount);
+      Number(amountTransactionIncome._sum.amount) -
+      Number(amountTransactionExpense._sum.amount);
 
     const dataFormatted = {
+      listTransactionsExpense,
+      listTransactionsIncome,
+      totalExpense: Number(amountTransactionExpense._sum.amount),
+      totalIncome: Number(amountTransactionIncome._sum.amount),
       netBalance,
-      totalExpense: Number(dataTransactionExpense._sum.amount),
-      totalIncome: Number(dataTransactionIncome._sum.amount),
     };
 
-    console.log(dataFormatted);
+    const validateFormatted = reportDataSchema.safeParse(dataFormatted);
+
+    if (!validateFormatted.success) {
+      console.error(validateFormatted.error);
+      return NextResponse.json(
+        {
+          success: false,
+          status: 400,
+          message: "Invalid Data",
+        },
+        { status: 400 },
+      );
+    }
 
     return NextResponse.json({
       success: true,
       status: 200,
-      data: dataFormatted,
+      data: validateFormatted.data,
     });
   } catch (error) {
     console.error("Error fetching report:", error);
