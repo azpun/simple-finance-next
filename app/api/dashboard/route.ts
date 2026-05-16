@@ -77,6 +77,77 @@ export async function GET() {
       );
     }
 
+    const lifetimeTransactions = await prisma.transactions.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        category: true,
+      },
+    });
+
+    if (lifetimeTransactions.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Transactions not found",
+        },
+        { status: 404 },
+      );
+    }
+
+    const lifetimeTransactionsIncome = lifetimeTransactions.filter(
+      transaction => transaction.type === "Income",
+    );
+
+    const lifetimeTransactionsExpanse = lifetimeTransactions.filter(
+      transaction => transaction.type === "Expense",
+    );
+
+    const lifetimeTransactionsIncomeSum = lifetimeTransactionsIncome.reduce(
+      (total, transaction) => Number(total) + Number(transaction.amount),
+      0,
+    );
+
+    const lifetimeTransactionsExpanseSum = lifetimeTransactionsExpanse.reduce(
+      (total, transaction) => Number(total) + Number(transaction.amount),
+      0,
+    );
+
+    const currentBalance =
+      lifetimeTransactionsIncomeSum - lifetimeTransactionsExpanseSum;
+
+    const transactionsExpanse = transactionsDate.filter(
+      transaction => transaction.type === "Expense",
+    );
+
+    const transactionsExpanseSum = transactionsExpanse.reduce(
+      (total, transaction) => Number(total) + Number(transaction.amount),
+      0,
+    );
+
+    const transactionsIncome = transactionsDate.filter(
+      transaction => transaction.type === "Income",
+    );
+
+    const transactionsIncomeSum = transactionsIncome.reduce(
+      (total, transaction) => Number(total) + Number(transaction.amount),
+      0,
+    );
+
+    const monthlyNetFlow = transactionsIncomeSum - transactionsExpanseSum;
+
+    const transactionsData = {
+      transactionsThisMonth: transactionsDate,
+      transactionsExpanseSum: transactionsExpanseSum,
+      transactionsIncomeSum: transactionsIncomeSum,
+      monthlyNetFlow: monthlyNetFlow,
+      lifetimeTransactionsIncomeSum: lifetimeTransactionsIncomeSum,
+      lifetimeTransactionsExpanseSum: lifetimeTransactionsExpanseSum,
+      currentBalance: currentBalance,
+    };
+
     const transactionGroupByCategories = await prisma.transactions.groupBy({
       by: ["categoryId"],
       where: {
@@ -251,7 +322,7 @@ export async function GET() {
     }
 
     const result = {
-      transactions: transactionsDate,
+      transactions: transactionsData,
       byCategories: sortedWithPercentage,
       operationsOf: validateOperationsOf.data,
       budget: validateMappingBudget.data,

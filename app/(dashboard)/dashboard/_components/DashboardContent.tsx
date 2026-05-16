@@ -48,18 +48,37 @@ const DashboardContent = () => {
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div>
-                <h3>Monthly Budget</h3>
+                <h3>Saldo Saat Ini</h3>
                 <p className="mt-2 text-xl font-bold">
-                  Rp. {result?.budget.totalAmount.toLocaleString("id-ID")}
+                  Rp.
+                  {result?.transactions.currentBalance.toLocaleString("id-ID")}
                 </p>
               </div>
               <div>
-                <h3>Spend so far</h3>
+                <h3>Pemasukan Bulan Ini</h3>
+                <p className="mt-2 text-xl font-bold">
+                  Rp.
+                  {result?.transactions.transactionsIncomeSum.toLocaleString(
+                    "id-ID",
+                  )}
+                </p>
+              </div>
+              <div>
+                <h3>Pengeluaran Bulan Ini</h3>
+                <p className="mt-2 text-xl font-bold">
+                  Rp.
+                  {result?.transactions.transactionsExpanseSum.toLocaleString(
+                    "id-ID",
+                  )}
+                </p>
+              </div>
+              <div>
+                <h3>Arus Bulan Ini</h3>
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center mt-2">
                     <p className="text-xl font-bold">
-                      Rp.{" "}
-                      {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                      Rp.
+                      {result?.transactions.monthlyNetFlow.toLocaleString(
                         "id-ID",
                       )}
                     </p>
@@ -85,7 +104,7 @@ const DashboardContent = () => {
                 </div>
               </div>
               <div>
-                <h3>Remaining</h3>
+                <h3>Sisa Budget Bulan Ini</h3>
                 <p className="mt-2 text-xl font-bold">
                   Rp.{" "}
                   {result?.operationsOf.budgetRemaining.toLocaleString("id-ID")}
@@ -97,7 +116,7 @@ const DashboardContent = () => {
           <div className="md:grid md:grid-cols-3">
             <Card className="flex flex-col gap-4">
               <CardHeader>
-                <h3>Monthly Budget</h3>
+                <h3>Pendapatan</h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <p className="text-xl font-bold">
@@ -107,7 +126,7 @@ const DashboardContent = () => {
             </Card>
             <Card>
               <CardHeader>
-                <h3>Spend so far </h3>
+                <h3>Pengeluaran</h3>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <div className="flex items-center">
@@ -151,6 +170,12 @@ const DashboardContent = () => {
             </Card>
           </div>
         )}
+        <Card>
+          <CardHeader>
+            <h3>Sisa Saldo</h3>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4"></CardContent>
+        </Card>
         <div className="grid grid-cols-1 gap-4 ">
           <Card className="flex flex-col gap-6 max-h-125">
             <CardHeader>
@@ -159,44 +184,46 @@ const DashboardContent = () => {
             <CardContent>
               <div className="p-2 overflow-y-auto max-h-125">
                 <ul className="flex flex-col gap-2 p-2 ">
-                  {result?.transactions?.length !== 0 ? (
+                  {result?.transactions.transactionsThisMonth.length !== 0 ? (
                     <>
                       {isLoading && <p className="text-center">Loading...</p>}
-                      {result?.transactions?.map(transaction => (
-                        <Card
-                          key={transaction.id}
-                          className="px-3 mx-0 border-0"
-                        >
-                          <li key={transaction.id}>
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h4 className="font-bold ">
-                                  {transaction.title}
-                                </h4>
-                                <p className="text-xs capitalize">
-                                  {transaction.category.name} - (
-                                  {transaction.type})
-                                </p>
+                      {result?.transactions?.transactionsThisMonth.map(
+                        transaction => (
+                          <Card
+                            key={transaction.id}
+                            className="px-3 mx-0 border-0"
+                          >
+                            <li key={transaction.id}>
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h4 className="font-bold ">
+                                    {transaction.title}
+                                  </h4>
+                                  <p className="text-xs capitalize">
+                                    {transaction.category.name} - (
+                                    {transaction.type})
+                                  </p>
+                                </div>
+                                <div className="flex flex-col items-end">
+                                  <p>
+                                    Rp.{" "}
+                                    {transaction.amount.toLocaleString("id-ID")}
+                                  </p>
+                                  <p className="text-xs">
+                                    {new Date(
+                                      transaction.updatedAt,
+                                    ).toLocaleDateString("id-ID", {
+                                      day: "numeric",
+                                      month: "long",
+                                      year: "numeric",
+                                    })}
+                                  </p>
+                                </div>
                               </div>
-                              <div className="flex flex-col items-end">
-                                <p>
-                                  Rp.{" "}
-                                  {transaction.amount.toLocaleString("id-ID")}
-                                </p>
-                                <p className="text-xs">
-                                  {new Date(
-                                    transaction.updatedAt,
-                                  ).toLocaleDateString("id-ID", {
-                                    day: "numeric",
-                                    month: "long",
-                                    year: "numeric",
-                                  })}
-                                </p>
-                              </div>
-                            </div>
-                          </li>
-                        </Card>
-                      ))}
+                            </li>
+                          </Card>
+                        ),
+                      )}
                     </>
                   ) : (
                     <>
