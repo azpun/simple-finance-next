@@ -42,109 +42,80 @@ const DashboardContent = () => {
       </div>
       <div className="flex flex-col gap-4 md:gap-7">
         {isMobile ? (
-          <Card className="flex flex-col gap-6">
-            <CardHeader>
-              <h3 className="text-2xl font-bold">Summary</h3>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <div>
-                <h3>Saldo Saat Ini</h3>
-                <p className="mt-2 text-xl font-bold">
-                  Rp.
-                  {result?.transactions.currentBalance.toLocaleString("id-ID")}
-                </p>
-              </div>
-              <div>
-                <h3>Pemasukan Bulan Ini</h3>
-                <p className="mt-2 text-xl font-bold">
-                  Rp.
-                  {result?.transactions.transactionsIncomeSum.toLocaleString(
-                    "id-ID",
-                  )}
-                </p>
-              </div>
-              <div>
-                <h3>Pengeluaran Bulan Ini</h3>
-                <p className="mt-2 text-xl font-bold">
-                  Rp.
-                  {result?.transactions.transactionsExpanseSum.toLocaleString(
-                    "id-ID",
-                  )}
-                </p>
-              </div>
-              <div>
-                <h3>Arus Bulan Ini</h3>
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center mt-2">
-                    <p className="text-xl font-bold">
-                      Rp.
-                      {result?.transactions.monthlyNetFlow.toLocaleString(
-                        "id-ID",
-                      )}
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-gray-500">
-                      <p>
-                        Usage Rp.{" "}
-                        {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
-                          "id-ID",
-                        )}{" "}
-                        / {result?.budget.totalAmount.toLocaleString("id-ID")}
-                      </p>
-                      <p className="ml-auto ">
-                        {result?.operationsOf.percentageUsage.toPrecision(2)}%
-                      </p>
-                    </div>
-                    <Progress
-                      value={result?.operationsOf.percentageUsage}
-                      className="h-2 my-2"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3>Sisa Budget Bulan Ini</h3>
-                <p className="mt-2 text-xl font-bold">
-                  Rp.{" "}
-                  {result?.operationsOf.budgetRemaining.toLocaleString("id-ID")}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="md:grid md:grid-cols-3">
-            <Card className="flex flex-col gap-4">
-              <CardHeader>
-                <h3>Pendapatan</h3>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <p className="text-xl font-bold">
-                  Rp. {result?.budget.totalAmount.toLocaleString("id-ID")}
-                </p>
-              </CardContent>
-            </Card>
+          <>
             <Card>
-              <CardHeader>
-                <h3>Pengeluaran</h3>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <div className="flex items-center">
-                  <p className="text-xl font-bold">
-                    Rp.{" "}
-                    {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+              <CardContent>
+                <div className="flex flex-col items-center justify-center">
+                  <h3 className="text-muted-foreground">Saldo Saat Ini</h3>
+                  <p className="mt-2 text-xl font-bold">
+                    Rp.
+                    {result?.transactions.currentBalance.toLocaleString(
                       "id-ID",
                     )}
                   </p>
                 </div>
+              </CardContent>
+            </Card>
+            <div className="grid grid-cols-2 mx-2">
+              <Card className="mx-2">
+                <CardContent>
+                  <div>
+                    <h3 className="text-muted-foreground">
+                      Pemasukan Bulan Ini
+                    </h3>
+                    <p className="mt-2 text-xl font-bold">
+                      Rp.
+                      {result?.transactions.transactionsIncomeSum.toLocaleString(
+                        "id-ID",
+                      )}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="mx-2">
+                <CardContent>
+                  <div>
+                    <h3 className="text-muted-foreground">
+                      Pengeluaran Bulan Ini
+                    </h3>
+                    <p className="mt-2 text-xl font-bold">
+                      Rp.
+                      {result?.transactions.transactionsExpanseSum.toLocaleString(
+                        "id-ID",
+                      )}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <Card>
+              <CardContent>
+                <div className="flex flex-col items-center">
+                  <h3 className="text-muted-foreground">Arus Bulan Ini</h3>
+                  <p className="text-xl font-bold">
+                    {(result?.transactions?.monthlyNetFlow ?? 0) < 0
+                      ? " - "
+                      : ""}
+                    Rp.
+                    {result?.transactions.transactionsExpanseSum.toLocaleString(
+                      "id-ID",
+                    )}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-gray-500">
+                  <div className="flex items-center justify-between text-muted-foreground">
                     <p>
-                      Usage Rp.{" "}
+                      Rp.
                       {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
                         "id-ID",
                       )}{" "}
-                      / {result?.budget.totalAmount.toLocaleString("id-ID")}
+                      dari Rp.
+                      {result?.budget.totalAmount.toLocaleString("id-ID")}{" "}
+                      digunakan
                     </p>
                     <p className="ml-auto ">
                       {result?.operationsOf.percentageUsage.toPrecision(2)}%
@@ -157,25 +128,113 @@ const DashboardContent = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader>
-                <h3>Remaining</h3>
-              </CardHeader>
+            <Card className="flex flex-col gap-6">
+              <CardContent className="flex flex-col gap-4">
+                <div>
+                  <h3 className="text-muted-foreground">
+                    Sisa Budget Bulan Ini
+                  </h3>
+                  <p className="mt-2 text-xl font-bold">
+                    Rp.{" "}
+                    {result?.operationsOf.budgetRemaining.toLocaleString(
+                      "id-ID",
+                    )}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <>
+            <Card className="flex flex-col items-center">
+              <div>
+                <h3 className="text-muted-foreground">Saldo Saat Ini</h3>
+              </div>
               <CardContent className="flex flex-col gap-4">
                 <p className="text-xl font-bold">
                   Rp.{" "}
-                  {result?.operationsOf.budgetRemaining.toLocaleString("id-ID")}
+                  {result?.transactions.currentBalance.toLocaleString("id-ID")}
                 </p>
               </CardContent>
             </Card>
-          </div>
+            <div className="md:grid md:grid-cols-3">
+              <Card className="flex flex-col gap-4">
+                <CardHeader>
+                  <h3 className="text-muted-foreground">Pemasukan Bulan Ini</h3>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                  <p className="text-xl font-bold">
+                    Rp.{" "}
+                    {result?.transactions.transactionsIncomeSum.toLocaleString(
+                      "id-ID",
+                    )}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <h3 className="text-muted-foreground">
+                    Pengeluaran Bulan Ini
+                  </h3>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                  <div className="flex items-center">
+                    <p className="text-xl font-bold">
+                      Rp.{" "}
+                      {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                        "id-ID",
+                      )}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="">
+                <CardHeader>
+                  <h3 className="text-muted-foreground">Arus Bulan Ini</h3>
+                </CardHeader>
+                <CardContent className="flex flex-col">
+                  <p
+                    className={`text-xl font-bold
+                    ${(result?.transactions?.monthlyNetFlow ?? 0) < 0 ? "text-red-400" : ""}`}
+                  >
+                    {(result?.transactions?.monthlyNetFlow ?? 0) < 0
+                      ? " - "
+                      : ""}
+                    Rp.{" "}
+                    {result?.transactions.monthlyNetFlow.toLocaleString(
+                      "id-ID",
+                    )}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <Card>
+              <CardContent>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between text-gray-500">
+                    <p className="text-muted-foreground">
+                      Rp.
+                      {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
+                        "id-ID",
+                      )}{" "}
+                      dari budget bulan ini senilai Rp.
+                      {result?.budget.totalAmount.toLocaleString("id-ID")}{" "}
+                      digunakan
+                    </p>
+                    <p className="ml-auto ">
+                      {result?.operationsOf.percentageUsage.toPrecision(2)}%
+                    </p>
+                  </div>
+                  <Progress
+                    value={result?.operationsOf.percentageUsage}
+                    className="h-2 my-2"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </>
         )}
-        <Card>
-          <CardHeader>
-            <h3>Sisa Saldo</h3>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4"></CardContent>
-        </Card>
+
         <div className="grid grid-cols-1 gap-4 ">
           <Card className="flex flex-col gap-6 max-h-125">
             <CardHeader>

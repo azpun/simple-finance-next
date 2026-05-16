@@ -56,19 +56,19 @@ export const ReportContent = () => {
         <Card className="my-4 ">
           <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3 ">
             <div className="space-y-2">
-              <h2>Total Pendapatan</h2>
+              <h2 className="text-muted-foreground">Total Pendapatan</h2>
               <p className="text-lg font-bold md:text-2xl">
                 Rp.{report?.totalIncome.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="space-y-2">
-              <h2>Total Pengeluaran</h2>
+              <h2 className="text-muted-foreground">Total Pengeluaran</h2>
               <p className="text-lg font-bold md:text-2xl">
                 Rp.{report?.totalExpense.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="space-y-2">
-              <h2>Sisa Saldo Kas</h2>
+              <h2 className="text-muted-foreground">Sisa Saldo Kas</h2>
               <p className="text-lg font-bold md:text-2xl">
                 Rp.{report?.netBalance.toLocaleString("id-ID")}
               </p>
@@ -84,15 +84,23 @@ export const ReportContent = () => {
                 <h2 className="text-xl">Ringkasan Pendapatan</h2>
               </div>
               <div className="my-4">
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <h3 className="text-muted-foreground">
+                      Pendapatan Bulan Ini
+                    </h3>
+                    <p className="text-xl font-bold">
+                      Rp.{report?.totalIncome.toLocaleString("id-ID")}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-muted-foreground">Sumber Utama</h3>
+                  </div>
+                </div>
                 <ul>
                   {report?.listTransactionsIncome.map((item, index) => (
                     <div key={index} className="flex flex-col gap-4">
                       <div>
-                        <h3>Pendapatan Bulan Ini</h3>
-                        <p>Rp.{item.amount.toLocaleString("id-ID")}</p>
-                      </div>
-                      <div>
-                        <h3>Sumber Utama</h3>
                         <li
                           key={"Item ke-" + index}
                           className="p-4 mt-4 border rounded-xl"
