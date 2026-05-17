@@ -63,7 +63,7 @@ const DashboardContent = () => {
                     <h3 className="text-muted-foreground">
                       Pemasukan Bulan Ini
                     </h3>
-                    <p className="mt-2 text-xl font-bold">
+                    <p className="mt-2 text-xl font-bold text-green-400">
                       Rp.
                       {result?.transactions.transactionsIncomeSum.toLocaleString(
                         "id-ID",
@@ -78,7 +78,7 @@ const DashboardContent = () => {
                     <h3 className="text-muted-foreground">
                       Pengeluaran Bulan Ini
                     </h3>
-                    <p className="mt-2 text-xl font-bold">
+                    <p className="mt-2 text-xl font-bold text-red-400">
                       Rp.
                       {result?.transactions.transactionsExpanseSum.toLocaleString(
                         "id-ID",
@@ -91,13 +91,20 @@ const DashboardContent = () => {
             <Card>
               <CardContent>
                 <div className="flex flex-col items-center">
-                  <h3 className="text-muted-foreground">Arus Bulan Ini</h3>
-                  <p className="text-xl font-bold">
+                  <h3 className="text-muted-foreground">
+                    {(result?.transactions.monthlyNetFlow ?? 0) < 0
+                      ? "Defisit Bulan Ini"
+                      : "Surplus Bulan Ini"}
+                  </h3>
+                  <p
+                    className={`mt-2 text-xl font-bold 
+                    ${(result?.transactions?.monthlyNetFlow ?? 0) < 0 ? "text-red-400" : "text-green-400"}`}
+                  >
                     {(result?.transactions?.monthlyNetFlow ?? 0) < 0
                       ? " - "
                       : ""}
                     Rp.
-                    {result?.transactions.transactionsExpanseSum.toLocaleString(
+                    {result?.transactions.monthlyNetFlow.toLocaleString(
                       "id-ID",
                     )}
                   </p>
@@ -107,7 +114,11 @@ const DashboardContent = () => {
             <Card>
               <CardContent>
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-muted-foreground">
+                  <div className="flex flex-col items-start justify-between gap-2 md:items-center md:flex-row text-muted-foreground">
+                    <p>
+                      {result?.operationsOf.percentageUsage.toPrecision(2)}%
+                      budget bulan ini digunakan
+                    </p>
                     <p>
                       Rp.
                       {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
@@ -115,10 +126,6 @@ const DashboardContent = () => {
                       )}{" "}
                       dari Rp.
                       {result?.budget.totalAmount.toLocaleString("id-ID")}{" "}
-                      digunakan
-                    </p>
-                    <p className="ml-auto ">
-                      {result?.operationsOf.percentageUsage.toPrecision(2)}%
                     </p>
                   </div>
                   <Progress
@@ -128,25 +135,10 @@ const DashboardContent = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="flex flex-col gap-6">
-              <CardContent className="flex flex-col gap-4">
-                <div>
-                  <h3 className="text-muted-foreground">
-                    Sisa Budget Bulan Ini
-                  </h3>
-                  <p className="mt-2 text-xl font-bold">
-                    Rp.{" "}
-                    {result?.operationsOf.budgetRemaining.toLocaleString(
-                      "id-ID",
-                    )}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
           </>
         ) : (
           <>
-            <Card className="flex flex-col items-center">
+            <Card className="flex flex-col items-center my-0">
               <div>
                 <h3 className="text-muted-foreground">Saldo Saat Ini</h3>
               </div>
@@ -163,7 +155,7 @@ const DashboardContent = () => {
                   <h3 className="text-muted-foreground">Pemasukan Bulan Ini</h3>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
-                  <p className="text-xl font-bold">
+                  <p className="text-xl font-bold text-green-400">
                     Rp.{" "}
                     {result?.transactions.transactionsIncomeSum.toLocaleString(
                       "id-ID",
@@ -179,7 +171,7 @@ const DashboardContent = () => {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                   <div className="flex items-center">
-                    <p className="text-xl font-bold">
+                    <p className="text-xl font-bold text-red-400">
                       Rp.{" "}
                       {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
                         "id-ID",
@@ -190,12 +182,16 @@ const DashboardContent = () => {
               </Card>
               <Card className="">
                 <CardHeader>
-                  <h3 className="text-muted-foreground">Arus Bulan Ini</h3>
+                  <h3 className="text-muted-foreground">
+                    {(result?.transactions.monthlyNetFlow ?? 0) < 0
+                      ? "Defisit Bulan Ini"
+                      : "Surplus Bulan Ini"}
+                  </h3>
                 </CardHeader>
                 <CardContent className="flex flex-col">
                   <p
                     className={`text-xl font-bold
-                    ${(result?.transactions?.monthlyNetFlow ?? 0) < 0 ? "text-red-400" : ""}`}
+                    ${(result?.transactions?.monthlyNetFlow ?? 0) < 0 ? "text-red-400" : "text-green-400"}`}
                   >
                     {(result?.transactions?.monthlyNetFlow ?? 0) < 0
                       ? " - "
@@ -213,16 +209,16 @@ const DashboardContent = () => {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between text-gray-500">
                     <p className="text-muted-foreground">
+                      {result?.operationsOf.percentageUsage.toPrecision(2)}%
+                      budget bulan ini digunakan
+                    </p>
+                    <p className="text-muted-foreground">
                       Rp.
                       {result?.operationsOf.sumOfExpansesThisMonth.toLocaleString(
                         "id-ID",
                       )}{" "}
-                      dari budget bulan ini senilai Rp.
+                      dari Rp.
                       {result?.budget.totalAmount.toLocaleString("id-ID")}{" "}
-                      digunakan
-                    </p>
-                    <p className="ml-auto ">
-                      {result?.operationsOf.percentageUsage.toPrecision(2)}%
                     </p>
                   </div>
                   <Progress
@@ -235,7 +231,7 @@ const DashboardContent = () => {
           </>
         )}
 
-        <div className="grid grid-cols-1 gap-4 ">
+        <div className="grid grid-cols-1 ">
           <Card className="flex flex-col gap-6 max-h-125">
             <CardHeader>
               <h3 className="text-xl">Recent Transactions</h3>
