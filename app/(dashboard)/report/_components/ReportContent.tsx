@@ -57,19 +57,23 @@ export const ReportContent = () => {
           <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3 ">
             <div className="space-y-2">
               <h2 className="text-muted-foreground">Total Pendapatan</h2>
-              <p className="text-lg font-bold md:text-2xl">
+              <p className="text-lg font-bold text-green-400 md:text-2xl">
                 Rp.{report?.totalIncome.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="space-y-2">
               <h2 className="text-muted-foreground">Total Pengeluaran</h2>
-              <p className="text-lg font-bold md:text-2xl">
+              <p className="text-lg font-bold text-red-400 md:text-2xl">
                 Rp.{report?.totalExpense.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="space-y-2">
               <h2 className="text-muted-foreground">Sisa Saldo Kas</h2>
-              <p className="text-lg font-bold md:text-2xl">
+              <p
+                className={`text-lg font-bold md:text-2xl
+              ${(report?.netBalance ?? 0) > 0 ? "text-green-400" : "text-red-400"}`}
+              >
+                {(report?.netBalance ?? 0) > 0 ? "" : " - "}
                 Rp.{report?.netBalance.toLocaleString("id-ID")}
               </p>
             </div>
@@ -89,7 +93,7 @@ export const ReportContent = () => {
                     <h3 className="text-muted-foreground">
                       Pendapatan Bulan Ini
                     </h3>
-                    <p className="text-xl font-bold">
+                    <p className="text-xl font-bold text-green-400">
                       Rp.{report?.totalIncome.toLocaleString("id-ID")}
                     </p>
                   </div>
@@ -108,7 +112,9 @@ export const ReportContent = () => {
                           <div className="flex items-center justify-between">
                             <div className="flex flex-col">
                               <p className="capitalize">{item.category.name}</p>
-                              <p>Rp.{item.amount.toLocaleString("id-ID")}</p>
+                              <p className="text-green-400">
+                                Rp.{item.amount.toLocaleString("id-ID")}
+                              </p>
                             </div>
                             <div>
                               {new Date(item.date).toLocaleDateString("id-ID")}
@@ -139,7 +145,7 @@ export const ReportContent = () => {
                         <div className="flex items-center justify-between">
                           <div className="flex flex-col gap-2">
                             <span>{item.title}</span>
-                            <span>
+                            <span className="text-red-400">
                               Rp.{item.amount.toLocaleString("id-ID")}
                             </span>
                           </div>
