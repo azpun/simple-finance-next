@@ -54,6 +54,18 @@ export const GET = auth(async (req, context) => {
       },
     });
 
+    const categories = await prisma.categories.findMany({
+      where: {
+        userId: userId,
+        type: "Expense",
+      },
+      select: {
+        id: true,
+        name: true,
+        type: true,
+      },
+    });
+
     if (!budget) {
       console.error("Budget not found");
       return NextResponse.json(
@@ -80,6 +92,7 @@ export const GET = auth(async (req, context) => {
       description: budget.description,
       createdAt: budget.createdAt,
       updatedAt: budget.updatedAt,
+      categories: categories,
     };
 
     const validateBudget = DataBudgetDescOptional.safeParse(reformattedBudget);

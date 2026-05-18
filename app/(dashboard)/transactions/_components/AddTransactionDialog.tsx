@@ -189,11 +189,7 @@ const AddTransactionDialog = () => {
                 control={control}
                 name="type"
                 render={({ field }) => (
-                  <Select
-                    // {...field}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a type" />
                     </SelectTrigger>

@@ -1,6 +1,7 @@
 import * as zod from "zod";
 
 const CategorySchema = zod.object({
+  id: zod.string(),
   name: zod.string(),
 });
 

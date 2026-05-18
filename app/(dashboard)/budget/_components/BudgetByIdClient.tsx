@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { fetchDataBudgetById } from "@/lib/api/budget";
-import { DataBudgetType } from "@/validations/budget.validation";
+import { DataBudgetDescOptionalType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +13,7 @@ import { AddBudgetCategory } from "./AddBudgetCategory";
 const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   const isMobile = useIsMobile();
   const id = budgetId;
-  const { data: dataBudget } = useQuery<DataBudgetType>({
+  const { data: dataBudget } = useQuery<DataBudgetDescOptionalType>({
     queryKey: ["budget", id],
     queryFn: () => fetchDataBudgetById(id),
   });

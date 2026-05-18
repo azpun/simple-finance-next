@@ -141,6 +141,13 @@ export const DataBudgetDescOptional = z.object({
     .nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  categories: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      type: z.enum(["Expense", "Income"]),
+    }),
+  ),
 });
 
 export type DataBudgetType = z.infer<typeof DataBudget>;
@@ -188,3 +195,5 @@ export const UpdateDataBudget = z.object({
 });
 
 export type UpdateDataBudgetType = z.infer<typeof UpdateDataBudget>;
+
+export const addDataBudgetCategory = z.object({});

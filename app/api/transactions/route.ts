@@ -138,6 +138,7 @@ export const GET = auth(async req => {
         date: true,
         category: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -148,6 +149,8 @@ export const GET = auth(async req => {
         date: "desc",
       },
     });
+
+    console.log(transactions);
 
     const validate =
       await TransactionSchema.array().safeParseAsync(transactions);
