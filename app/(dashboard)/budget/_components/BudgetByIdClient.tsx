@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -9,6 +8,7 @@ import { DataBudgetType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { AddBudgetCategory } from "./AddBudgetCategory";
 
 const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   const isMobile = useIsMobile();
@@ -23,8 +23,8 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   }
 
   return (
-    <div>
-      <Card className="my-4">
+    <div className="space-y-4">
+      <Card>
         <div className="mx-4 my-2">
           <Link href="/budget">
             <ArrowLeft className="w-6 h-6" />
@@ -80,15 +80,16 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
           </div>
         </CardContent>
       </Card>
-      <div className="px-4 space-x-1">
-        <Button>Update</Button>
-        <Button
-          onClick={() => {
-            alert("Comming Soon");
-          }}
-        >
-          Add Budget Category
-        </Button>
+      <div className="px-4 space-x-1"></div>
+      <AddBudgetCategory budgetId={id} />
+      <div>
+        <div className="mx-4 mb-4">
+          <h1 className="text-xl font-bold md:text-2xl">Budget Category</h1>
+        </div>
+        <Card>
+          <CardHeader className="my-2"></CardHeader>
+          <CardContent>{/* <BudgetCategory budgetId={id} /> */}</CardContent>
+        </Card>
       </div>
     </div>
   );
