@@ -28,7 +28,9 @@ export const fetchDataTransactionById = async (transactionId: string) => {
   return data;
 };
 
-export const fetchDataTransactions = async (transactionName: string | null) => {
+export const fetchDataTransactions = async (
+  transactionName?: string | null,
+) => {
   const params = new URLSearchParams();
 
   if (transactionName) {
