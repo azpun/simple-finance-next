@@ -150,8 +150,6 @@ export const GET = auth(async req => {
       },
     });
 
-    console.log(transactions);
-
     const validate =
       await TransactionSchema.array().safeParseAsync(transactions);
 

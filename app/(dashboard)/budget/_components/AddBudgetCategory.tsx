@@ -19,18 +19,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAddBudgetCategory } from "@/hooks/useAddBudgetCategory";
 import { fetchDataBudgetById } from "@/lib/api/budget";
+import { FormValues } from "@/types/budgetCategories";
 import { DataBudgetDescOptionalType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-
-type FormValues = {
-  budgetId: string;
-  categoryId: string;
-  amount: number;
-};
+import { toast } from "sonner";
 
 export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
+  const [open, setOpen] = useState(false);
+
   const { data: dataBudget } = useQuery<DataBudgetDescOptionalType>({
     queryKey: ["budget", budgetId],
     queryFn: () => fetchDataBudgetById(budgetId),
@@ -42,8 +42,11 @@ export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormValues>();
+
+  const { mutateAsync, isPending } = useAddBudgetCategory();
 
   const onSubmit: SubmitHandler<FormValues> = data => {
     const newData = {
@@ -51,12 +54,26 @@ export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
       categoryId: data.categoryId,
       amount: data.amount,
     };
-    console.log(newData);
+    toast.promise(
+      mutateAsync(newData, {
+        onSuccess: () => {
+          setOpen(false);
+          reset();
+        },
+      }),
+      {
+        loading: "Adding budget category...",
+        success: "Budget category added successfully",
+        error: "Failed to add budget category",
+        duration: 5000,
+        position: "top-center",
+      },
+    );
   };
 
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild className="mx-4">
           <Button>Add Budget Category</Button>
         </DialogTrigger>
@@ -77,7 +94,11 @@ export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
                   control={control}
                   name="categoryId"
                   render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      disabled={isPending}
+                    >
                       <SelectTrigger className="w-full capitalize">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
@@ -112,6 +133,7 @@ export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
                       {...field}
                       type="number"
                       value={field.value ?? ""}
+                      disabled={isPending}
                       onChange={e => {
                         const value = e.target.value;
                         field.onChange(value === "" ? "" : Number(value));
@@ -132,7 +154,9 @@ export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isPending}>
+                Submit
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
