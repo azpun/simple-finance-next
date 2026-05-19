@@ -69,8 +69,21 @@ export const GET = auth(async req => {
         },
       },
       include: {
-        budget: true,
-        category: true,
+        budget: {
+          select: {
+            id: true,
+            month: true,
+            year: true,
+            totalAmount: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+          },
+        },
       },
     });
 
@@ -101,14 +114,31 @@ export const GET = auth(async req => {
       );
     }
 
-    console.log(validateBudgetCategories);
+    const dataReformatted = validateBudgetCategories.data.map(item => {
+      return {
+        id: item.id,
+        budgetId: item.budget.id,
+        budgetMonthAndYear: new Date(
+          item.budget.year,
+          item.budget.month,
+        ).toLocaleDateString("id-ID", {
+          month: "long",
+          year: "numeric",
+        }),
+        budgetTotalAmount: item.budget.totalAmount,
+        categoryId: item.category.id,
+        categoryName: item.category.name,
+        categoryType: item.category.type,
+        amountBudgetCategory: item.amount,
+      };
+    });
 
     return NextResponse.json(
       {
         success: true,
         status: 200,
         message: "Get budget categories successfully",
-        data: getDataBudgetCategories,
+        data: dataReformatted,
       },
       { status: 200 },
     );

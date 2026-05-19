@@ -2,7 +2,7 @@ import * as z from "zod";
 
 export const pureDataBudget = z.object({
   id: z.string(),
-  userId: z.string(),
+  // userId: z.string(),
   month: z
     .any()
     .transform(value => {
@@ -33,13 +33,13 @@ export const pureDataBudget = z.object({
     .refine(value => !isNaN(value) && value > 0, {
       message: "Amount budget must be a valid number",
     }),
-  description: z
-    .string()
-    .trim()
-    .max(200, "Description must be at most 200 characters long")
-    .nullable(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  // description: z
+  //   .string()
+  //   .trim()
+  //   .max(200, "Description must be at most 200 characters long")
+  //   .nullable(),
+  // createdAt: z.coerce.date(),
+  // updatedAt: z.coerce.date(),
 });
 
 export const createBudgetSchema = z.object({
