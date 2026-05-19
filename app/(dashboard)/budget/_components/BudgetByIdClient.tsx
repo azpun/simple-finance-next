@@ -31,7 +31,7 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
       });
       const result = await response.json();
       const data: RemappedData[] = result.data;
-      // console.log(data);
+      console.log(data);
       return data;
     },
   });
@@ -128,14 +128,17 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
                   <CardContent className="space-y-2">
                     <div className="flex justify-between text-muted-foreground">
                       <p>
-                        Rp.{category.categorySumAmount.toLocaleString("id-ID")}{" "}
+                        Rp.
+                        {(category.categorySumAmount ?? 0).toLocaleString(
+                          "id-ID",
+                        )}{" "}
                         dari Rp.
                         {category.amountBudgetCategory.toLocaleString(
                           "id-ID",
                         )}{" "}
                         digunakan
                       </p>
-                      <p>({category.categoryUsegePercentage.value}%)</p>
+                      <p>({category.categoryUsegePercentage.value ?? 0}%)</p>
                     </div>
                     <div>
                       <Progress

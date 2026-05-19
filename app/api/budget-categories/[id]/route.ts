@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/connectDB";
 import { budgetCategoriesDataSchema } from "@/validations/budgetCategories.validation";
+import { endOfMonth, startOfMonth } from "date-fns";
 import { NextResponse } from "next/server";
 
 export const GET = auth(async (req, context) => {
@@ -58,6 +59,22 @@ export const GET = auth(async (req, context) => {
       );
     }
 
+    const getCurrentMonthYear = () => {
+      const now = new Date();
+      return {
+        month: now.getMonth() + 1,
+        year: now.getFullYear(),
+      };
+    };
+
+    const { month, year } = getCurrentMonthYear();
+
+    const referenceDateStart = new Date(year, month - 2, 1); // First day of the current month
+    const referenceDateEnd = new Date(year, month - 1, 0, 23, 59, 59); // Last day of the current month
+
+    const start = startOfMonth(referenceDateStart);
+    const end = endOfMonth(referenceDateEnd);
+
     const getTransactionsByCategories = await prisma.transactions.groupBy({
       by: ["categoryId"],
       _sum: {
@@ -67,6 +84,10 @@ export const GET = auth(async (req, context) => {
         userId: userId,
         category: {
           type: "Expense",
+        },
+        createdAt: {
+          gte: start,
+          lte: end,
         },
       },
     });
