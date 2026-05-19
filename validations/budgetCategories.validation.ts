@@ -20,3 +20,5 @@ export const budgetCategoriesDataSchema = z.object({
   budget: pureDataBudget,
   category: pureCategoriesData,
 });
+
+export type BudgetCategories = z.infer<typeof budgetCategoriesDataSchema>;

@@ -32,13 +32,12 @@ export const POST = auth(async req => {
       },
     });
 
-    console.log(postDataBudgetCategories);
-
     return NextResponse.json(
       {
         success: true,
         status: 200,
         message: "Budget category created successfully",
+        data: postDataBudgetCategories,
       },
       { status: 200 },
     );
@@ -144,7 +143,7 @@ export const GET = auth(async req => {
         budgetId: item.budget.id,
         budgetMonthAndYear: new Date(
           item.budget.year,
-          item.budget.month,
+          item.budget.month - 1,
         ).toLocaleDateString("id-ID", {
           month: "long",
           year: "numeric",
