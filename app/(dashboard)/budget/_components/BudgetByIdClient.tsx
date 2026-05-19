@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { AddBudgetCategory } from "./AddBudgetCategory";
+import { RemappedData } from "@/validations/budgetCategories.validation";
 
 const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   const isMobile = useIsMobile();
@@ -16,6 +17,22 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   const { data: dataBudget } = useQuery<DataBudgetDescOptionalType>({
     queryKey: ["budget", id],
     queryFn: () => fetchDataBudgetById(id),
+  });
+
+  const { data: dataBudgetCategories } = useQuery<RemappedData[]>({
+    queryKey: ["budget-categories"],
+    queryFn: async () => {
+      const response = await fetch("/api/budget-categories", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+      const data: RemappedData[] = result.data;
+      // console.log(data);
+      return data;
+    },
   });
 
   if (dataBudget === undefined) {
@@ -84,11 +101,13 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
       <AddBudgetCategory budgetId={id} />
       <div>
         <div className="mx-4 mb-4">
-          <h1 className="text-xl font-bold md:text-2xl">Budget Category</h1>
+          <h1 className="text-xl font-bold md:text-2xl">
+            Budget Category List
+          </h1>
         </div>
         <Card>
           <CardHeader className="my-2"></CardHeader>
-          <CardContent>{/* <BudgetCategory budgetId={id} /> */}</CardContent>
+          <CardContent></CardContent>
         </Card>
       </div>
     </div>

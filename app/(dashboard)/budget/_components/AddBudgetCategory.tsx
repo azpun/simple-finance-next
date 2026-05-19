@@ -23,7 +23,6 @@ import { useAddBudgetCategory } from "@/hooks/useAddBudgetCategory";
 import { fetchDataBudgetById } from "@/lib/api/budget";
 import { FormValues } from "@/types/budgetCategories";
 import { DataBudgetDescOptionalType } from "@/validations/budget.validation";
-import { BudgetCategories } from "@/validations/budgetCategories.validation";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -71,22 +70,6 @@ export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
       },
     );
   };
-
-  const { data: dataBudgetCategories } = useQuery({
-    queryKey: ["budget-categories"],
-    queryFn: async () => {
-      const response = await fetch("/api/budget-categories", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await response.json();
-      const data: BudgetCategories[] = result.data;
-      console.log(data);
-      return result;
-    },
-  });
 
   return (
     <>

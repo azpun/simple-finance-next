@@ -163,6 +163,12 @@ export const GET = auth(async req => {
       return {
         ...item,
         categorySumAmount: Number(item.categorySumAmount),
+        categoryUsegePercentage: {
+          value: Math.round(
+            (Number(item.categorySumAmount) / item.amountBudgetCategory) * 100,
+          ),
+          label: `${Math.round((Number(item.categorySumAmount) / item.amountBudgetCategory) * 100)}%`,
+        },
       };
     });
 
