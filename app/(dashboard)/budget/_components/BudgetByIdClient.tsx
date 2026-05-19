@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { AddBudgetCategory } from "./AddBudgetCategory";
 import { RemappedData } from "@/validations/budgetCategories.validation";
+import { Progress } from "@/components/ui/progress";
 
 const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   const isMobile = useIsMobile();
@@ -20,9 +21,9 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
   });
 
   const { data: dataBudgetCategories } = useQuery<RemappedData[]>({
-    queryKey: ["budget-categories"],
+    queryKey: ["budget-categories", id],
     queryFn: async () => {
-      const response = await fetch("/api/budget-categories", {
+      const response = await fetch(`/api/budget-categories/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -105,10 +106,49 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
             Budget Category List
           </h1>
         </div>
-        <Card>
-          <CardHeader className="my-2"></CardHeader>
-          <CardContent></CardContent>
-        </Card>
+        <div className="space-y-4">
+          {dataBudgetCategories?.length === 0 ||
+          dataBudgetCategories === undefined ? (
+            <Card>
+              <CardHeader className="my-2">
+                <h2 className="text-lg font-bold md:text-xl">
+                  No budget category found
+                </h2>
+              </CardHeader>
+            </Card>
+          ) : (
+            <>
+              {dataBudgetCategories?.map((category, index) => (
+                <Card key={index}>
+                  <CardHeader className="">
+                    <h2 className="text-lg font-bold capitalize md:text-xl">
+                      {category.categoryName}
+                    </h2>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="flex justify-between text-muted-foreground">
+                      <p>
+                        Rp.{category.categorySumAmount.toLocaleString("id-ID")}{" "}
+                        dari Rp.
+                        {category.amountBudgetCategory.toLocaleString(
+                          "id-ID",
+                        )}{" "}
+                        digunakan
+                      </p>
+                      <p>({category.categoryUsegePercentage.value}%)</p>
+                    </div>
+                    <div>
+                      <Progress
+                        value={category.categoryUsegePercentage.value}
+                        className="h-2"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
