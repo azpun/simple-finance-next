@@ -30,6 +30,9 @@ export const useAddBudgetCategory = () => {
       queryClient.invalidateQueries({
         queryKey: ["report"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["budget-categories"],
+      });
     },
     onError: err => {
       console.error("Error creating budget category", err.message);
