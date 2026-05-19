@@ -98,6 +98,30 @@ export const GET = auth(async req => {
       );
     }
 
+    const getTransactionsByCategories = await prisma.transactions.groupBy({
+      by: ["categoryId"],
+      _sum: {
+        amount: true,
+      },
+      where: {
+        userId: userId,
+        category: {
+          type: "Expense",
+        },
+      },
+    });
+
+    if (getTransactionsByCategories.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: 404,
+          message: "Transactions not found",
+        },
+        { status: 404 },
+      );
+    }
+
     const validateBudgetCategories = budgetCategoriesDataSchema
       .array()
       .safeParse(getDataBudgetCategories);
@@ -114,7 +138,7 @@ export const GET = auth(async req => {
       );
     }
 
-    const dataReformatted = validateBudgetCategories.data.map(item => {
+    const data = validateBudgetCategories.data.map(item => {
       return {
         id: item.id,
         budgetId: item.budget.id,
@@ -129,7 +153,17 @@ export const GET = auth(async req => {
         categoryId: item.category.id,
         categoryName: item.category.name,
         categoryType: item.category.type,
+        categorySumAmount: getTransactionsByCategories.find(
+          itemTransaction => itemTransaction.categoryId === item.category.id,
+        )?._sum.amount,
         amountBudgetCategory: item.amount,
+      };
+    });
+
+    const dataReformatted = data.map(item => {
+      return {
+        ...item,
+        categorySumAmount: Number(item.categorySumAmount),
       };
     });
 
