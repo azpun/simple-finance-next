@@ -24,7 +24,7 @@ import { fetchDataBudgetById } from "@/lib/api/budget";
 import { FormValues } from "@/types/budgetCategories";
 import { DataBudgetDescOptionalType } from "@/validations/budget.validation";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { use, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -70,6 +70,18 @@ export const AddBudgetCategory = ({ budgetId }: { budgetId: string }) => {
       },
     );
   };
+
+  const {} = useQuery({
+    queryKey: ["budget-categories"],
+    queryFn: async () => {
+      const response = await fetch("/api/budget-categories", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+  });
 
   return (
     <>
