@@ -31,7 +31,7 @@ const BudgetByIdClient = ({ budgetId }: { budgetId: string }) => {
       });
       const result = await response.json();
       const data: RemappedData[] = result.data;
-      console.log(data);
+
       return data;
     },
   });

@@ -7,9 +7,11 @@ import { getDataReport } from "@/lib/api/report";
 import { DashboardData } from "@/validations/dashboard.validation";
 import { ReportDataType } from "@/validations/report.validation";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 
 export const ReportContent = () => {
+  const { status } = useSession();
   const { data: report } = useQuery<ReportDataType>({
     queryKey: ["report"],
     queryFn: getDataReport,
@@ -44,6 +46,10 @@ export const ReportContent = () => {
       ? [...(main ?? []), otherCombine]
       : main;
   }, [result?.byCategories]);
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="mt-2 space-y-4">

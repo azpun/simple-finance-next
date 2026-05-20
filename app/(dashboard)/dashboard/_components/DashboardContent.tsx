@@ -11,8 +11,7 @@ import { useSession } from "next-auth/react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const DashboardContent = () => {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { data: session, status } = useSession();
   const isMobile = useIsMobile();
 
   const { data: result, isLoading } = useQuery<DashboardData>({
@@ -21,9 +20,8 @@ const DashboardContent = () => {
     staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
-  // Check if the user is authenticated
-  if (!user?.id || user.id === undefined) {
-    return <div>Not Authenticated</div>;
+  if (status === "loading") {
+    return <div>Loading...</div>;
   }
 
   return (

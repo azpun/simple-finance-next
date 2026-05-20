@@ -23,12 +23,14 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import Link from "next/link";
 import { Dot, Trash2Icon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 type Category = {
   name: string;
 };
 
 export default function TransactionContent() {
+  const { status } = useSession();
   const isMobile = useIsMobile();
   // Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
@@ -78,6 +80,10 @@ export default function TransactionContent() {
 
     return uniqueAvailableCategories;
   };
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>

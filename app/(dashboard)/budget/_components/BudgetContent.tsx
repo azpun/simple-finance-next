@@ -22,8 +22,10 @@ import { useState } from "react";
 import UpdateBudgetModal from "./UpdateBudgetModal";
 import DeleteBudgetModal from "./DeleteBudgetModal";
 import { fetchDataBudgets } from "@/lib/api/budget";
+import { useSession } from "next-auth/react";
 
 export const BudgetContent = () => {
+  const { status } = useSession();
   const isMobile = useMediaQuery(1022);
   const isTabletDesktop = useMediaQuery(1024);
 
@@ -37,6 +39,10 @@ export const BudgetContent = () => {
     queryFn: fetchDataBudgets,
     staleTime: 1000 * 60, // 1 minutes
   });
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
